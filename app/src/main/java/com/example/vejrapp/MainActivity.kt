@@ -13,14 +13,18 @@ import androidx.compose.foundation.ScrollState.Companion.Saver
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -32,6 +36,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.outlinedButtonBorder
 import androidx.compose.material3.ButtonDefaults.shape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,6 +46,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +65,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.SemanticsProperties.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
 //import com.example.vejrapp.SearchInputStateImpl.Companion.Saver
 import com.example.vejrapp.ui.theme.VejrAppTheme
 import java.nio.file.Files.size
@@ -66,16 +74,57 @@ import java.nio.file.Files.size
 class MainActivity : ComponentActivity() {
 
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             VejrAppTheme {
+                val viewModel = viewModel<SearchViewModel>()
+                val searchText by viewModel.searchText.collectAsState()
+                val cities by viewModel.cities.collectAsState()
+                val isSearching by viewModel.isSearching.collectAsState()
                 Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.End
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
                 ) {
-                    SearchBar()
+                    TextField(
+                        value = searchText,
+                        onValueChange = viewModel::onSearchTextChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text(text = "Copenhagen") }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    if (isSearching) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        )
+                        {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+
+                        }
+                    } else {
+
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                        ) {
+                            items(cities) { city ->
+                                Text(
+                                    text = "${city.name}",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 16.dp)
+                                )
+
+                            }
+                        }
+                    }
+                    //SearchBar()
 
 
                 }
@@ -186,18 +235,46 @@ fun Settings() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar() {
-    var search by rememberSaveable {
-        mutableStateOf("")
-    }
+    //var search by rememberSaveable {
+    //    mutableStateOf("")
+    //}
+    val viewModel = viewModel<SearchViewModel>()
+    val searchText by viewModel.searchText.collectAsState()
+    val cities by viewModel.cities.collectAsState()
+    val isSearching by viewModel.isSearching.collectAsState()
+
 
 
     Row(
         modifier = Modifier.padding(8.dp),
-        verticalAlignment = Alignment.Bottom,
+        verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.End
     ) {
-        Search(string = search, onValueChange = { search = it }, onSearch = {})
+        TextField(
+            value = searchText,
+            onValueChange = viewModel::onSearchTextChange,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(text = "Copenhagen") }
+
+        )
+        //Search(string = search, onValueChange = { search = it }, onSearch = {})
         Settings()
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            items(cities) { city ->
+                Text(
+                    text = "${city.name}",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+
+                )
+            }
+
+        }
 
     }
 
