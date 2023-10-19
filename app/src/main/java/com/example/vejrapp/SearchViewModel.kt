@@ -44,6 +44,11 @@ class SearchViewModel : ViewModel() {
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
+
+    fun favoriteUpdate(city: City) {
+        city.favorite = !city.favorite
+    }
+
 }
 
 
@@ -53,8 +58,11 @@ class SearchViewModel : ViewModel() {
 data class City(
     val name: String,
     val coordinatesDD1: Double,
-    val coordinatesDD2: Double
+    val coordinatesDD2: Double,
+    var favorite: Boolean,
 ) {
+
+
     fun doesMatchSearchQuery(query: String): Boolean {
         val matchingCombinations = listOf(
             "$name",
@@ -65,6 +73,8 @@ data class City(
             it.contains(query, ignoreCase = true)
         }
     }
+
+
 }
 
 //Predefined list of cities, api will replace the data
@@ -72,15 +82,16 @@ private val allCities = listOf(
     City(
         name = "Copenhagen",
         coordinatesDD1 = 55.67594,
-        coordinatesDD2 = 12.56553
+        coordinatesDD2 = 12.56553,
+        favorite = false
     ),
     City(
-        name = "Odense", 55.39594, 10.38831
+        name = "Odense", 55.39594, 10.38831, false
     ),
     City(
-        name = "Frederiksberg", 55.67938, 12.53463
+        name = "Frederiksberg", 55.67938, 12.53463, false
     ),
     City(
-        name = "Naestved", 55.22992, 11.76092
+        name = "Naestved", 55.22992, 11.76092, false
     )
 )

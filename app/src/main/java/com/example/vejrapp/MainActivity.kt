@@ -13,10 +13,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState.Companion.Saver
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+//import androidx.compose.foundation.layout.RowScopeInstance.align
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,6 +41,8 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.outlinedButtonBorder
@@ -67,13 +73,17 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.SemanticsActions.OnClick
 import androidx.compose.ui.semantics.SemanticsProperties.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -85,7 +95,7 @@ import java.nio.file.Files.size
 class MainActivity : ComponentActivity() {
 
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -96,10 +106,16 @@ class MainActivity : ComponentActivity() {
                 val isSearching by viewModel.isSearching.collectAsState()
 
                 //Search mode belongs to the top bar
-                var searchMode = false
+                var searchMode by remember {
+                    mutableStateOf(false)
+                }
                 var displayText by remember {
                     mutableStateOf("Copenhagen")
                 }
+
+
+                val keyboardController = LocalSoftwareKeyboardController.current
+                val focusManager = LocalFocusManager.current
 
                 Column(
                     modifier = Modifier
@@ -118,7 +134,14 @@ class MainActivity : ComponentActivity() {
                                     TextField(
                                         value = searchText,
                                         onValueChange = viewModel::onSearchTextChange,
-                                        modifier = Modifier.fillMaxWidth(),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .motionEventSpy {
+                                                //searchMode = !searchMode
+                                            }
+                                            .onFocusEvent {
+                                                searchMode = !searchMode
+                                            },
                                         placeholder = { Text(text = displayText) },
                                         leadingIcon = {
                                             Icon(
@@ -128,14 +151,25 @@ class MainActivity : ComponentActivity() {
                                                     .width(20.dp)
                                             )
                                         },
-                                        shape = RoundedCornerShape(28.dp)
+                                        shape = RoundedCornerShape(28.dp),
+                                        keyboardOptions = KeyboardOptions.Default.copy(
+                                            imeAction = androidx.compose.ui.text.input.ImeAction.Done,
+                                            keyboardType = KeyboardType.Text
+                                        ),
+                                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                                     )
+
                                 },
                                 navigationIcon = {
                                     IconButton(
 
-                                        onClick = { /*TODO*/ },
-                                        modifier = Modifier.alpha(if (searchText.isNotBlank()) 1f else 0f)
+                                        onClick = {
+                                            keyboardController?.hide()
+                                            //or hide keyboard
+                                            focusManager.clearFocus()
+                                            searchMode = !searchMode
+                                        },
+                                        modifier = Modifier.alpha(if (searchMode) 1f else 0f)
 
                                     ) {
                                         Icon(
@@ -153,21 +187,13 @@ class MainActivity : ComponentActivity() {
                                             contentDescription = "Open Settings"
                                         )
 
-                                    }/*
-                                    IconButton(onClick = { /*TODO*/ }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Edit,
-                                            contentDescription = "Edit notes"
-                                        )
-
-                                    }*/
+                                    }
                                 },
                                 scrollBehavior = scrollBeavior
                             )
                         }
                     ) { values ->
 
-                        //Insert lazycolumn here
                         if (isSearching) {
                             Box(
                                 modifier = Modifier
@@ -179,7 +205,7 @@ class MainActivity : ComponentActivity() {
                                 )
 
                             }
-                        } else if (!searchText.isBlank()) {
+                        } else if (searchMode) {
 
                             LazyColumn(
                                 modifier = Modifier
@@ -187,18 +213,56 @@ class MainActivity : ComponentActivity() {
                                     .padding(values),
                             ) {
                                 items(cities) { city ->
-                                    Text(
-                                        text = "${city.name}",
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 16.dp)
-                                            .selectable(
-                                                selected = city.name == displayText,
-                                                onClick = {
-                                                    displayText = city.name
-                                                }
-                                            )
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth()
                                     )
+                                    {
+                                        Text(
+                                            text = "${city.name}",
+                                            modifier = Modifier
+                                                .align(alignment = Alignment.Top)
+                                                .fillMaxWidth(0.85f)
+                                                .padding(vertical = 16.dp)
+                                                .selectable(
+                                                    selected = city.name == displayText,
+                                                    onClick = {
+                                                        displayText = city.name
+                                                        keyboardController?.hide()
+                                                        //or hide keyboard
+                                                        focusManager.clearFocus()
+                                                    }
+                                                )
+                                        )
+                                        var iconChange by remember {
+                                            mutableStateOf(city.favorite)
+                                        }
+                                        IconButton(
+                                            modifier = Modifier.align(alignment = Alignment.Bottom),
+
+                                            onClick = {
+                                                viewModel.favoriteUpdate(city)
+                                                iconChange = city.favorite
+
+                                            }
+
+                                        ) {
+                                            if (iconChange) {
+                                                Icon(
+                                                    imageVector = Icons.Outlined.Favorite,
+                                                    contentDescription = "Favourited this city"
+                                                )
+
+
+                                            } else {
+                                                Icon(
+                                                    imageVector = Icons.Outlined.FavoriteBorder,
+                                                    contentDescription = "Favourite this city",
+                                                )
+
+                                            }
+                                        }
+                                    }
+
 
                                     //Add a button at the end with a favourite icon
 
