@@ -81,6 +81,6 @@ private val allCities = listOf(
         name = "Frederiksberg", 55.67938, 12.53463
     ),
     City(
-        name = "Næstved", 55.22992, 11.76092
+        name = "Naestved", 55.22992, 11.76092
     )
 )
