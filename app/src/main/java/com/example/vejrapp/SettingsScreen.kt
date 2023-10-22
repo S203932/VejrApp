@@ -121,7 +121,7 @@ fun Settings(
                 )
 
 
-                var checked by remember { mutableStateOf(tempUnit.value == "Celsius") }
+                var checked by remember { mutableStateOf(tempUnit.value == "Fahrenheit") }
                 Switch(
 
                     checked =
@@ -160,7 +160,7 @@ fun Settings(
                         .fillMaxHeight(0.2f),
                 )
 
-                var checked by remember { mutableStateOf(windUnit.value == "m/s") }
+                var checked by remember { mutableStateOf(windUnit.value == "f/s") }
                 Switch(
                     checked = checked,
                     onCheckedChange = {
@@ -195,7 +195,7 @@ fun Settings(
                         .fillMaxHeight(0.2f),
                 )
 
-                var checked by remember { mutableStateOf(pressureUnit.value == "Bar") }
+                var checked by remember { mutableStateOf(pressureUnit.value == "Pa") }
                 Switch(
                     checked = checked,
                     onCheckedChange = {
