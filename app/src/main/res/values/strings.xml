@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">VejrApp</string>
+    <string name="search_label">Change location</string>
 </resources>
