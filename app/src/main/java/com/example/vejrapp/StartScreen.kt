@@ -74,6 +74,7 @@ fun StartScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
