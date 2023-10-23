@@ -129,7 +129,6 @@ fun Settings(
                     onCheckedChange = {
                         if (tempUnit.value == ("Celsius")) dataViewModel.updateTempUnit("Fahrenheit")
                         else dataViewModel.updateTempUnit("Celsius")
-                        //dataViewModel.updateTempUnit("Fahrenheit")
                         checked = !checked
 
                     }
@@ -204,16 +203,9 @@ fun Settings(
                         checked = !checked
                     }
                 )
-
             }
-
-
         }
-
-
     }
-
-
 }
 
 @Preview(showBackground = true)

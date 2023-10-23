@@ -68,7 +68,6 @@ fun WeatherAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherApp(
-    //dataViewModel: DataViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     val dataViewModel = viewModel<DataViewModel>()
@@ -95,7 +94,6 @@ fun WeatherApp(
 
 
     ) { innerPadding ->
-        val uiState by dataViewModel.uiState.collectAsState()
 
         NavHost(
             navController = navController,
@@ -108,7 +106,6 @@ fun WeatherApp(
                 StartScreen(
                     viewModel = searchViewModel,
                     onNextButtonClicked = {
-                        //viewModel.setQuantity(it)
                         navController.navigate(WeatherScreen.Settings.name)
                     },
                     modifier = Modifier
@@ -118,8 +115,6 @@ fun WeatherApp(
             }
 
             composable(route = WeatherScreen.Settings.name) {
-                val context = LocalContext.current
-
                 Settings(
                     onNextButtonClicked = {
                         navController.previousBackStackEntry
@@ -132,52 +127,9 @@ fun WeatherApp(
                     modifier = Modifier.fillMaxHeight(),
 
                     dataViewModel = dataViewModel,
-                    //canNavigateBack = true,
-                    //currentScreen = WeatherScreen.Settings
                 )
             }
-            /*
-            composable(route = WeatherScreen.Settings.name) {
-                val context = LocalContext.current
-                Settings(
-                    onNextButtonClicked = { navController.navigate(WeatherScreen.Start.name) },
-                    onCancelButtonClicked = {
-                        cancelAndNavigateToStart(viewModel, navController)
-                    },
-                    //options = DataSource.flavors.map { id -> context.resources.getString(id) },
-                    //onSelectionChanged = { viewModel.setFlavor(it) },
-                    //modifier = Modifier.fillMaxHeight()
-                )
-            }
-
-             */
         }
-        /*
-        composable(route = CupcakeScreen.Pickup.name) {
-            SelectOptionScreen(
-                subtotal = uiState.price,
-                onNextButtonClicked = { navController.navigate(CupcakeScreen.Summary.name) },
-                onCancelButtonClicked = {
-                    cancelOrderAndNavigateToStart(viewModel, navController)
-                },
-                options = uiState.pickupOptions,
-                onSelectionChanged = { viewModel.setDate(it) },
-                modifier = Modifier.fillMaxHeight()
-            )
-        }
-        composable(route = CupcakeScreen.Summary.name) {
-            val context = LocalContext.current
-            OrderSummaryScreen(
-                orderUiState = uiState,
-                onCancelButtonClicked = {
-                    cancelOrderAndNavigateToStart(viewModel, navController)
-                },
-                onSendButtonClicked = { subject: String, summary: String ->
-                    shareOrder(context, subject = subject, summary = summary)
-                },
-                modifier = Modifier.fillMaxHeight()
-            )
-        }*/
     }
 }
 

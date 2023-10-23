@@ -74,7 +74,7 @@ fun StartScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -219,38 +219,11 @@ fun StartScreen(
                                 }
                             }
                         }
-
-
-                        //Add a button at the end with a favourite icon
-
                     }
                 }
             }
-            /*
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(values)
-            ) {
-                items(100) {
-                    Text(
-                        text = "Item$it",
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-            }
-
-             */
-
-
         }
-
-
-        //SearchBar(viewModel, searchText, cities, isSearching)
-
-
     }
-
 }
 
 
