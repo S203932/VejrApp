@@ -103,7 +103,7 @@ fun WeatherApp(
 
 
             composable(route = WeatherScreen.Start.name) {
-                StartScreen(
+                SearchBar(
                     viewModel = searchViewModel,
                     onNextButtonClicked = {
                         navController.navigate(WeatherScreen.Settings.name)

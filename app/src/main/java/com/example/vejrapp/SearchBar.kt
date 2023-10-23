@@ -53,7 +53,7 @@ import com.example.vejrapp.data.SearchViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun StartScreen(
+fun SearchBar(
     onNextButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel
@@ -231,7 +231,7 @@ fun StartScreen(
 @Composable
 fun StartOrderPreview() {
     val viewModel = viewModel<SearchViewModel>()
-    StartScreen(
+    SearchBar(
         viewModel = viewModel,
 
         onNextButtonClicked = {},
