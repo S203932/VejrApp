@@ -15,21 +15,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.data.SearchViewModel
-import javax.sql.DataSource
 
 
 enum class WeatherScreen(@StringRes val title: Int) {
@@ -66,6 +62,7 @@ fun WeatherAppBar(
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Preview
 @Composable
 fun WeatherApp(
     navController: NavHostController = rememberNavController()
@@ -112,6 +109,7 @@ fun WeatherApp(
                         .fillMaxSize()
                         .padding()
                 )
+
             }
 
             composable(route = WeatherScreen.Settings.name) {
