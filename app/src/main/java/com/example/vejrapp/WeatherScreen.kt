@@ -2,7 +2,6 @@ package com.example.vejrapp
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -30,7 +29,7 @@ import com.example.vejrapp.data.SearchViewModel
 
 enum class WeatherScreen(@StringRes val title: Int) {
     Start(title = R.string.app_name),
-    Settings(title = R.string.settings)
+    Settings(title = R.string.settings),
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,12 +101,11 @@ fun WeatherApp(
             composable(route = WeatherScreen.Start.name) {
                 SearchBar(
                     viewModel = searchViewModel,
+
                     onNextButtonClicked = {
                         navController.navigate(WeatherScreen.Settings.name)
                     },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding()
+                    navController = navController
                 )
 
             }

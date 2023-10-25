@@ -3,7 +3,6 @@ package com.example.vejrapp
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -54,64 +53,45 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.data.SearchViewModel
 
+
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(
+fun Searching(
     onNextButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel,
-    navController: NavController
+    navController: NavController,
 ) {
+
     val searchText by viewModel.searchText.collectAsState()
     val cities by viewModel.cities.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
+
+    val currentCity by viewModel.currentCity.collectAsState()
 
     //Search mode belongs to the top bar
     var searchMode by remember {
         mutableStateOf(true)
     }
-    var displayText by remember {
-        mutableStateOf("Copenhagen")
-    }
+    //var displayText by remember {
+    //    mutableStateOf("Copenhagen")
+    //}
 
     //This is for hiding the keyboard
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    var searchBarModifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight()
-    //.padding(10.dp)
-
-    if (searchMode) {
-        searchBarModifier = searchBarModifier.then(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-            //.padding(16.dp)
-        )
-    } else {
-        searchBarModifier = searchBarModifier.then(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.08f)
-            //.padding(16.dp)
-        )
-    }
-
 
     Column(
-        modifier = searchBarModifier.padding(16.dp)
-
-
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
         val scrollBeavior = TopAppBarDefaults.pinnedScrollBehavior()
 
         Scaffold(
-            modifier = searchBarModifier.nestedScroll(scrollBeavior.nestedScrollConnection),
-            //modifier = Modifier
-            //    .fillMaxHeight(0.08f)
-            //    .fillMaxWidth()
-            //    .nestedScroll(scrollBeavior.nestedScrollConnection),
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBeavior.nestedScrollConnection),
             topBar = {
                 TopAppBar(
                     title = {
@@ -121,13 +101,12 @@ fun SearchBar(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .motionEventSpy {
-                                    //navController.navigate(WeatherScreen.Searching.name)
                                     //searchMode = !searchMode
                                 }
                                 .onFocusEvent {
                                     searchMode = !searchMode
                                 },
-                            placeholder = { Text(text = displayText) },
+                            placeholder = { Text(text = currentCity) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Filled.Search, contentDescription = null,
@@ -153,6 +132,7 @@ fun SearchBar(
                                 //or hide keyboard
                                 focusManager.clearFocus()
                                 searchMode = !searchMode
+                                navController.navigate(WeatherScreen.Start.name)
                             },
                             modifier = Modifier.alpha(if (searchMode) 1f else 0f)
 
@@ -209,11 +189,12 @@ fun SearchBar(
                                     .fillMaxWidth(0.85f)
                                     .padding(vertical = 16.dp)
                                     .selectable(
-                                        selected = city.name == displayText,
+                                        selected = city.name == currentCity,
                                         onClick = {
-                                            displayText = city.name
+                                            viewModel.updateCurrentCity(city.name)
                                             keyboardController?.hide()
                                             focusManager.clearFocus()
+                                            navController.navigate(WeatherScreen.Start.name)
                                         }
                                     )
                             )
@@ -256,15 +237,15 @@ fun SearchBar(
 
 @Preview
 @Composable
-fun StartOrderPreview() {
+fun SearchingPreview() {
     val viewModel = viewModel<SearchViewModel>()
     val navController = rememberNavController()
-    SearchBar(
+    Searching(
         viewModel = viewModel,
-        navController = navController,
+
         onNextButtonClicked = {},
+        navController = navController
     )
 
 }
-
 

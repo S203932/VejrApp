@@ -15,6 +15,10 @@ class SearchViewModel : ViewModel() {
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
+    private val _currentCity = MutableStateFlow("")
+    val currentCity = _currentCity.asStateFlow()
+
+
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
 
@@ -46,6 +50,10 @@ class SearchViewModel : ViewModel() {
 
     fun favoriteUpdate(city: City) {
         city.favorite = !city.favorite
+    }
+
+    fun updateCurrentCity(cityName: String) {
+        _currentCity.value = cityName
     }
 
 }
