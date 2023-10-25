@@ -150,7 +150,6 @@ fun StartScreen(
                 )
             }
         ) { values ->
-
             if (isSearching) {
                 Box(
                     modifier = Modifier
@@ -247,10 +246,11 @@ fun StartScreen(
 
         //SearchBar(viewModel, searchText, cities, isSearching)
 
-
     }
 
+
 }
+
 
 
 @Preview
