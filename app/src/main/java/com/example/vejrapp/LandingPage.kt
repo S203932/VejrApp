@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TopWeather() {
 
+    val fontColor = Color.White
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,7 +47,8 @@ fun TopWeather() {
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                color = fontColor
             )
         }
         Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
@@ -60,8 +63,8 @@ fun TopWeather() {
                     modifier = Modifier
                         .padding(0.dp),
                     textAlign = TextAlign.Center,
-
-                    )
+                    color = fontColor
+                )
                 //Realfeel Temp
                 Text(
                     text = "Realfeel 16°",
@@ -69,29 +72,34 @@ fun TopWeather() {
                     modifier = Modifier
                         .padding(0.dp),
                     textAlign = TextAlign.Center,
+                    color = fontColor
                 )
                 //Min-Max Row
                 Row {
                     //Max Temp
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.baseline_arrow_upward_24),
-                        contentDescription = "Max"
+                        contentDescription = "Max",
+                        tint = fontColor
                     )
                     Text(
                         text = "20°",
                         modifier = Modifier
                             .padding(2.dp),
+                        color = fontColor
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     //Min Temp
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.baseline_arrow_downward_24),
-                        contentDescription = "Max"
+                        contentDescription = "Max",
+                        tint = fontColor
                     )
                     Text(
                         text = "14°",
                         modifier = Modifier
                             .padding(2.dp),
+                        color = fontColor
                     )
 
                 }
@@ -101,10 +109,12 @@ fun TopWeather() {
                         text = "23/09 , 15:30",
                         modifier = Modifier
                             .padding(2.dp),
+                        color = fontColor
                     )
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.baseline_sync_24),
-                        contentDescription = "Update data"
+                        contentDescription = "Update data",
+                        tint = fontColor
                     )
                 }
 
@@ -124,31 +134,36 @@ fun TopWeather() {
                         .width(135.dp)
                 )
                 Row {
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.baseline_umbrella_24),
                         contentDescription = "Weather icon",
                         modifier = Modifier
                             .height(30.dp)
                             .width(30.dp)
-                            .rotate(180F)
+                            .rotate(180F),
+                        tint = fontColor
+
                     )
                     Text(
                         text = "5%",
                         modifier = Modifier
                             .padding(2.dp),
+                        color = fontColor
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.baseline_air_24),
                         contentDescription = "Weather icon",
                         modifier = Modifier
                             .height(30.dp)
-                            .width(30.dp)
+                            .width(30.dp),
+                        tint = fontColor
                     )
                     Text(
                         text = "10 m/s",
                         modifier = Modifier
                             .padding(2.dp),
+                        color = fontColor
                     )
                 }
             }
@@ -165,8 +180,9 @@ fun TopWeather() {
 
 @Composable
 fun CautionBox() {
+    val fontColor = Color.White
     Card(
-        colors = CardDefaults.cardColors(  containerColor = Color.White.copy(alpha = 0.6f)),
+        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
             .height(70.dp)
@@ -179,9 +195,13 @@ fun CautionBox() {
             Text(
                 text = "Caution:",
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = fontColor
             )
-            Text(text = "Rainy weather in coming days")
+            Text(
+                text = "Rainy weather in coming days",
+                color = fontColor
+            )
         }
     }
 }
@@ -193,7 +213,7 @@ fun CardWithColumnAndRow(
 //weatherType: WeatherType
 ) {
     Card(
-        colors = CardDefaults.cardColors(  containerColor = Color.White.copy(alpha = 0.6f)),
+        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .width(50.dp) // Set the card's width
             .height(125.dp),
@@ -300,8 +320,9 @@ fun LazyRowWithCards() {
 @Preview
 @Composable
 fun DetailsBox() {
+    val fontColor = Color.White
     Card(
-        colors = CardDefaults.cardColors( containerColor = Color.White.copy(alpha = 0.6f)),
+        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
@@ -310,7 +331,8 @@ fun DetailsBox() {
             Text(
                 text = "Details",
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(4.dp)
+                modifier = Modifier.padding(4.dp),
+                color = fontColor
             )
         }
         Row(
@@ -320,70 +342,82 @@ fun DetailsBox() {
 
         ) {
             Column(modifier = Modifier.padding(4.dp)) {
-                Image(
+                Icon(
                     painter = painterResource(R.drawable.baseline_water_drop_24),
                     contentDescription = "Humidity",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    tint = fontColor
                 )
                 Text(
                     text = "Humidity",
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = fontColor
                 )
                 Text(
                     text = "56%",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = fontColor
                 )
             }
 
             Column(modifier = Modifier.padding(4.dp)) {
-                Image(
+                Icon(
                     painter = painterResource(R.drawable.outline_visibility_24),
                     contentDescription = "Humidity",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    tint = fontColor
                 )
                 Text(
                     text = "Visibility",
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = fontColor
                 )
                 Text(
                     text = "24100 m",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = fontColor
                 )
             }
 
             Column(modifier = Modifier.padding(4.dp)) {
-                Image(
+                Icon(
                     painter = painterResource(R.drawable.outline_wb_sunny_24),
                     contentDescription = "Humidity",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    tint = fontColor
                 )
                 Text(
                     text = "UV index",
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = fontColor
                 )
                 Text(
                     text = "Low (1)",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = fontColor
                 )
             }
 
             Column(modifier = Modifier.padding(4.dp)) {
-                Image(
+                Icon(
                     painter = painterResource(R.drawable.baseline_compress_24),
                     contentDescription = "Humidity",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    tint = fontColor
                 )
                 Text(
                     text = "Pressure",
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = fontColor
                 )
                 Text(
                     text = "756,06 mmHg",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = fontColor
                 )
             }
         }
