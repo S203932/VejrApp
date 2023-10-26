@@ -48,6 +48,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -126,7 +127,7 @@ fun SearchBar(
                         keyboardType = KeyboardType.Text
                     ),
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    textStyle = TextStyle(color = fontColor)
+                    textStyle = TextStyle(color = fontColor, fontSize = 20.sp)
                 )
 
             },
@@ -199,6 +200,9 @@ fun SearchBar(
                                         displayText = city.name
                                         keyboardController?.hide()
                                         focusManager.clearFocus()
+                                        viewModel.onSearchTextChange("")
+                                        viewModel.updateSearchMode(false)
+
                                     }
                                 ),
                             color = fontColor
