@@ -1,8 +1,13 @@
 package com.example.vejrapp
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +21,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -76,17 +84,19 @@ fun WeatherApp(
         backStackEntry?.destination?.route ?: WeatherScreen.Start.name
     )
 
-    Scaffold(
-        /*
-        topBar = {
-            WeatherAppBar(
-                currentScreen = currentScreen,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
-            )
-        }
 
-         */
+
+    Scaffold(
+
+        topBar = {
+            /* WeatherAppBar(
+                 currentScreen = currentScreen,
+                 canNavigateBack = navController.previousBackStackEntry != null,
+                 navigateUp = { navController.navigateUp() }
+             )*/
+
+
+        }
 
 
     ) { innerPadding ->
@@ -99,14 +109,35 @@ fun WeatherApp(
 
 
             composable(route = WeatherScreen.Start.name) {
-                SearchBar(
-                    viewModel = searchViewModel,
+                /* SearchBar(
+                     viewModel = searchViewModel,
 
-                    onNextButtonClicked = {
-                        navController.navigate(WeatherScreen.Settings.name)
-                    },
-                    navController = navController
+                     onNextButtonClicked = {
+                         navController.navigate(WeatherScreen.Settings.name)
+                     },
+                     navController = navController
+                 )*/
+                val scrollState = rememberScrollState()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .paint(
+                            // Replace with your image id
+                            painterResource(id = R.drawable.bg),
+                            contentScale = ContentScale.FillBounds
+                        )
                 )
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(state = scrollState)
+                ) {
+
+                    TopWeather()
+                    LazyRowWithCards()
+                    DetailsBox()
+
+
+                }
 
             }
 

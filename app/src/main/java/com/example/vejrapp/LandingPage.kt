@@ -2,7 +2,6 @@ package com.example.vejrapp
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +37,6 @@ fun TopWeather() {
 
     Column(
         modifier = Modifier
-            .background(Color.White)
             .fillMaxWidth()
     ) {
         Row() {
@@ -167,6 +166,7 @@ fun TopWeather() {
 @Composable
 fun CautionBox() {
     Card(
+        colors = CardDefaults.cardColors(  containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
             .height(70.dp)
@@ -193,6 +193,7 @@ fun CardWithColumnAndRow(
 //weatherType: WeatherType
 ) {
     Card(
+        colors = CardDefaults.cardColors(  containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .width(50.dp) // Set the card's width
             .height(125.dp),
@@ -272,6 +273,7 @@ fun CardWithColumnAndRow(
 //        }
 //    }
 //}
+@Preview
 @Composable
 fun LazyRowWithCards() {
     LazyRow(
@@ -299,6 +301,7 @@ fun LazyRowWithCards() {
 @Composable
 fun DetailsBox() {
     Card(
+        colors = CardDefaults.cardColors( containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
