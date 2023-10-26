@@ -164,6 +164,14 @@ fun WeatherApp(
             //I just added the setting to that of the preview
             LinearGradient()
             Column {
+                SearchBar(
+                    viewModel = searchViewModel,
+
+                    onNextButtonClicked = {
+                        navController.navigate(WeatherScreen.Settings.name)
+                    },
+                    navController = navController
+                )
                 Card {
                     WeekWeather(background = R.drawable.forweek)
                 }
