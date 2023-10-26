@@ -4,18 +4,15 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -27,7 +24,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -40,6 +36,8 @@ import com.example.vejrapp.data.SearchViewModel
 enum class WeatherScreen(@StringRes val title: Int) {
     Start(title = R.string.app_name),
     Settings(title = R.string.settings),
+    Tomorrow(title = R.string.tomorrow),
+    Weekview(title = R.string.week_view)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,70 +85,112 @@ fun WeatherApp(
     )
 
 
+    //Scaffold(
 
-    Scaffold(
+    /*topBar = {
+        /* WeatherAppBar(
+             currentScreen = currentScreen,
+             canNavigateBack = navController.previousBackStackEntry != null,
+             navigateUp = { navController.navigateUp() }
+         )*/
 
-        topBar = {
-            /* WeatherAppBar(
-                 currentScreen = currentScreen,
-                 canNavigateBack = navController.previousBackStackEntry != null,
-                 navigateUp = { navController.navigateUp() }
-             )*/
 
+    }
+
+     */
+
+
+    // ) { innerPadding ->
+
+    NavHost(
+        navController = navController,
+        startDestination = WeatherScreen.Start.name,
+        //modifier = Modifier.padding(innerPadding)
+    ) {
+
+
+        composable(route = WeatherScreen.Start.name) {
+
+
+            LinearGradient()
+            Column {
+                SearchBar(
+                    viewModel = searchViewModel,
+
+                    onNextButtonClicked = {
+                        navController.navigate(WeatherScreen.Settings.name)
+                    },
+                    navController = navController
+                )
+                //Spacer(modifier = Modifier.height(100.dp))
+                TopWeather()
+                LazyRowWithCards()
+                DetailsBox()
+
+
+            }
 
         }
 
 
-    ) { innerPadding ->
-
-        NavHost(
-            navController = navController,
-            startDestination = WeatherScreen.Start.name,
-            modifier = Modifier.padding(innerPadding)
-        ) {
+        composable(route = WeatherScreen.Tomorrow.name) {
 
 
-            composable(route = WeatherScreen.Start.name) {
-                /* SearchBar(
-                     viewModel = searchViewModel,
+            LinearGradient()
+            Column {
+                SearchBar(
+                    viewModel = searchViewModel,
 
-                     onNextButtonClicked = {
-                         navController.navigate(WeatherScreen.Settings.name)
-                     },
-                     navController = navController
-                 )*/
-
-
-                LinearGradient()
-                Column {
-                    Spacer(modifier = Modifier.height(100.dp))
-                    TopWeather()
-                    LazyRowWithCards()
-                    DetailsBox()
+                    onNextButtonClicked = {
+                        navController.navigate(WeatherScreen.Settings.name)
+                    },
+                    navController = navController
+                )
+                //Spacer(modifier = Modifier.height(100.dp))
+                TopWeather()
+                LazyRowWithCards()
+                DetailsBox()
 
 
+            }
+
+        }
+
+        composable(route = WeatherScreen.Weekview.name) {
+
+            // I think this is how to set up week view, not sure if you are supposed to use the
+            // WeekWeather composable alone or with the card parameter
+
+            //I just added the setting to that of the preview
+            LinearGradient()
+            Column {
+                Card {
+                    WeekWeather(background = R.drawable.forweek)
                 }
 
+
             }
 
-            composable(route = WeatherScreen.Settings.name) {
-                Settings(
-                    onNextButtonClicked = {
-                        navController.previousBackStackEntry
-                    },
-                    onCancelButtonClicked = {
-                        cancelAndNavigateToStart(dataViewModel, navController)
-                    },
-                    navController = navController,
+        }
 
-                    modifier = Modifier.fillMaxHeight(),
+        composable(route = WeatherScreen.Settings.name) {
+            Settings(
+                onNextButtonClicked = {
+                    navController.previousBackStackEntry
+                },
+                onCancelButtonClicked = {
+                    cancelAndNavigateToStart(dataViewModel, navController)
+                },
+                navController = navController,
 
-                    dataViewModel = dataViewModel,
-                )
-            }
+                modifier = Modifier.fillMaxHeight(),
+
+                dataViewModel = dataViewModel,
+            )
         }
     }
 }
+//}
 
 
 private fun cancelAndNavigateToStart(

@@ -3,7 +3,6 @@ package com.example.vejrapp
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,7 +24,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -41,10 +39,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,185 +64,172 @@ fun SearchBar(
     val searchText by viewModel.searchText.collectAsState()
     val cities by viewModel.cities.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
+    val searchMode by viewModel.searchMode.collectAsState()
 
-    //Search mode belongs to the top bar
-    var searchMode by remember {
-        mutableStateOf(true)
-    }
+    //There is added a font color, that is the same for all the text within
+    val fontColor = Color.Black
+
+
     var displayText by remember {
-        mutableStateOf("Copenhagen")
+        mutableStateOf(viewModel.currentCity.value)
     }
 
     //This is for hiding the keyboard
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    var searchBarModifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight()
-    //.padding(10.dp)
-
-    if (searchMode) {
-        searchBarModifier = searchBarModifier.then(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-            //.padding(16.dp)
-        )
-    } else {
-        searchBarModifier = searchBarModifier.then(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.08f)
-            //.padding(16.dp)
-        )
-    }
 
 
     Column(
-        modifier = searchBarModifier.padding(16.dp)
+
+        modifier = modifier.padding(8.dp)
 
 
     ) {
         val scrollBeavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-        Scaffold(
-            modifier = searchBarModifier.nestedScroll(scrollBeavior.nestedScrollConnection),
-            //modifier = Modifier
-            //    .fillMaxHeight(0.08f)
-            //    .fillMaxWidth()
-            //    .nestedScroll(scrollBeavior.nestedScrollConnection),
-            topBar = {
-                TopAppBar(
-                    title = {
-                        TextField(
-                            value = searchText,
-                            onValueChange = viewModel::onSearchTextChange,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .motionEventSpy {
-                                    //navController.navigate(WeatherScreen.Searching.name)
-                                    //searchMode = !searchMode
-                                }
-                                .onFocusEvent {
-                                    searchMode = !searchMode
-                                },
-                            placeholder = { Text(text = displayText) },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Filled.Search, contentDescription = null,
-                                    modifier = Modifier
-                                        .height(20.dp)
-                                        .width(20.dp)
-                                )
-                            },
-                            shape = RoundedCornerShape(28.dp),
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done,
-                                keyboardType = KeyboardType.Text
-                            ),
-                            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                        )
+        TopAppBar(
+            title = {
+                TextField(
 
-                    },
-                    navigationIcon = {
-                        IconButton(
+                    value = searchText,
+                    onValueChange =
 
-                            onClick = {
-                                keyboardController?.hide()
-                                //or hide keyboard
-                                focusManager.clearFocus()
-                                searchMode = !searchMode
-                            },
-                            modifier = Modifier.alpha(if (searchMode) 1f else 0f)
-
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Go back"
-                            )
-
+                    {
+                        viewModel.onSearchTextChange(it)
+                        if (it.isBlank()) {
+                            viewModel.updateSearchMode(false)
+                        } else {
+                            viewModel.updateSearchMode(true)
                         }
                     },
 
-                    actions = {
-                        IconButton(onClick = onNextButtonClicked) {
-                            Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = "Open Settings"
-                            )
-
-                        }
-                    },
-                    scrollBehavior = scrollBeavior
-                )
-            }
-        ) { values ->
-
-            if (isSearching) {
-                Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
+                        .motionEventSpy {
+
+                        }
+                        .onFocusEvent {
+
+                        },
+                    placeholder = { Text(text = displayText, color = fontColor) },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Search, contentDescription = null,
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(20.dp)
+                        )
+                    },
+                    shape = RoundedCornerShape(28.dp),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Text
+                    ),
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                    textStyle = TextStyle(color = fontColor)
                 )
-                {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
+
+            },
+            navigationIcon = {
+                IconButton(
+
+                    onClick = {
+                        keyboardController?.hide()
+                        //or hide keyboard
+                        focusManager.clearFocus()
+
+                        viewModel.updateSearchMode(!searchMode)
+                        viewModel.onSearchTextChange("")
+
+                    },
+                    modifier = Modifier.alpha(if (searchMode) 1f else 0f)
+
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Go back"
                     )
 
                 }
-            } else if (searchMode) {
+            },
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(values),
-                ) {
-                    items(cities) { city ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
+            actions = {
+                IconButton(onClick = onNextButtonClicked) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Open Settings"
+                    )
+
+                }
+            },
+            scrollBehavior = scrollBeavior
+        )
+        if (isSearching) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+            {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+
+            }
+        } else if (searchMode) {
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+            ) {
+                items(cities) { city ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    {
+                        Text(
+                            text = "${city.name}",
+                            modifier = Modifier
+                                .align(alignment = Alignment.Top)
+                                .fillMaxWidth(0.85f)
+                                .padding(vertical = 16.dp)
+                                .selectable(
+                                    selected = city.name == displayText,
+                                    onClick = {
+                                        displayText = city.name
+                                        keyboardController?.hide()
+                                        focusManager.clearFocus()
+                                    }
+                                ),
+                            color = fontColor
                         )
-                        {
-                            Text(
-                                text = "${city.name}",
-                                modifier = Modifier
-                                    .align(alignment = Alignment.Top)
-                                    .fillMaxWidth(0.85f)
-                                    .padding(vertical = 16.dp)
-                                    .selectable(
-                                        selected = city.name == displayText,
-                                        onClick = {
-                                            displayText = city.name
-                                            keyboardController?.hide()
-                                            focusManager.clearFocus()
-                                        }
-                                    )
-                            )
-                            var iconChange by remember {
-                                mutableStateOf(city.favorite)
+                        var iconChange by remember {
+                            mutableStateOf(city.favorite)
+                        }
+                        IconButton(
+                            modifier = Modifier.align(alignment = Alignment.Bottom),
+
+                            onClick = {
+                                viewModel.favoriteUpdate(city)
+                                viewModel.updateCurrentCity(city.name)
+                                iconChange = city.favorite
+
                             }
-                            IconButton(
-                                modifier = Modifier.align(alignment = Alignment.Bottom),
 
-                                onClick = {
-                                    viewModel.favoriteUpdate(city)
-                                    iconChange = city.favorite
-
-                                }
-
-                            ) {
-                                if (iconChange) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Favorite,
-                                        contentDescription = "Favourited this city"
-                                    )
+                        ) {
+                            if (iconChange) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Favorite,
+                                    contentDescription = "Favourited this city"
+                                )
 
 
-                                } else {
-                                    Icon(
-                                        imageVector = Icons.Outlined.FavoriteBorder,
-                                        contentDescription = "Favourite this city",
-                                    )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.FavoriteBorder,
+                                    contentDescription = "Favourite this city",
+                                )
 
-                                }
                             }
                         }
                     }

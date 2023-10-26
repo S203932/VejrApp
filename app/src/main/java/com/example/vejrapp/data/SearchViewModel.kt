@@ -15,9 +15,11 @@ class SearchViewModel : ViewModel() {
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
-    private val _currentCity = MutableStateFlow("")
+    private val _currentCity = MutableStateFlow("Copenhagen")
     val currentCity = _currentCity.asStateFlow()
 
+    private val _searchMode = MutableStateFlow(false)
+    val searchMode = _searchMode.asStateFlow()
 
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
@@ -55,6 +57,11 @@ class SearchViewModel : ViewModel() {
     fun updateCurrentCity(cityName: String) {
         _currentCity.value = cityName
     }
+
+    fun updateSearchMode(searchMode: Boolean) {
+        _searchMode.value = searchMode
+    }
+
 
 }
 
