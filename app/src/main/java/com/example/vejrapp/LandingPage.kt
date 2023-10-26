@@ -369,7 +369,7 @@ fun DetailsBox() {
 
             Column(modifier = Modifier.padding(4.dp)) {
                 Image(
-                    painter = painterResource(R.drawable.outline_wb_sunny_24),
+                    painter = painterResource(R.drawable.baseline_compress_24),
                     contentDescription = "Humidity",
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
