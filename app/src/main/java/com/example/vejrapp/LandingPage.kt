@@ -34,6 +34,15 @@ fun TopWeather() {
             .background(Color.White)
             .fillMaxWidth()
     ) {
+        Row() {
+            Text(
+                text = "Monday October 9th",
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
         Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
             Column(
                 modifier = Modifier
