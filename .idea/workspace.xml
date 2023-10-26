@@ -9,21 +9,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="414079b2-b222-45fc-b0a7-a8b5962f68b1" name="Changes" comment="Searchbar renamed and must be put at the top of the desired screen">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/Searching.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/sha1-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="414079b2-b222-45fc-b0a7-a8b5962f68b1" name="Changes" comment="Updated searchbar so it only takes the whole screen if it is searching">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/SearchBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/SearchBar.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/WeatherScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/WeatherScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/SearchViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/SearchViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/LandingPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/LandingPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -583,7 +572,14 @@
       <option name="project" value="LOCAL" />
       <updated>1697741445404</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Updated searchbar so it only takes the whole screen if it is searching">
+      <created>1698264107978</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1698264107978</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -603,6 +599,7 @@
     <MESSAGE value="Focused on adding functionality of search bar. Need to change the location of the code and reactivate the settings button" />
     <MESSAGE value="Remade the searchbar as a topbar. Have the icons and selectable cities. Missing favouriting cities and the settings" />
     <MESSAGE value="Can favorite cities and return button appears and dissapears. Only missing settings page (and maybe a fix for the ghost in the return button" />
-    <option name="LAST_COMMIT_MESSAGE" value="Can favorite cities and return button appears and dissapears. Only missing settings page (and maybe a fix for the ghost in the return button" />
+    <MESSAGE value="Updated searchbar so it only takes the whole screen if it is searching" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated searchbar so it only takes the whole screen if it is searching" />
   </component>
 </project>

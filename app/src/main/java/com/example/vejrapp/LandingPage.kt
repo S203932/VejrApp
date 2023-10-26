@@ -1,5 +1,6 @@
 package com.example.vejrapp
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,12 +11,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -149,7 +155,7 @@ fun TopWeather() {
             }
         }
         Spacer(modifier = Modifier.height(5.dp))
-        Column{
+        Column {
             CautionBox()
         }
 
@@ -165,9 +171,10 @@ fun CautionBox() {
             .fillMaxWidth()
             .height(70.dp)
     ) {
-        Column( modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Caution:",
@@ -179,9 +186,118 @@ fun CautionBox() {
     }
 }
 
+//Inserting Urban's stuff
+
+@Composable
+fun CardWithColumnAndRow(
+//weatherType: WeatherType
+) {
+    Card(
+        modifier = Modifier
+            .width(50.dp) // Set the card's width
+            .height(125.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ) {
+
+            //Image (you can replace the URL with your image source)
+            Image(
+                painter = painterResource(id = R.drawable.cloudy), // Use your own image resource
+                contentDescription = null,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(shape = MaterialTheme.shapes.medium)
+            )
+
+            // Second Text
+            Text(
+                text = "21°",
+                fontSize = 16.sp,
+                modifier = Modifier.padding(4.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //Image (you can replace the URL with your image source)
+                Image(
+                    painter = painterResource(id = R.drawable.baseline_umbrella_24), // Use your own image resource
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(10.dp)
+                        .clip(shape = MaterialTheme.shapes.medium)
+                        .rotate(180F)
+                )
+
+                // Text
+                Text(
+                    text = "100%",
+                    fontSize = 8.sp,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+            // Third Text
+            Text(
+                text = "00:00"
+                //LocalContext.current.getString(weatherType.stringResourceId)
+                ,
+                fontSize = 8.sp,
+                modifier = Modifier.padding(4.dp)
+            )
+
+            // Row with Image and Text
+
+        }
+    }
+    Spacer(modifier = Modifier.width(4.dp))
+}
+
+//@Composable
+//fun LazyRowWithCards(weatherTypeList: List<WeatherType>
+// ) {
+//    LazyRow(
+//        modifier = Modifier
+//            .fillMaxSize() // This makes the LazyRow take up the full available width
+//            .padding(8.dp)
+//    ) {
+//        items(weatherTypeList) { weatherType ->
+//            CardWithColumnAndRow(weatherType = weatherType)
+//            Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
+//        }
+//    }
+//}
+@Composable
+fun LazyRowWithCards() {
+    LazyRow(
+        modifier = Modifier
+            // This makes the LazyRow take up the full available width
+            .padding(8.dp)
+            .wrapContentSize(Alignment.BottomCenter)
+    ) {
+        items(24) { // You can change the number of cards as needed
+            CardWithColumnAndRow()
+            Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+//@Preview
+//@Composable
+//fun CardWithColumnAndRowPreview() {
+//    LazyRowWithCards()
+//    //LazyRowWithCards(weatherTypeList = DataSource().loadWeatherType,
+
+//}
 @Preview
 @Composable
-fun DetailsBox(){
+fun DetailsBox() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
