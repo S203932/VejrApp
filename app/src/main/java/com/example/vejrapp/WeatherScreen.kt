@@ -122,11 +122,9 @@ fun WeatherApp(
                     },
                     navController = navController
                 )
-                //Spacer(modifier = Modifier.height(100.dp))
                 TopWeather()
                 LazyRowWithCards()
                 DetailsBox()
-
 
             }
 

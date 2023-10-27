@@ -180,7 +180,7 @@ fun TopWeather() {
 
 @Composable
 fun CautionBox() {
-    val fontColor = Color.White
+    val fontColor = Color.Black
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
@@ -320,7 +320,7 @@ fun LazyRowWithCards() {
 @Preview
 @Composable
 fun DetailsBox() {
-    val fontColor = Color.White
+    val fontColor = Color.Black
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
