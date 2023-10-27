@@ -171,7 +171,8 @@ fun WeatherApp(
                     navController = navController
                 )
                 Card {
-                    WeekWeather(background = R.drawable.forweek)
+                    TopHeadLine()
+                    WeekWeather()
                 }
 
 
