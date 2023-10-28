@@ -2,6 +2,10 @@ package com.example.vejrapp.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.vejrapp.search.Locations
+import com.example.vejrapp.search.models.City
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,12 +14,14 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class SearchViewModel : ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(locations: Locations) : ViewModel() {
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
-    private val _currentCity = MutableStateFlow("Copenhagen")
+    private val _currentCity = MutableStateFlow(locations.defaultCity)
     val currentCity = _currentCity.asStateFlow()
 
     private val _searchMode = MutableStateFlow(false)
@@ -24,20 +30,20 @@ class SearchViewModel : ViewModel() {
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
 
-    private val _cities = MutableStateFlow(allCities)
+    private val _cities = MutableStateFlow(locations.cities)
+
+    @OptIn(FlowPreview::class)
     val cities = searchText
-        .debounce(500L)
+        .debounce(100L)
         .onEach { _isSearching.update { true } }
         .combine(_cities) { text, cities ->
             if (text.isBlank()) {
                 cities
             } else {
                 cities.filter {
-                    it.doesMatchSearchQuery(text)
+                    it.name.contains(text, ignoreCase = true)
                 }
             }
-
-
         }
         .onEach { _isSearching.update { false } }
         .stateIn(
@@ -54,58 +60,11 @@ class SearchViewModel : ViewModel() {
         city.favorite = !city.favorite
     }
 
-    fun updateCurrentCity(cityName: String) {
-        _currentCity.value = cityName
+    fun updateCurrentCity(city: City) {
+        _currentCity.value = city
     }
 
     fun updateSearchMode(searchMode: Boolean) {
         _searchMode.value = searchMode
     }
-
-
 }
-
-
-//The data below should probably be in the domain layer, but we don't
-//have that project structure yet, so for now it's here
-
-data class City(
-    val name: String,
-    val coordinatesDD1: Double,
-    val coordinatesDD2: Double,
-    var favorite: Boolean,
-) {
-
-
-    fun doesMatchSearchQuery(query: String): Boolean {
-        val matchingCombinations = listOf(
-            "$name",
-            "$coordinatesDD1,$coordinatesDD2",
-
-            )
-        return matchingCombinations.any {
-            it.contains(query, ignoreCase = true)
-        }
-    }
-
-
-}
-
-//Predefined list of cities, api will replace the data
-private val allCities = listOf(
-    City(
-        name = "Copenhagen",
-        coordinatesDD1 = 55.67594,
-        coordinatesDD2 = 12.56553,
-        favorite = false
-    ),
-    City(
-        name = "Odense", 55.39594, 10.38831, false
-    ),
-    City(
-        name = "Frederiksberg", 55.67938, 12.53463, false
-    ),
-    City(
-        name = "Naestved", 55.22992, 11.76092, false
-    )
-)

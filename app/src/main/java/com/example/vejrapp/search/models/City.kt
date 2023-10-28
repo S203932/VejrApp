@@ -6,6 +6,6 @@ data class City(
     val latitude: Float,
     val longitude: Float,
     val population: Int,
-    val favourite: Boolean = false,
-    val currentLocation: Boolean = false
+    var favorite: Boolean = false,
+    var currentLocation: Boolean = false
 )

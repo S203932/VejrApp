@@ -55,12 +55,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.data.SearchViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -71,8 +68,9 @@ fun SearchBar(
     viewModel: SearchViewModel,
     navController: NavController
 ) {
+
     val searchText by viewModel.searchText.collectAsState()
-    val cities by viewModel.cities.collectAsState()
+    val cities = viewModel.cities.collectAsState().value
     val isSearching by viewModel.isSearching.collectAsState()
     val searchMode by viewModel.searchMode.collectAsState()
 
@@ -80,7 +78,7 @@ fun SearchBar(
     val fontColor = Color.Black
 
 
-    var displayText by remember {
+    var currentCity by remember {
         mutableStateOf(viewModel.currentCity.value)
     }
 
@@ -121,7 +119,7 @@ fun SearchBar(
                         .onFocusEvent {
 
                         },
-                    placeholder = { Text(text = displayText, color = fontColor) },
+                    placeholder = { Text(text = currentCity.name, color = fontColor) },
                     leadingIcon = {
                         Icon(
                             Icons.Filled.Search, contentDescription = null,
@@ -221,42 +219,43 @@ fun SearchBar(
                     )
                     {
                         Text(
-                            text = "${city.name}",
+                            text = city.name,
                             modifier = Modifier
                                 .align(alignment = Alignment.Top)
                                 .fillMaxWidth(0.85f)
                                 .padding(vertical = 16.dp)
                                 .selectable(
-                                    selected = city.name == displayText,
+                                    selected = city.name == currentCity.name,
                                     onClick = {
-                                        displayText = city.name
+                                        currentCity = city
                                         keyboardController?.hide()
                                         focusManager.clearFocus()
                                         viewModel.onSearchTextChange("")
                                         viewModel.updateSearchMode(false)
+                                        viewModel.updateCurrentCity(city)
+
 
                                     }
                                 ),
                             color = fontColor
                         )
-                        var iconChange by remember {
-                            mutableStateOf(city.favorite)
-                        }
+//                        var iconChange by remember {
+//                            mutableStateOf(city.favorite)
+//                        }
                         IconButton(
                             modifier = Modifier.align(alignment = Alignment.Bottom),
 
                             onClick = {
                                 viewModel.favoriteUpdate(city)
-                                viewModel.updateCurrentCity(city.name)
-                                iconChange = city.favorite
+//                                iconChange = city.favorite
 
                             }
 
                         ) {
-                            if (iconChange) {
+                            if (city.favorite) {
                                 Icon(
                                     imageVector = Icons.Outlined.Favorite,
-                                    contentDescription = "Favourited this city"
+                                    contentDescription = "Favorited this city"
                                 )
 
 
@@ -276,17 +275,17 @@ fun SearchBar(
 }
 
 
-@Preview
-@Composable
-fun StartOrderPreview() {
-    val viewModel = viewModel<SearchViewModel>()
-    val navController = rememberNavController()
-    SearchBar(
-        viewModel = viewModel,
-        navController = navController,
-        onNextButtonClicked = {},
-    )
-
-}
+//@Preview
+//@Composable
+//fun StartOrderPreview() {
+//    val viewModel = viewModel<SearchViewModel>()
+////    val navController = rememberNavController()
+//    SearchBar(
+//        viewModel = viewModel,
+////        navController = navController,
+//        onNextButtonClicked = {},
+//    )
+//
+//}
 
 

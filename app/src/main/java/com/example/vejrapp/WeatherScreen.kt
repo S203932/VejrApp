@@ -32,7 +32,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.data.SearchViewModel
 
-
 enum class WeatherScreen(@StringRes val title: Int) {
     Start(title = R.string.app_name),
     Settings(title = R.string.settings),
@@ -72,11 +71,14 @@ fun WeatherAppBar(
 @Preview
 @Composable
 fun WeatherApp(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    dataViewModel: DataViewModel = viewModel(),
+    searchViewModel: SearchViewModel = viewModel()
 ) {
-    val dataViewModel = viewModel<DataViewModel>()
-
-    val searchViewModel = viewModel<SearchViewModel>()
+//    val dataViewModel = viewModel<DataViewModel>()
+//    val searchViewModel = viewModel<SearchViewModel>()
+//    val searchViewModel: SearchViewModel by viewModels()
+//    val searchViewModel = SearchViewModel by viewModels()
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
@@ -115,12 +117,11 @@ fun WeatherApp(
             LinearGradient()
             Column {
                 SearchBar(
-                    viewModel = searchViewModel,
-
                     onNextButtonClicked = {
                         navController.navigate(WeatherScreen.Settings.name)
                     },
-                    navController = navController
+                    navController = navController,
+                    viewModel = searchViewModel
                 )
                 TopWeather()
                 LazyRowWithCards()
@@ -137,12 +138,12 @@ fun WeatherApp(
             LinearGradient()
             Column {
                 SearchBar(
-                    viewModel = searchViewModel,
-
                     onNextButtonClicked = {
                         navController.navigate(WeatherScreen.Settings.name)
                     },
-                    navController = navController
+                    navController = navController,
+                    viewModel = searchViewModel
+
                 )
                 //Spacer(modifier = Modifier.height(100.dp))
                 TopWeather()
@@ -163,12 +164,12 @@ fun WeatherApp(
             LinearGradient()
             Column {
                 SearchBar(
-                    viewModel = searchViewModel,
-
                     onNextButtonClicked = {
                         navController.navigate(WeatherScreen.Settings.name)
                     },
-                    navController = navController
+                    navController = navController,
+                    viewModel = searchViewModel
+
                 )
                 Card {
                     TopHeadLine()
@@ -186,13 +187,11 @@ fun WeatherApp(
                     navController.previousBackStackEntry
                 },
                 onCancelButtonClicked = {
-                    cancelAndNavigateToStart(dataViewModel, navController)
+                    cancelAndNavigateToStart(navController)
                 },
-                navController = navController,
-
                 modifier = Modifier.fillMaxHeight(),
-
-                dataViewModel = dataViewModel,
+                navController = navController,
+                viewModel = dataViewModel
             )
         }
     }
@@ -200,10 +199,7 @@ fun WeatherApp(
 //}
 
 
-private fun cancelAndNavigateToStart(
-    viewModel: DataViewModel,
-    navController: NavHostController
-) {
+private fun cancelAndNavigateToStart(navController: NavHostController) {
     navController.popBackStack(WeatherScreen.Start.name, inclusive = false)
 }
 

@@ -16,6 +16,7 @@ interface LocationforecastApi {
         @Query("lon") lon: Float
     ): Call<METJSONForecast>
 
+    @Headers("User-Agent: VejrApp https://github.com/S203932/VejrApp")
     @GET("status")
     fun getStatus(): Call<Status>
 }

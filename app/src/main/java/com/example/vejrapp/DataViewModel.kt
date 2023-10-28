@@ -2,16 +2,15 @@ package com.example.vejrapp
 
 import androidx.lifecycle.ViewModel
 import com.example.vejrapp.data.preferenceUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import javax.inject.Inject
 
-class DataViewModel : ViewModel() {
+@HiltViewModel
+class DataViewModel @Inject constructor() : ViewModel() {
     private val _tempUnit = MutableStateFlow("Celsius")
     val tempUnit = _tempUnit.asStateFlow()
 

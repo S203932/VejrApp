@@ -10,10 +10,13 @@ class Locations(private val context: Context) {
     private val citiesAssetPath = "filtered_dataset_100000.json"
     private val gson = Gson()
 
-    val cities: Array<City> = gson.fromJson(
+    val cities: List<City> = gson.fromJson(
         context.assets.open(citiesAssetPath).bufferedReader().use(BufferedReader::readText),
         Array<City>::class.java
-    )
+    ).toMutableList()
+
+    // Set the default city to the first occurrence of Copenhagen
+    val defaultCity = cities.first { it.name == "Copenhagen" }
 
     fun searchCity(query: String): Array<City> {
         val matchingCities = cities.filter { it.name.contains(query, ignoreCase = true) }
