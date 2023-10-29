@@ -191,7 +191,7 @@ fun WeatherApp(
                 },
                 modifier = Modifier.fillMaxHeight(),
                 navController = navController,
-                viewModel = dataViewModel
+                dataViewModel = dataViewModel
             )
         }
     }
