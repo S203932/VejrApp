@@ -49,7 +49,7 @@ fun TopHeadLine() {
 
 @Composable
 fun WeekWeather() {
-    val fontColor = Color.White
+    val fontColor = Color.Black
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
@@ -67,13 +67,13 @@ fun WeekWeather() {
                 modifier = Modifier
                     .padding(3.dp, 3.dp)
                     .align(Alignment.CenterVertically),
-                color = Color.White,
+                color = fontColor,
                 fontSize = 20.sp
             )
             Spacer(modifier = Modifier.width(7.dp))
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-                Text(text = "22°", color = Color.White, fontSize = 13.sp)
-                Text(text = "16°", color = Color.White, fontSize = 13.sp)
+                Text(text = "22°", color = fontColor, fontSize = 13.sp)
+                Text(text = "16°", color = fontColor, fontSize = 13.sp)
             }
             Spacer(modifier = Modifier.width(7.dp))
             Image(
@@ -91,7 +91,7 @@ fun WeekWeather() {
             Text(
                 text = "30%",
                 modifier = Modifier.align(Alignment.CenterVertically),
-                color = Color.White,
+                color = fontColor,
                 fontSize = 13.sp
             )
             Spacer(modifier = Modifier.width(150.dp))
@@ -100,13 +100,377 @@ fun WeekWeather() {
                 Text(
                     text = "Monday"
                     /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
-                    color = Color.White,
+                    color = fontColor,
                     fontSize = 10.sp
                 )
                 Text(
                     text = "23/10"
                     /* text = "${DateFormat.DATE_FIELD}"*/,
-                    color = Color.White,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+            }
+
+
+        }
+
+//Tuesday
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(10.dp))
+        ) {
+            Spacer(modifier = Modifier.width(2.dp))
+            Text(
+                text = "20°",
+                modifier = Modifier
+                    .padding(3.dp, 3.dp)
+                    .align(CenterVertically),
+                color = fontColor,
+                fontSize = 20.sp
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(text = "22°", color = fontColor, fontSize = 13.sp)
+                Text(text = "16°", color = fontColor, fontSize = 13.sp)
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.clouds),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.umbrella),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically),
+            )
+            Spacer(modifier = Modifier.width(1.dp))
+            Text(
+                text = "30%",
+                modifier = Modifier.align(CenterVertically),
+                color = fontColor,
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.width(150.dp))
+
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(
+                    text = "Tuesday"
+                    /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+                Text(
+                    text = "24/10"
+                    /* text = "${DateFormat.DATE_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+            }
+
+
+        }
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+//Wednesday
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(10.dp))
+
+        ) {
+            Spacer(modifier = Modifier.width(2.dp))
+            Text(
+                text = "20°",
+                modifier = Modifier
+                    .padding(3.dp, 3.dp)
+                    .align(CenterVertically),
+                color = fontColor,
+                fontSize = 20.sp
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(text = "22°", color = fontColor, fontSize = 13.sp)
+                Text(text = "16°", color = fontColor, fontSize = 13.sp)
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.clouds),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.umbrella),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically),
+            )
+            Spacer(modifier = Modifier.width(1.dp))
+            Text(
+                text = "30%",
+                modifier = Modifier.align(CenterVertically),
+                color = fontColor,
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.width(150.dp))
+
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(
+                    text = "Wednesday"
+                    /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+                Text(
+                    text = "25/10"
+                    /* text = "${DateFormat.DATE_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+            }
+
+
+        }
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+//Thursday
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(10.dp))
+        ) {
+            Spacer(modifier = Modifier.width(2.dp))
+            Text(
+                text = "20°",
+                modifier = Modifier
+                    .padding(3.dp, 3.dp)
+                    .align(CenterVertically),
+                color = fontColor,
+                fontSize = 20.sp
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(text = "22°", color = fontColor, fontSize = 13.sp)
+                Text(text = "16°", color = fontColor, fontSize = 13.sp)
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.clouds),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.umbrella),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically),
+            )
+            Spacer(modifier = Modifier.width(1.dp))
+            Text(
+                text = "30%",
+                modifier = Modifier.align(CenterVertically),
+                color = fontColor,
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.width(150.dp))
+
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(
+                    text = "Thursday"
+                    /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+                Text(
+                    text = "26/10"
+                    /* text = "${DateFormat.DATE_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+            }
+
+
+        }
+
+        Spacer(modifier = Modifier.height(5.dp))
+//Friday
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(10.dp))
+
+        ) {
+            Spacer(modifier = Modifier.width(2.dp))
+            Text(
+                text = "20°",
+                modifier = Modifier
+                    .padding(3.dp, 3.dp)
+                    .align(CenterVertically),
+                color = fontColor,
+                fontSize = 20.sp
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(text = "22°", color = fontColor, fontSize = 13.sp)
+                Text(text = "16°", color = fontColor, fontSize = 13.sp)
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.clouds),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.umbrella),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically),
+            )
+            Spacer(modifier = Modifier.width(1.dp))
+            Text(
+                text = "30%",
+                modifier = Modifier.align(CenterVertically),
+                color = fontColor,
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.width(150.dp))
+
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(
+                    text = "Friday"
+                    /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+                Text(
+                    text = "27/10"
+                    /* text = "${DateFormat.DATE_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+            }
+
+
+        }
+
+        Spacer(modifier = Modifier.height(5.dp))
+//Saturday
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(10.dp))
+
+        ) {
+            Spacer(modifier = Modifier.width(2.dp))
+            Text(
+                text = "20°",
+                modifier = Modifier
+                    .padding(3.dp, 3.dp)
+                    .align(CenterVertically),
+                color = fontColor,
+                fontSize = 20.sp
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(text = "22°", color = fontColor, fontSize = 13.sp)
+                Text(text = "16°", color = fontColor, fontSize = 13.sp)
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.clouds),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.umbrella),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically),
+            )
+            Spacer(modifier = Modifier.width(1.dp))
+            Text(
+                text = "30%",
+                modifier = Modifier.align(CenterVertically),
+                color = fontColor,
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.width(150.dp))
+
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(
+                    text = "Saturday"
+                    /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+                Text(
+                    text = "28/10"
+                    /* text = "${DateFormat.DATE_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+            }
+
+
+        }
+
+        Spacer(modifier = Modifier.height(5.dp))
+//Sunday
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(10.dp))
+        ) {
+            Spacer(modifier = Modifier.width(2.dp))
+            Text(
+                text = "20°",
+                modifier = Modifier
+                    .padding(3.dp, 3.dp)
+                    .align(CenterVertically),
+                color = fontColor,
+                fontSize = 20.sp
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(text = "22°", color = fontColor, fontSize = 13.sp)
+                Text(text = "16°", color = fontColor, fontSize = 13.sp)
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.clouds),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            Image(
+                painter = painterResource(id = R.drawable.umbrella),
+                contentDescription = null,
+                modifier = Modifier.align(CenterVertically),
+            )
+            Spacer(modifier = Modifier.width(1.dp))
+            Text(
+                text = "30%",
+                modifier = Modifier.align(CenterVertically),
+                color = fontColor,
+                fontSize = 13.sp
+            )
+            Spacer(modifier = Modifier.width(150.dp))
+
+            Column(modifier = Modifier.align(CenterVertically)) {
+                Text(
+                    text = "Sunday"
+                    /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 10.sp
+                )
+                Text(
+                    text = "29/10"
+                    /* text = "${DateFormat.DATE_FIELD}"*/,
+                    color = fontColor,
                     fontSize = 10.sp
                 )
             }
@@ -114,371 +478,7 @@ fun WeekWeather() {
 
         }
     }
-//Tuesday
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(10.dp))
-    ) {
-        Spacer(modifier = Modifier.width(2.dp))
-        Text(
-            text = "20°",
-            modifier = Modifier
-                .padding(3.dp, 3.dp)
-                .align(CenterVertically),
-            color = Color.White,
-            fontSize = 20.sp
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(text = "22°", color = Color.White, fontSize = 13.sp)
-            Text(text = "16°", color = Color.White, fontSize = 13.sp)
-        }
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.clouds),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically)
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.umbrella),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically),
-        )
-        Spacer(modifier = Modifier.width(1.dp))
-        Text(
-            text = "30%",
-            modifier = Modifier.align(CenterVertically),
-            color = Color.White,
-            fontSize = 13.sp
-        )
-        Spacer(modifier = Modifier.width(150.dp))
-
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(
-                text = "Tuesday"
-                /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-            Text(
-                text = "24/10"
-                /* text = "${DateFormat.DATE_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-        }
-
-
-    }
-
-    Spacer(modifier = Modifier.height(5.dp))
-
-//Wednesday
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(10.dp))
-
-    ) {
-        Spacer(modifier = Modifier.width(2.dp))
-        Text(
-            text = "20°",
-            modifier = Modifier
-                .padding(3.dp, 3.dp)
-                .align(CenterVertically),
-            color = Color.White,
-            fontSize = 20.sp
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(text = "22°", color = Color.White, fontSize = 13.sp)
-            Text(text = "16°", color = Color.White, fontSize = 13.sp)
-        }
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.clouds),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically)
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.umbrella),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically),
-        )
-        Spacer(modifier = Modifier.width(1.dp))
-        Text(
-            text = "30%",
-            modifier = Modifier.align(CenterVertically),
-            color = Color.White,
-            fontSize = 13.sp
-        )
-        Spacer(modifier = Modifier.width(150.dp))
-
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(
-                text = "Wednesday"
-                /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-            Text(
-                text = "25/10"
-                /* text = "${DateFormat.DATE_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-        }
-
-
-    }
-
-    Spacer(modifier = Modifier.height(5.dp))
-
-//Thursday
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(10.dp))
-    ) {
-        Spacer(modifier = Modifier.width(2.dp))
-        Text(
-            text = "20°",
-            modifier = Modifier
-                .padding(3.dp, 3.dp)
-                .align(CenterVertically),
-            color = Color.White,
-            fontSize = 20.sp
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(text = "22°", color = Color.White, fontSize = 13.sp)
-            Text(text = "16°", color = Color.White, fontSize = 13.sp)
-        }
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.clouds),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically)
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.umbrella),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically),
-        )
-        Spacer(modifier = Modifier.width(1.dp))
-        Text(
-            text = "30%",
-            modifier = Modifier.align(CenterVertically),
-            color = Color.White,
-            fontSize = 13.sp
-        )
-        Spacer(modifier = Modifier.width(150.dp))
-
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(
-                text = "Thursday"
-                /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-            Text(
-                text = "26/10"
-                /* text = "${DateFormat.DATE_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-        }
-
-
-    }
-
-    Spacer(modifier = Modifier.height(5.dp))
-//Friday
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(10.dp))
-
-    ) {
-        Spacer(modifier = Modifier.width(2.dp))
-        Text(
-            text = "20°",
-            modifier = Modifier
-                .padding(3.dp, 3.dp)
-                .align(CenterVertically),
-            color = Color.White,
-            fontSize = 20.sp
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(text = "22°", color = Color.White, fontSize = 13.sp)
-            Text(text = "16°", color = Color.White, fontSize = 13.sp)
-        }
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.clouds),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically)
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.umbrella),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically),
-        )
-        Spacer(modifier = Modifier.width(1.dp))
-        Text(
-            text = "30%",
-            modifier = Modifier.align(CenterVertically),
-            color = Color.White,
-            fontSize = 13.sp
-        )
-        Spacer(modifier = Modifier.width(150.dp))
-
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(
-                text = "Friday"
-                /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-            Text(
-                text = "27/10"
-                /* text = "${DateFormat.DATE_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-        }
-
-
-    }
-
-    Spacer(modifier = Modifier.height(5.dp))
-//Saturday
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(10.dp))
-
-    ) {
-        Spacer(modifier = Modifier.width(2.dp))
-        Text(
-            text = "20°",
-            modifier = Modifier
-                .padding(3.dp, 3.dp)
-                .align(CenterVertically),
-            color = Color.White,
-            fontSize = 20.sp
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(text = "22°", color = Color.White, fontSize = 13.sp)
-            Text(text = "16°", color = Color.White, fontSize = 13.sp)
-        }
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.clouds),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically)
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.umbrella),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically),
-        )
-        Spacer(modifier = Modifier.width(1.dp))
-        Text(
-            text = "30%",
-            modifier = Modifier.align(CenterVertically),
-            color = Color.White,
-            fontSize = 13.sp
-        )
-        Spacer(modifier = Modifier.width(150.dp))
-
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(
-                text = "Saturday"
-                /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-            Text(
-                text = "28/10"
-                /* text = "${DateFormat.DATE_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-        }
-
-
-    }
-
-    Spacer(modifier = Modifier.height(5.dp))
-//Sunday
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(10.dp))
-    ) {
-        Spacer(modifier = Modifier.width(2.dp))
-        Text(
-            text = "20°",
-            modifier = Modifier
-                .padding(3.dp, 3.dp)
-                .align(CenterVertically),
-            color = Color.White,
-            fontSize = 20.sp
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(text = "22°", color = Color.White, fontSize = 13.sp)
-            Text(text = "16°", color = Color.White, fontSize = 13.sp)
-        }
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.clouds),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically)
-        )
-        Spacer(modifier = Modifier.width(7.dp))
-        Image(
-            painter = painterResource(id = R.drawable.umbrella),
-            contentDescription = null,
-            modifier = Modifier.align(CenterVertically),
-        )
-        Spacer(modifier = Modifier.width(1.dp))
-        Text(
-            text = "30%",
-            modifier = Modifier.align(CenterVertically),
-            color = Color.White,
-            fontSize = 13.sp
-        )
-        Spacer(modifier = Modifier.width(150.dp))
-
-        Column(modifier = Modifier.align(CenterVertically)) {
-            Text(
-                text = "Sunday"
-                /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-            Text(
-                text = "29/10"
-                /* text = "${DateFormat.DATE_FIELD}"*/,
-                color = Color.White,
-                fontSize = 10.sp
-            )
-        }
-
-
-    }
 }
-
 
 @Preview
 @Composable

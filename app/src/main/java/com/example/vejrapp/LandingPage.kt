@@ -32,9 +32,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@Preview
+
 @Composable
-fun TopWeather() {
+fun TopWeather(
+    //day: String
+)
+{
 
     val fontColor = Color.White
     Column(
@@ -215,12 +218,12 @@ fun CardWithColumnAndRow(
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
-            .width(50.dp) // Set the card's width
-            .height(125.dp),
+            .width(100.dp) // Set the card's width
+            .height(200.dp),
     ) {
         Column(
             modifier = Modifier
-                .padding(8.dp),
+                .padding(5.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
 
@@ -231,17 +234,17 @@ fun CardWithColumnAndRow(
                 painter = painterResource(id = R.drawable.cloudy), // Use your own image resource
                 contentDescription = null,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(80.dp)
                     .clip(shape = MaterialTheme.shapes.medium)
             )
 
             // Second Text
             Text(
                 text = "21°",
-                fontSize = 16.sp,
+                fontSize = 32.sp,
                 modifier = Modifier.padding(4.dp)
             )
-
+            Spacer(modifier = Modifier.height(4.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -251,7 +254,7 @@ fun CardWithColumnAndRow(
                     painter = painterResource(id = R.drawable.baseline_umbrella_24), // Use your own image resource
                     contentDescription = null,
                     modifier = Modifier
-                        .size(10.dp)
+                        .size(20.dp)
                         .clip(shape = MaterialTheme.shapes.medium)
                         .rotate(180F)
                 )
@@ -259,16 +262,17 @@ fun CardWithColumnAndRow(
                 // Text
                 Text(
                     text = "100%",
-                    fontSize = 8.sp,
+                    fontSize = 16.sp,
                     modifier = Modifier.padding(start = 4.dp)
                 )
             }
+            Spacer(modifier = Modifier.height(4.dp))
             // Third Text
             Text(
                 text = "00:00"
                 //LocalContext.current.getString(weatherType.stringResourceId)
                 ,
-                fontSize = 8.sp,
+                fontSize = 16.sp,
                 modifier = Modifier.padding(4.dp)
             )
 
@@ -325,7 +329,7 @@ fun DetailsBox() {
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(110.dp)
     ) {
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text(
@@ -422,4 +426,9 @@ fun DetailsBox() {
             }
         }
     }
+}
+@Preview
+@Composable
+fun WeatherPreview(){
+    //TopWeather(day = "Tuesday")
 }
