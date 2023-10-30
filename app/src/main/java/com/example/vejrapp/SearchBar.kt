@@ -70,7 +70,7 @@ fun SearchBar(
 ) {
 
     val searchText by viewModel.searchText.collectAsState()
-    val cities = viewModel.cities.collectAsState().value
+    val cities = viewModel.cities.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
     val searchMode by viewModel.searchMode.collectAsState()
 
@@ -213,7 +213,7 @@ fun SearchBar(
                     .fillMaxSize()
                     .padding(8.dp),
             ) {
-                items(cities) { city ->
+                items(cities.value) { city ->
                     Row(
                         modifier = Modifier.fillMaxWidth()
                     )

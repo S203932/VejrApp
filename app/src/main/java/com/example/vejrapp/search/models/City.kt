@@ -8,4 +8,8 @@ data class City(
     val population: Int,
     var favorite: Boolean = false,
     var currentLocation: Boolean = false
-)
+) {
+    fun doesMatchSearchQuery(query: String): Boolean {
+        return name.contains(query, ignoreCase = true) || country.contains(query, ignoreCase = true)
+    }
+}

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.vejrapp.search.Locations
 import com.example.vejrapp.search.models.City
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,8 +30,6 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel() {
     val isSearching = _isSearching.asStateFlow()
 
     private val _cities = MutableStateFlow(locations.cities)
-
-    @OptIn(FlowPreview::class)
     val cities = searchText
         .debounce(100L)
         .onEach { _isSearching.update { true } }
@@ -41,7 +38,7 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel() {
                 cities
             } else {
                 cities.filter {
-                    it.name.contains(text, ignoreCase = true)
+                    it.doesMatchSearchQuery(text)
                 }
             }
         }
