@@ -2,14 +2,10 @@ package com.example.vejrapp
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -28,13 +24,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.vejrapp.appscreens.DayPage
 import com.example.vejrapp.data.SearchViewModel
 
 enum class WeatherScreen(@StringRes val title: Int) {
@@ -118,35 +114,10 @@ fun WeatherApp(
 
         composable(route = WeatherScreen.Start.name) {
             LinearGradient()
-            Column {
-                SearchBar(
-                    onNextButtonClicked = {
-                        navController.navigate(WeatherScreen.Settings.name)
-                    },
-                    navController = navController,
-                    viewModel = searchViewModel
-                )
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    item {
-                        TopWeather()
-                    }
-                    item {
-                        LazyRowWithCards()
-                    }
-                    item {
-                        DetailsBox()
-                    }
-                    item {
-                        Spacer(modifier = Modifier.height(6.dp))
-                        WeekWeather()
-                    }
-                }
-            }
+            DayPage(navController, searchViewModel)
+
         }
         composable(route = WeatherScreen.Tomorrow.name) {
-
 
             LinearGradient()
             Column {

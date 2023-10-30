@@ -33,12 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
+@Preview
 @Composable
-fun TopWeather(
-    //day: String
-)
+fun TopWeather()
 {
-
     val fontColor = Color.White
     Column(
         modifier = Modifier
@@ -171,17 +169,13 @@ fun TopWeather(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(5.dp))
-        Column {
-            CautionBox()
-        }
-
     }
 
 }
 
 
 @Composable
+@Preview
 fun CautionBox() {
     val fontColor = Color.Black
     Card(
@@ -208,6 +202,9 @@ fun CautionBox() {
         }
     }
 }
+
+
+
 
 //Inserting Urban's stuff
 
@@ -426,9 +423,4 @@ fun DetailsBox() {
             }
         }
     }
-}
-@Preview
-@Composable
-fun WeatherPreview(){
-    //TopWeather(day = "Tuesday")
 }
