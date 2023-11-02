@@ -17,7 +17,7 @@ import com.example.vejrapp.LazyRowWithCards
 import com.example.vejrapp.SearchBar
 import com.example.vejrapp.TopWeather
 import com.example.vejrapp.WeatherScreen
-import com.example.vejrapp.WeekWeather
+import com.example.vejrapp.WeekView
 import com.example.vejrapp.data.SearchViewModel
 
 @Composable
@@ -49,11 +49,9 @@ fun DayPage(
             item {
                 DetailsBox()
             }
-            item {
-                Spacer(modifier = Modifier.height(6.dp))
-                WeekWeather()
-            }
         }
+        Spacer(modifier = Modifier.height(6.dp))
+        WeekView()
     }
 
 }
