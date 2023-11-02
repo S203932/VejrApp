@@ -10,9 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,13 +24,9 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel() {
     private val _searchMode = MutableStateFlow(false)
     val searchMode = _searchMode.asStateFlow()
 
-    private val _isSearching = MutableStateFlow(false)
-    val isSearching = _isSearching.asStateFlow()
-
     private val _cities = MutableStateFlow(locations.cities)
     val cities = searchText
         .debounce(100L)
-        .onEach { _isSearching.update { true } }
         .combine(_cities) { text, cities ->
             if (text.isBlank()) {
                 cities
@@ -42,7 +36,6 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel() {
                 }
             }
         }
-        .onEach { _isSearching.update { false } }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -53,7 +46,7 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel() {
         _searchText.value = text
     }
 
-    fun favoriteUpdate(city: City) {
+    fun updateFavorite(city: City) {
         city.favorite = !city.favorite
     }
 

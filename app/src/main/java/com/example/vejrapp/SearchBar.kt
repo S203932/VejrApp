@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,9 +23,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,9 +34,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -52,6 +45,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -69,35 +63,25 @@ fun SearchBar(
     onNextButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel,
-    navController: NavController
+    navController: NavController,
 ) {
 
     val searchText by viewModel.searchText.collectAsState()
     val cities = viewModel.cities.collectAsState()
-    val isSearching by viewModel.isSearching.collectAsState()
     val searchMode by viewModel.searchMode.collectAsState()
+    val currentCity by viewModel.currentCity.collectAsState()
 
     //There is added a font color, that is the same for all the text within
     val fontColor = Color.Black
 
-
-    var currentCity by remember {
-        mutableStateOf(viewModel.currentCity.value)
-    }
-
     //This is for hiding the keyboard
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    var navIconVisible by remember { mutableStateOf(false) }
+//    var navIconVisible by remember { mutableStateOf(false) }
 
 
-    Column(
-
-        modifier = modifier.padding(8.dp)
-
-
-    ) {
-        val scrollBeavior = TopAppBarDefaults.pinnedScrollBehavior()
+    Column(modifier = modifier.padding(8.dp)) {
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         val visible by viewModel.searchMode.collectAsState()
 
         TopAppBar(
@@ -116,12 +100,8 @@ fun SearchBar(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .motionEventSpy {
-
-                        }
-                        .onFocusEvent {
-
-                        },
+                        .motionEventSpy {}
+                        .onFocusEvent {},
                     placeholder = { Text(text = currentCity.name, color = fontColor) },
                     leadingIcon = {
                         Icon(
@@ -146,8 +126,7 @@ fun SearchBar(
                         disabledIndicatorColor = Color.Transparent,
                         containerColor = Color.White.copy(alpha = 0.8f)
                     ),
-
-                    )
+                )
             },
             navigationIcon = {
                 val density = LocalDensity.current
@@ -172,7 +151,6 @@ fun SearchBar(
                             focusManager.clearFocus()
                             viewModel.updateSearchMode(!searchMode)
                             viewModel.onSearchTextChange("")
-
                         },
                         // modifier = Modifier.alpha(if (searchMode) 1f else 0f)
 
@@ -192,25 +170,13 @@ fun SearchBar(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Open Settings"
                     )
-
                 }
             },
-            scrollBehavior = scrollBeavior,
+            scrollBehavior = scrollBehavior,
             colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Transparent)
         )
-        if (isSearching) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            )
-            {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
 
-            }
-        } else if (searchMode) {
-
+        if (searchMode) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -230,45 +196,24 @@ fun SearchBar(
                                 .selectable(
                                     selected = city.name == currentCity.name,
                                     onClick = {
-                                        currentCity = city
                                         keyboardController?.hide()
                                         focusManager.clearFocus()
                                         viewModel.onSearchTextChange("")
                                         viewModel.updateSearchMode(false)
                                         viewModel.updateCurrentCity(city)
-
-
                                     }
                                 ),
                             color = fontColor
                         )
-//                        var iconChange by remember {
-//                            mutableStateOf(city.favorite)
-//                        }
                         IconButton(
                             modifier = Modifier.align(alignment = Alignment.Bottom),
-
-                            onClick = {
-                                viewModel.favoriteUpdate(city)
-//                                iconChange = city.favorite
-
-                            }
+                            onClick = { viewModel.updateFavorite(city) }
 
                         ) {
-                            if (city.favorite) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Favorite,
-                                    contentDescription = "Favorited this city"
-                                )
-
-
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Outlined.FavoriteBorder,
-                                    contentDescription = "Favourite this city",
-                                )
-
-                            }
+                            Icon(
+                                imageVector = city.favoriteIcon(),
+                                contentDescription = stringResource(city.favoriteDescriptionId())
+                            )
                         }
                     }
                 }
@@ -288,7 +233,6 @@ fun StartOrderPreview() {
         navController = navController,
         onNextButtonClicked = {},
     )
-
 }
 
 

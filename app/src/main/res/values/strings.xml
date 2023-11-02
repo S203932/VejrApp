@@ -4,4 +4,9 @@
     <string name="search_label">Change location</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="week_view">Week_View</string>
+
+
+    <!--SearchBar strings -->
+    <string name="favorite_city">Favorite %s</string>
+    <string name="unfavorite_city">Unfavorite %s</string>
 </resources>
