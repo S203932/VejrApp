@@ -131,7 +131,6 @@ fun WeatherApp(
                 )
                 //Spacer(modifier = Modifier.height(100.dp))
                 TopWeather()
-                LazyRowWithCards()
                 DetailsBox()
 
 
@@ -156,8 +155,7 @@ fun WeatherApp(
 
                 )
                 Card {
-                    TopHeadLine()
-                    WeekWeather()
+                    WeekView()
                 }
 
 

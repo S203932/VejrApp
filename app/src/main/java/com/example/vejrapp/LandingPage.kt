@@ -183,6 +183,7 @@ fun CautionBox() {
         modifier = Modifier
             .fillMaxWidth()
             .height(70.dp)
+            .padding(6.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -327,6 +328,7 @@ fun DetailsBox() {
         modifier = Modifier
             .fillMaxWidth()
             .height(110.dp)
+            .padding(6.dp)
     ) {
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text(
