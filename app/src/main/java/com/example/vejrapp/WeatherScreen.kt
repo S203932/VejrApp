@@ -1,6 +1,7 @@
 package com.example.vejrapp
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -198,4 +200,17 @@ fun LinearGradient() {
             .background(gradient)
             .fillMaxSize()
     )
+}
+@Composable
+fun PictureBackground(){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.bluefigma), // Use your own image resource
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 }

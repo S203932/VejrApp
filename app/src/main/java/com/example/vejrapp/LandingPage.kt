@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,6 +63,7 @@ fun TopWeather()
                 Text(
                     text = " 18° ",
                     fontSize = 50.sp,
+                    fontStyle = FontStyle.Italic,
                     modifier = Modifier
                         .padding(0.dp),
                     textAlign = TextAlign.Center,
@@ -109,6 +111,7 @@ fun TopWeather()
                 Row {
                     Text(
                         text = "23/09 , 15:30",
+                        fontStyle = FontStyle.Italic,
                         modifier = Modifier
                             .padding(2.dp),
                         color = fontColor
@@ -247,7 +250,7 @@ fun CardWithColumnAndRow(
             Spacer(modifier = Modifier.height(4.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                Arrangement.Center
             ) {
                 //Image (you can replace the URL with your image source)
                 Image(
@@ -303,7 +306,7 @@ fun LazyRowWithCards() {
     LazyRow(
         modifier = Modifier
             // This makes the LazyRow take up the full available width
-            .padding(8.dp)
+            .padding(6.dp)
             .wrapContentSize(Alignment.BottomCenter)
     ) {
         items(24) { // You can change the number of cards as needed
