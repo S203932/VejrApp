@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,6 +53,7 @@ fun TopWeather() {
                 color = fontColor
             )
         }
+        Spacer(modifier = Modifier.height(10.dp))
         Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
             Column(
                 modifier = Modifier
@@ -61,6 +63,7 @@ fun TopWeather() {
                 Text(
                     text = " 18° ",
                     fontSize = 50.sp,
+                    fontStyle = FontStyle.Italic,
                     modifier = Modifier
                         .padding(0.dp),
                     textAlign = TextAlign.Center,
@@ -104,10 +107,11 @@ fun TopWeather() {
                     )
 
                 }
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(30.dp))
                 Row {
                     Text(
                         text = "23/09 , 15:30",
+                        fontStyle = FontStyle.Italic,
                         modifier = Modifier
                             .padding(2.dp),
                         color = fontColor
@@ -131,7 +135,7 @@ fun TopWeather() {
                     painter = painterResource(R.drawable.cloudy),
                     contentDescription = "Weather icon",
                     modifier = Modifier
-                        .height(130.dp)
+                        .height(90.dp)
                         .width(135.dp)
                 )
                 Row {
@@ -177,16 +181,17 @@ fun TopWeather() {
 @Composable
 @Preview
 fun CautionBox() {
-    val fontColor = Color.Black
+    val fontColor = Color.White
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         modifier = Modifier
             .fillMaxWidth()
             .height(70.dp)
             .padding(6.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -243,7 +248,7 @@ fun CardWithColumnAndRow(
             Spacer(modifier = Modifier.height(4.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                Arrangement.Center
             ) {
                 //Image (you can replace the URL with your image source)
                 Image(
@@ -299,7 +304,7 @@ fun LazyRowWithCards() {
     LazyRow(
         modifier = Modifier
             // This makes the LazyRow take up the full available width
-            .padding(8.dp)
+            .padding(6.dp)
             .wrapContentSize(Alignment.BottomCenter)
     ) {
         items(24) { // You can change the number of cards as needed
@@ -325,7 +330,7 @@ fun DetailsBox() {
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
-            .height(110.dp)
+            .height(130.dp)
             .padding(6.dp)
     ) {
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {

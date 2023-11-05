@@ -24,7 +24,6 @@ fun DayPage(
     searchViewModel: SearchViewModel,
     dayViewModel: DayViewModel = viewModel()
 ) {
-
     Column {
         SearchBar(
             onNextButtonClicked = {
@@ -48,9 +47,12 @@ fun DayPage(
             item {
                 DetailsBox()
             }
+            item {
+                Spacer(modifier = Modifier.height(6.dp))
+                WeekView()
+            }
         }
-        Spacer(modifier = Modifier.height(6.dp))
-        WeekView()
+
     }
 
 }
