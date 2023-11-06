@@ -15,10 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DayViewModel @Inject constructor(
-    locationforecast: Locationforecast, locations: Locations
+    private val locationforecast: Locationforecast, locations: Locations
 ) : ViewModel() {
 
-    private val locationforecast = locationforecast
 
     private val _complete = MutableStateFlow(LocationforecastImplementation.defaultComplete)
     val complete = _complete.asStateFlow()
@@ -27,9 +26,9 @@ class DayViewModel @Inject constructor(
     val city = _city.asStateFlow()
 
     // Get forecast for the default city when starting the app
-    init {
-        updateComplete()
-    }
+//    init {
+//        updateComplete()
+//    }
 
     fun updateComplete() {
         viewModelScope.launch {
