@@ -3,7 +3,7 @@ package com.example.vejrapp.data.remote.locationforecast.models
 import com.google.gson.annotations.SerializedName
 
 data class ForecastUnits(
-    @SerializedName("air_pressure_at_sea_level") val airPressureAtSeaLevel: String, // hPa
+    @SerializedName("air_pressure_at_sea_level") val airPressureAtSeaLevel: String? = null, // hPa
     @SerializedName("air_temperature") val airTemperature: String? = null, // C
     @SerializedName("air_temperature_max") val airTemperatureMax: String? = null, // C
     @SerializedName("air_temperature_min") val airTemperatureMin: String? = null, // C

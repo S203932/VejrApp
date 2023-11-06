@@ -1,13 +1,9 @@
 package com.example.vejrapp
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,9 +16,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,12 +60,6 @@ fun WeatherAppBar(
 @Preview
 @Composable
 fun WeatherApp(navController: NavHostController = rememberNavController()) {
-
-//    val locationforecastApi = RetroFitHelper.getInstance().create(LocationforecastApi::class.java)
-//    GlobalScope.launch {
-//        val complete = locationforecastApi.getComplete(latitude = 12.4932F, longitude = 55.7995F)
-//        Log.d("API", complete.toString())
-//    }
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
@@ -101,11 +88,11 @@ fun WeatherApp(navController: NavHostController = rememberNavController()) {
 
 
 @Composable
-fun PictureBackground(){
+fun PictureBackground() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-    ){
+    ) {
         Image(
             painter = painterResource(id = R.drawable.bluefigma), // Use your own image resource
             contentDescription = null,

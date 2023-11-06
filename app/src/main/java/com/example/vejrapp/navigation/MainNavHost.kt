@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.vejrapp.presentation.day.DayPage
+import com.example.vejrapp.presentation.day.DayViewModel
 import com.example.vejrapp.presentation.day.DetailsBox
 import com.example.vejrapp.presentation.day.TopWeather
 import com.example.vejrapp.presentation.search.SearchBar
@@ -24,6 +25,7 @@ fun MainNavHost(
     navController: NavHostController,
     dataViewModel: DataViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
+    dayViewModel: DayViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -35,7 +37,7 @@ fun MainNavHost(
 
         composable(route = Route.Today.name) {
             LinearGradient()
-            DayPage(navController, searchViewModel)
+            DayPage(navController, searchViewModel, dayViewModel)
 
         }
         composable(route = Route.Tomorrow.name) {
