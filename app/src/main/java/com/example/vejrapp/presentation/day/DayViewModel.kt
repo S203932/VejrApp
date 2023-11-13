@@ -24,7 +24,7 @@ class DayViewModel @Inject constructor(
 
 
     // Top half of dayPage information
-    private val currentWeather = complete.value.properties.timeseries.get(0)
+    private val currentWeather = complete.value.properties.timeseries[0]
     val currentTemperature = currentWeather.data.instant?.details?.airTemperature
     val currentCondition = currentWeather.data.nextOneHours?.summary?.symbolCode
     val realFeel = currentWeather.data.instant?.details?.dewPointTemperature
@@ -41,14 +41,14 @@ class DayViewModel @Inject constructor(
 
     // Hourly Data
     val hourlyTemperature = MutableList<Float?>(24) { index ->
-        complete.value.properties.timeseries.get(index).data.instant?.details?.airTemperature
+        complete.value.properties.timeseries[index].data.instant?.details?.airTemperature
     }
     val hourlyCondition = MutableList<String>(24) { index ->
-        complete.value.properties.timeseries.get(index).data.nextOneHours?.summary?.symbolCode.toString()
+        complete.value.properties.timeseries[index].data.nextOneHours?.summary?.symbolCode.toString()
     }
 
     val hourlyPercentageRain = MutableList<Float?>(24) { index ->
-        complete.value.properties.timeseries.get(index).data.nextOneHours?.details?.probabilityOfPrecipitation
+        complete.value.properties.timeseries[index].data.nextOneHours?.details?.probabilityOfPrecipitation
     }
 
 
