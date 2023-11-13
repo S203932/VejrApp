@@ -39,6 +39,7 @@ import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.presentation.search.DummySearchBar
 import com.example.vejrapp.presentation.search.SearchBar
 import com.example.vejrapp.presentation.search.SearchViewModel
+import com.example.vejrapp.presentation.theme.LinearGradient
 import com.example.vejrapp.presentation.week.WeekView
 
 @Composable
@@ -48,6 +49,7 @@ fun DayPage(
     dayViewModel: DayViewModel
 ) {
 //    dayViewModel
+
     Column {
         SearchBar(
             onNextButtonClicked = {
@@ -71,10 +73,10 @@ fun DayPage(
             item {
                 DetailsBox()
             }
-            item {
+            /*item {
                 Spacer(modifier = Modifier.height(6.dp))
                 WeekView()
-            }
+            }*/
         }
 
     }

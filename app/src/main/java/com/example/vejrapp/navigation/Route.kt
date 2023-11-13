@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import com.example.vejrapp.R
 
 enum class Route(@StringRes val title: Int) {
+    AllDaysAllWeek(title = R.string.allDaysAllWeek),
     Today(title = R.string.app_name),
     Settings(title = R.string.settings),
     Tomorrow(title = R.string.tomorrow),

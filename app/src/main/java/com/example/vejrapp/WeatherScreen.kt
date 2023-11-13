@@ -63,10 +63,12 @@ fun WeatherApp(navController: NavHostController = rememberNavController()) {
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
-    val currentScreen = Route.valueOf(
-        backStackEntry?.destination?.route ?: Route.Today.name
+    /*val currentScreen = Route.valueOf(
+        backStackEntry?.destination?.route ?: Route.AllDaysAllWeek.name
     )
 
+
+     */
     MainNavHost(navController = navController)
     //Scaffold(
 
