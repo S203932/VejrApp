@@ -2,6 +2,8 @@ package com.example.vejrapp.data.remote.locationforecast
 
 import com.example.vejrapp.data.remote.locationforecast.models.Forecast
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastMeta
+import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
+import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastUnits
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastEnum
@@ -87,7 +89,20 @@ class LocationforecastImplementation : Locationforecast {
             ),
             properties = Forecast(
                 meta = ForecastMeta(units = ForecastUnits(), updatedAt = ZonedDateTime.now()),
-                timeseries = listOf()
+                timeseries = List(24) {
+                    ForecastTimeStep(
+                        time = ZonedDateTime.now().plusHours(it.toLong()),
+                        data = ForecastTimeStepData()
+                    )
+                }
+//                listOf(
+//
+////                    ForecastTimeStep(
+////                        time = ZonedDateTime.now(),
+////                        data = ForecastTimeStepData()
+////                    )
+//                )
+
             ),
             type = METJSONForecastEnum.Feature
         )
