@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import java.time.ZonedDateTime
 
-class ZonedDateTimeDeserializer(val dateTime: String) : JsonDeserializer<ZonedDateTime> {
+class ZonedDateTimeDeserializer() : JsonDeserializer<ZonedDateTime> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
@@ -56,7 +56,7 @@ class LocationforecastImplementation : Locationforecast {
     private val gson =
         GsonBuilder().registerTypeAdapter(
             ZonedDateTime::class.java,
-            ZonedDateTimeDeserializer("1970-01-01T00:00:00Z")
+            ZonedDateTimeDeserializer()
         ).create()
 
     // Create retrofit object with custom deserializer and interceptor
@@ -82,29 +82,6 @@ class LocationforecastImplementation : Locationforecast {
 
     // object for getting a default value for a complete forecast
     companion object {
-        val defaultComplete = METJSONForecast(
-            geometry = PointGeometry(
-                coordinates = listOf(0F, 0F, 0F),
-                type = PointGeometryEnum.Point
-            ),
-            properties = Forecast(
-                meta = ForecastMeta(units = ForecastUnits(), updatedAt = ZonedDateTime.now()),
-                timeseries = List(24) {
-                    ForecastTimeStep(
-                        time = ZonedDateTime.now().plusHours(it.toLong()),
-                        data = ForecastTimeStepData()
-                    )
-                }
-//                listOf(
-//
-////                    ForecastTimeStep(
-////                        time = ZonedDateTime.now(),
-////                        data = ForecastTimeStepData()
-////                    )
-//                )
 
-            ),
-            type = METJSONForecastEnum.Feature
-        )
     }
 }

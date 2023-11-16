@@ -1,5 +1,7 @@
 package com.example.vejrapp.presentation.day
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,87 +38,56 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
 import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.presentation.search.DummySearchBar
+import com.example.vejrapp.presentation.search.ISearchViewModel
 import com.example.vejrapp.presentation.search.SearchBar
-import com.example.vejrapp.presentation.search.SearchViewModel
+import com.example.vejrapp.presentation.search.SearchViewModelPreview
 import com.example.vejrapp.presentation.week.WeekView
 
 @Composable
 fun DayPage(
     navController: NavHostController,
-    searchViewModel: SearchViewModel,
-    dayViewModel: DayViewModel
+    searchViewModel: ISearchViewModel,
+    dayViewModel: IDayViewModel
 ) {
-//    dayViewModel
     Column {
         SearchBar(
-            onNextButtonClicked = {
-                navController.navigate(Route.Settings.name)
-            },
+            onNextButtonClicked = { navController.navigate(Route.Settings.name) },
             navController = navController,
-            viewModel = searchViewModel
+            searchViewModel = searchViewModel
         )
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            item {
-                TopWeather()
-            }
-            item {
-                CautionBox()
-            }
-            item {
-                LazyRowWithCards()
-            }
-            item {
-                DetailsBox()
-            }
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            item { TopWeather(dayViewModel) }
+            item { CautionBox() }
+            item { LazyRowWithCards() }
+            item { DetailsBox() }
             item {
                 Spacer(modifier = Modifier.height(6.dp))
                 WeekView()
             }
         }
-
     }
-
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun DayPreview() {
-    Column {
-        DummySearchBar()
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            item {
-                TopWeather()
-            }
-            item {
-                CautionBox()
-            }
-            item {
-                LazyRowWithCards()
-            }
-            item {
-                DetailsBox()
-            }
-            item {
-                Spacer(modifier = Modifier.height(6.dp))
-                WeekView()
-            }
-        }
-
-
-    }
+fun DayPagePreview() {
+    DayPage(
+        navController = rememberNavController(),
+        searchViewModel = SearchViewModelPreview(),
+        dayViewModel = DayViewModelPreview()
+    )
 }
 
-@Preview
+//@Preview
 @Composable
-fun TopWeather() {
+fun TopWeather(dayViewModel: IDayViewModel) {
+    val currentWeather by dayViewModel.currentWeather.collectAsState()
+
     val fontColor = Color.White
     Column(
         modifier = Modifier
@@ -147,6 +120,7 @@ fun TopWeather() {
                     color = fontColor
                 )
                 //Realfeel Temp
+                Log.d("Using", currentWeather.toString())
                 Text(
                     text = "Realfeel 16°",
                     fontSize = 20.sp,

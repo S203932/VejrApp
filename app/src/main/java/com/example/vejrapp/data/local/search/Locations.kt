@@ -1,6 +1,7 @@
 package com.example.vejrapp.data.local.search
 
 import android.content.Context
+import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.local.search.models.City
 import com.google.gson.Gson
 import java.io.BufferedReader
@@ -15,8 +16,8 @@ class Locations(private val context: Context) {
         Array<City>::class.java
     ).toList()
 
-    // Set the default city to the first occurrence of Copenhagen
-    val defaultCity = cities.first { it.name == "Copenhagen" }
+    // TODO Get favorite city from data store
+    val selectedCity = DefaultData.defaultCity
 
 //    fun getCityFromLocation(): City {
 //

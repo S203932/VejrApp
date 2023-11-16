@@ -2,30 +2,72 @@ package com.example.vejrapp.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.local.search.Locations
 import com.example.vejrapp.data.local.search.models.City
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-@HiltViewModel
-class SearchViewModel @Inject constructor(locations: Locations) : ViewModel() {
-    private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
+interface ISearchViewModel {
+    val searchText: StateFlow<String>
+    val currentCity: StateFlow<City>
+    val searchMode: StateFlow<Boolean>
+    val cities: StateFlow<List<City>>
 
-    private val _currentCity = MutableStateFlow(locations.defaultCity)
-    val currentCity = _currentCity.asStateFlow()
+    fun onSearchTextChange(text: String)
+    fun updateFavorite(city: City)
+    fun updateCurrentCity(city: City)
+    fun updateSearchMode(searchMode: Boolean)
+}
+
+class SearchViewModelPreview @Inject constructor() :
+    ISearchViewModel {
+    override val searchText: StateFlow<String>
+        get() {
+            return MutableStateFlow<String>("")
+        }
+
+    override val currentCity: StateFlow<City> = MutableStateFlow<City>(DefaultData.defaultCity)
+    override val searchMode: StateFlow<Boolean> = MutableStateFlow<Boolean>(false)
+    override val cities = MutableStateFlow<List<City>>(DefaultData.cities)
+
+    override fun onSearchTextChange(text: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateFavorite(city: City) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateCurrentCity(city: City) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateSearchMode(searchMode: Boolean) {
+        TODO("Not yet implemented")
+    }
+}
+
+@HiltViewModel
+class SearchViewModel @Inject constructor(locations: Locations) : ViewModel(), ISearchViewModel {
+    private val _searchText = MutableStateFlow("")
+    override val searchText = _searchText.asStateFlow()
+
+    private val _currentCity = MutableStateFlow(DefaultData.defaultCity)
+    override val currentCity = _currentCity.asStateFlow()
 
     private val _searchMode = MutableStateFlow(false)
-    val searchMode = _searchMode.asStateFlow()
+    override val searchMode = _searchMode.asStateFlow()
 
     private val _cities = MutableStateFlow(locations.cities)
-    val cities = searchText
+    override val cities = searchText
         .debounce(100L)
         .combine(_cities) { text, cities ->
             if (text.isBlank()) {
@@ -42,19 +84,19 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel() {
             _cities.value
         )
 
-    fun onSearchTextChange(text: String) {
+    override fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
 
-    fun updateFavorite(city: City) {
+    override fun updateFavorite(city: City) {
         city.favorite = !city.favorite
     }
 
-    fun updateCurrentCity(city: City) {
+    override fun updateCurrentCity(city: City) {
         _currentCity.value = city
     }
 
-    fun updateSearchMode(searchMode: Boolean) {
+    override fun updateSearchMode(searchMode: Boolean) {
         _searchMode.value = searchMode
     }
 }

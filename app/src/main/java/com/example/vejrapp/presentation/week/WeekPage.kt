@@ -23,7 +23,7 @@ fun WeekPage(
                 navController.navigate(Route.Settings.name)
             },
             navController = navController,
-            viewModel = searchViewModel
+            searchViewModel = searchViewModel
         )
         WeekView()
     }

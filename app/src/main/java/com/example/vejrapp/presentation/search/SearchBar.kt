@@ -52,7 +52,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
@@ -62,14 +61,14 @@ import com.example.vejrapp.R
 fun SearchBar(
     onNextButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel,
+    searchViewModel: ISearchViewModel,
     navController: NavController,
 ) {
 
-    val searchText by viewModel.searchText.collectAsState()
-    val cities = viewModel.cities.collectAsState()
-    val searchMode by viewModel.searchMode.collectAsState()
-    val currentCity by viewModel.currentCity.collectAsState()
+    val searchText by searchViewModel.searchText.collectAsState()
+    val cities = searchViewModel.cities.collectAsState()
+    val searchMode by searchViewModel.searchMode.collectAsState()
+    val currentCity by searchViewModel.currentCity.collectAsState()
 
     //There is added a font color, that is the same for all the text within
     val fontColor = Color.Black
@@ -82,7 +81,7 @@ fun SearchBar(
 
     Column(modifier = modifier.padding(8.dp)) {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-        val visible by viewModel.searchMode.collectAsState()
+        val visible by searchViewModel.searchMode.collectAsState()
 
         TopAppBar(
             title = {
@@ -90,12 +89,12 @@ fun SearchBar(
                     value = searchText,
                     onValueChange =
                     {
-                        viewModel.onSearchTextChange(it)
+                        searchViewModel.onSearchTextChange(it)
                         if (it.isBlank()) {
-                            viewModel.updateSearchMode(false)
+                            searchViewModel.updateSearchMode(false)
 
                         } else {
-                            viewModel.updateSearchMode(true)
+                            searchViewModel.updateSearchMode(true)
                         }
                     },
                     modifier = Modifier
@@ -149,8 +148,8 @@ fun SearchBar(
                             keyboardController?.hide()
                             //or hide keyboard
                             focusManager.clearFocus()
-                            viewModel.updateSearchMode(!searchMode)
-                            viewModel.onSearchTextChange("")
+                            searchViewModel.updateSearchMode(!searchMode)
+                            searchViewModel.onSearchTextChange("")
                         },
                         // modifier = Modifier.alpha(if (searchMode) 1f else 0f)
 
@@ -198,16 +197,16 @@ fun SearchBar(
                                     onClick = {
                                         keyboardController?.hide()
                                         focusManager.clearFocus()
-                                        viewModel.onSearchTextChange("")
-                                        viewModel.updateSearchMode(false)
-                                        viewModel.updateCurrentCity(city)
+                                        searchViewModel.onSearchTextChange("")
+                                        searchViewModel.updateSearchMode(false)
+                                        searchViewModel.updateCurrentCity(city)
                                     }
                                 ),
                             color = fontColor
                         )
                         IconButton(
                             modifier = Modifier.align(alignment = Alignment.Bottom),
-                            onClick = { viewModel.updateFavorite(city) }
+                            onClick = { searchViewModel.updateFavorite(city) }
 
                         ) {
                             Icon(
@@ -225,12 +224,10 @@ fun SearchBar(
 
 @Preview
 @Composable
-fun StartOrderPreview() {
-    var viewModel = viewModel<SearchViewModel>()
-    val navController = rememberNavController()
+fun StartOrderPreviewSearchBar() {
     SearchBar(
-        viewModel = viewModel,
-        navController = navController,
+        searchViewModel = SearchViewModelPreview(),
+        navController = rememberNavController(),
         onNextButtonClicked = {},
     )
 }

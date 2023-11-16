@@ -49,11 +49,11 @@ fun MainNavHost(
                         navController.navigate(Route.Settings.name)
                     },
                     navController = navController,
-                    viewModel = searchViewModel
+                    searchViewModel = searchViewModel
 
                 )
                 //Spacer(modifier = Modifier.height(100.dp))
-                TopWeather()
+                TopWeather(dayViewModel)
                 DetailsBox()
 
 
@@ -74,7 +74,7 @@ fun MainNavHost(
                         navController.navigate(Route.Settings.name)
                     },
                     navController = navController,
-                    viewModel = searchViewModel
+                    searchViewModel = searchViewModel
 
                 )
                 Card {
