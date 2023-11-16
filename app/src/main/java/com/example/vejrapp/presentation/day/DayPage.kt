@@ -1,7 +1,6 @@
 package com.example.vejrapp.presentation.day
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,7 +43,6 @@ import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.presentation.search.ISearchViewModel
 import com.example.vejrapp.presentation.search.SearchBar
 import com.example.vejrapp.presentation.search.SearchViewModelPreview
-import com.example.vejrapp.presentation.week.WeekView
 
 @Composable
 fun DayPage(
@@ -63,10 +61,10 @@ fun DayPage(
             item { CautionBox() }
             item { LazyRowWithCards() }
             item { DetailsBox() }
-            item {
-                Spacer(modifier = Modifier.height(6.dp))
-                WeekView()
-            }
+//            item {
+//                Spacer(modifier = Modifier.height(6.dp))
+//                WeekView()
+//            }
         }
     }
 }
@@ -120,7 +118,6 @@ fun TopWeather(dayViewModel: IDayViewModel) {
                     color = fontColor
                 )
                 //Realfeel Temp
-                Log.d("Using", currentWeather.toString())
                 Text(
                     text = "Realfeel 16°",
                     fontSize = 20.sp,

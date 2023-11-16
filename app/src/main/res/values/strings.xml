@@ -4,6 +4,7 @@
     <string name="search_label">Change location</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="week_view">Week_View</string>
+    <string name="allDaysAllWeek">AllDaysAllWeek</string>
 
 
     <!--SearchBar strings -->
