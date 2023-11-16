@@ -31,7 +31,7 @@ class WeatherRepositoryPreview() : IWeatherRepository {
 
 class WeatherRepository @Inject constructor(private val locationforecast: Locationforecast) :
     IWeatherRepository {
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     private var complete = DefaultData.defaultComplete
     override var city = DefaultData.defaultCity
