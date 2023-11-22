@@ -34,9 +34,9 @@ class SearchViewModelPreview @Inject constructor() :
             return MutableStateFlow<String>("")
         }
 
-    override val currentCity: StateFlow<City> = MutableStateFlow<City>(DefaultData.defaultCity)
+    override val currentCity: StateFlow<City> = MutableStateFlow<City>(DefaultData.LOCATIONS.CITY)
     override val searchMode: StateFlow<Boolean> = MutableStateFlow<Boolean>(false)
-    override val cities = MutableStateFlow<List<City>>(DefaultData.cities)
+    override val cities = MutableStateFlow<List<City>>(DefaultData.LOCATIONS.CITIES)
 
     override fun onSearchTextChange(text: String) {
         TODO("Not yet implemented")
@@ -60,7 +60,7 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel(), I
     private val _searchText = MutableStateFlow("")
     override val searchText = _searchText.asStateFlow()
 
-    private val _currentCity = MutableStateFlow(DefaultData.defaultCity)
+    private val _currentCity = MutableStateFlow(DefaultData.LOCATIONS.CITY)
     override val currentCity = _currentCity.asStateFlow()
 
     private val _searchMode = MutableStateFlow(false)
@@ -89,6 +89,8 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel(), I
     }
 
     override fun updateFavorite(city: City) {
+
+//        city = city.copy()
         city.favorite = !city.favorite
     }
 

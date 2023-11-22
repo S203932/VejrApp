@@ -17,7 +17,7 @@ class Locations(private val context: Context) {
     ).toList()
 
     // TODO Get favorite city from data store
-    val selectedCity = DefaultData.defaultCity
+    val selectedCity = DefaultData.LOCATIONS.CITY
 
 //    fun getCityFromLocation(): City {
 //
