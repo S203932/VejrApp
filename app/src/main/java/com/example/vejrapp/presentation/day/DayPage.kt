@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -59,8 +60,8 @@ fun DayPage(
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             item { TopWeather(dayViewModel) }
             item { CautionBox() }
-            item { LazyRowWithCards() }
-            item { DetailsBox() }
+            item { LazyRowWithCards(dayViewModel) }
+            item { DetailsBox(dayViewModel) }
 //            item {
 //                Spacer(modifier = Modifier.height(6.dp))
 //                WeekView()
@@ -85,7 +86,7 @@ fun DayPagePreview() {
 @Composable
 fun TopWeather(dayViewModel: IDayViewModel) {
     val currentWeather by dayViewModel.currentWeather.collectAsState()
-
+    val weatherSymbol = currentWeather.currentCondition.toString()
     val fontColor = Color.White
     Column(
         modifier = Modifier
@@ -109,7 +110,7 @@ fun TopWeather(dayViewModel: IDayViewModel) {
             {
                 //Current Temp
                 Text(
-                    text = " 18° ",
+                    text = currentWeather.currentTemperature.toString() + "°",
                     fontSize = 50.sp,
                     fontStyle = FontStyle.Italic,
                     modifier = Modifier
@@ -119,7 +120,7 @@ fun TopWeather(dayViewModel: IDayViewModel) {
                 )
                 //Realfeel Temp
                 Text(
-                    text = "Realfeel 16°",
+                    text = "Realfeel " + currentWeather.realFeel.toString() + "°", //TODO actual realfeel
                     fontSize = 20.sp,
                     modifier = Modifier
                         .padding(0.dp),
@@ -135,7 +136,7 @@ fun TopWeather(dayViewModel: IDayViewModel) {
                         tint = fontColor
                     )
                     Text(
-                        text = "20°",
+                        text = currentWeather.currentMaxTemperature.toString() + "°",
                         modifier = Modifier
                             .padding(2.dp),
                         color = fontColor
@@ -144,11 +145,11 @@ fun TopWeather(dayViewModel: IDayViewModel) {
                     //Min Temp
                     Icon(
                         painter = painterResource(R.drawable.baseline_arrow_downward_24),
-                        contentDescription = "Max",
+                        contentDescription = "Min",
                         tint = fontColor
                     )
                     Text(
-                        text = "14°",
+                        text = currentWeather.currentMinTemperature.toString() + "°",
                         modifier = Modifier
                             .padding(2.dp),
                         color = fontColor
@@ -198,7 +199,7 @@ fun TopWeather(dayViewModel: IDayViewModel) {
 
                     )
                     Text(
-                        text = "5%",
+                        text = currentWeather.currentPercentageRain.toString() + "%",
                         modifier = Modifier
                             .padding(2.dp),
                         color = fontColor
@@ -213,7 +214,7 @@ fun TopWeather(dayViewModel: IDayViewModel) {
                         tint = fontColor
                     )
                     Text(
-                        text = "10 m/s",
+                        text = currentWeather.currentWindSpeed.toString() + " m/s",
                         modifier = Modifier
                             .padding(2.dp),
                         color = fontColor
@@ -260,9 +261,9 @@ fun CautionBox() {
 //Inserting Urban's stuff
 
 @Composable
-fun CardWithColumnAndRow(
-//weatherType: WeatherType
-) {
+fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
+    val currentWeather by dayViewModel.currentWeather.collectAsState()
+
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
@@ -288,8 +289,8 @@ fun CardWithColumnAndRow(
 
             // Second Text
             Text(
-                text = "21°",
-                fontSize = 32.sp,
+                text = currentWeather.hourlyTemperature[hour].toString() + "°",
+                fontSize = 28.sp,
                 modifier = Modifier.padding(4.dp)
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -309,7 +310,7 @@ fun CardWithColumnAndRow(
 
                 // Text
                 Text(
-                    text = "100%",
+                    text = currentWeather.hourlyTemperature[hour].toString() + "%",
                     fontSize = 16.sp,
                     modifier = Modifier.padding(start = 4.dp)
                 )
@@ -317,9 +318,8 @@ fun CardWithColumnAndRow(
             Spacer(modifier = Modifier.height(4.dp))
             // Third Text
             Text(
-                text = "00:00"
-                //LocalContext.current.getString(weatherType.stringResourceId)
-                ,
+                text = String.format("%02d:00", hour),
+                //LocalContext.current.getString(weatherType.stringResourceId),
                 fontSize = 16.sp,
                 modifier = Modifier.padding(4.dp)
             )
@@ -345,17 +345,18 @@ fun CardWithColumnAndRow(
 //        }
 //    }
 //}
-@Preview
+
 @Composable
-fun LazyRowWithCards() {
+fun LazyRowWithCards(dayViewModel: IDayViewModel) {
+    val hourList = List(24){ index -> index + 1 }
     LazyRow(
         modifier = Modifier
             // This makes the LazyRow take up the full available width
             .padding(6.dp)
             .wrapContentSize(Alignment.BottomCenter)
     ) {
-        items(24) { // You can change the number of cards as needed
-            CardWithColumnAndRow()
+        items(hourList) { hourList-> // You can change the number of cards as needed
+            CardWithColumnAndRow(dayViewModel,hourList)
             Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
         }
     }
@@ -370,10 +371,11 @@ fun LazyRowWithCards() {
 
 //}
 
-@Preview
+
 @Composable
-fun DetailsBox() {
+fun DetailsBox(dayViewModel: IDayViewModel) {
     val fontColor = Color.Black
+    val currentWeather by dayViewModel.currentWeather.collectAsState()
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
@@ -409,7 +411,7 @@ fun DetailsBox() {
                     color = fontColor
                 )
                 Text(
-                    text = "56%",
+                    text = currentWeather.humidity.toString() + "%",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = fontColor
                 )
@@ -429,7 +431,7 @@ fun DetailsBox() {
                     color = fontColor
                 )
                 Text(
-                    text = "24100 m",
+                    text = "n/a",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = fontColor
                 )
@@ -449,7 +451,7 @@ fun DetailsBox() {
                     color = fontColor
                 )
                 Text(
-                    text = "Low (1)",
+                    text = currentWeather.uVIndex.toString(),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = fontColor
                 )
@@ -469,7 +471,7 @@ fun DetailsBox() {
                     color = fontColor
                 )
                 Text(
-                    text = "756,06 mmHg",
+                    text = currentWeather.pressure.toString() + " hPa",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = fontColor
                 )
