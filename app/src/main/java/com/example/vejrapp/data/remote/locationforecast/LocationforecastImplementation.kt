@@ -1,25 +1,29 @@
 package com.example.vejrapp.data.remote.locationforecast
 
-import com.example.vejrapp.data.remote.locationforecast.models.Forecast
-import com.example.vejrapp.data.remote.locationforecast.models.ForecastMeta
-import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
-import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
-import com.example.vejrapp.data.remote.locationforecast.models.ForecastUnits
-import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
-import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastEnum
-import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
-import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
+import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.remote.locationforecast.models.Status
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.google.gson.JsonParser
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import java.time.ZonedDateTime
 
+private val gson =
+    GsonBuilder().registerTypeAdapter(
+        ZonedDateTime::class.java,
+        ZonedDateTimeDeserializer()
+    ).create()
+
+// Deserializer for ZonedDateTime
 class ZonedDateTimeDeserializer() : JsonDeserializer<ZonedDateTime> {
     override fun deserialize(
         json: JsonElement?,
@@ -34,32 +38,42 @@ class ZonedDateTimeDeserializer() : JsonDeserializer<ZonedDateTime> {
             ZonedDateTime.parse("1970-01-01T00:00:00Z")
         }
     }
+}
 
+// Set the User-Agent header for request and add expires and last_modified to response from headers
+class CustomInterceptor() : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        val response = chain.proceed(request)
+
+        return response.newBuilder()
+            .addHeader(
+                name = "User-Agent",
+                value = "VejrApp https://github.com/S203932/VejrApp"
+            )
+            .body(addTimeStampFromHeader(response))
+            .build()
+    }
+
+    private fun addTimeStampFromHeader(response: Response): ResponseBody {
+        return gson.toJson(
+            hashMapOf(
+                "met_json_forecast" to JsonParser().parse(response.body?.string()),
+                "expires" to response.header("expires").toString(),
+                "last_modified" to response.header("last-modified").toString()
+            )
+        ).toString().toResponseBody(response.body?.contentType())
+    }
 }
 
 class LocationforecastImplementation : Locationforecast {
 
     private val baseUrl = "https://api.met.no/weatherapi/locationforecast/2.0/"
 
-    // Add custom intercepter to add header by default
     private val customHttpClient = OkHttpClient().newBuilder()
-        .addInterceptor { chain ->
-            val request = chain.request().newBuilder()
-                .addHeader(
-                    name = "User-Agent",
-                    value = "VejrApp https://github.com/S203932/VejrApp"
-                ).build()
-            chain.proceed(request)
-        }
+        .addInterceptor(CustomInterceptor())
 
-    // Add custom deserializer for ZonedDateTime
-    private val gson =
-        GsonBuilder().registerTypeAdapter(
-            ZonedDateTime::class.java,
-            ZonedDateTimeDeserializer()
-        ).create()
-
-    // Create retrofit object with custom deserializer and interceptor
+    // Create retrofit object with custom deserializer and okhttp interceptor
     private val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(customHttpClient.build())
@@ -72,16 +86,11 @@ class LocationforecastImplementation : Locationforecast {
         altitude: Int?,
         latitude: Float,
         longitude: Float
-    ): METJSONForecast {
+    ): METJSONForecastTimestamped {
         return apiClient.getComplete(altitude, latitude, longitude)
     }
 
     override suspend fun getStatus(): Status {
         return apiClient.getStatus()
-    }
-
-    // object for getting a default value for a complete forecast
-    companion object {
-
     }
 }

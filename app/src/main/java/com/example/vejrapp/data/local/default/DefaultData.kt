@@ -8,6 +8,7 @@ import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepD
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastUnits
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastEnum
+import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
 import com.example.vejrapp.data.repository.models.CurrentWeather
@@ -38,7 +39,8 @@ class DefaultData {
     }
 
     object LOCATIONFORECAST {
-        val COMPLETE = METJSONForecast(
+
+        val COMPLETE = METJSONForecastTimestamped(METJSONForecast(
             geometry = PointGeometry(
                 coordinates = listOf(0F, 0F, 0F),
                 type = PointGeometryEnum.Point
@@ -53,9 +55,9 @@ class DefaultData {
                 }
             ),
             type = METJSONForecastEnum.Feature
-        )
+        ), "", "")
 
-        val CURRENT_WEATHER = CurrentWeather(COMPLETE)
+        val CURRENT_WEATHER = CurrentWeather(COMPLETE.metJsonForecast)
     }
 
     object SETTINGS {

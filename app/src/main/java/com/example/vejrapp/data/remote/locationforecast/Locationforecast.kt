@@ -1,6 +1,6 @@
 package com.example.vejrapp.data.remote.locationforecast
 
-import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
+import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.remote.locationforecast.models.Status
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,7 +11,7 @@ interface Locationforecast {
         @Query("altitude") altitude: Int? = null,
         @Query("lat") latitude: Float,
         @Query("lon") longitude: Float
-    ): METJSONForecast
+    ): METJSONForecastTimestamped
 
     @GET("status")
     suspend fun getStatus(): Status
