@@ -31,11 +31,12 @@ class SearchViewModelPreview @Inject constructor() :
     ISearchViewModel {
     override val searchText: StateFlow<String>
         get() {
-            return MutableStateFlow<String>("")
+            return MutableStateFlow<String>(DefaultData.LOCATIONS.SEARCH_TEXT)
         }
 
     override val currentCity: StateFlow<City> = MutableStateFlow<City>(DefaultData.LOCATIONS.CITY)
-    override val searchMode: StateFlow<Boolean> = MutableStateFlow<Boolean>(false)
+    override val searchMode: StateFlow<Boolean> =
+        MutableStateFlow<Boolean>(DefaultData.LOCATIONS.SEARCH_MODE)
     override val cities = MutableStateFlow<List<City>>(DefaultData.LOCATIONS.CITIES)
 
     override fun onSearchTextChange(text: String) {
@@ -57,13 +58,13 @@ class SearchViewModelPreview @Inject constructor() :
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(locations: Locations) : ViewModel(), ISearchViewModel {
-    private val _searchText = MutableStateFlow("")
+    private val _searchText = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_TEXT)
     override val searchText = _searchText.asStateFlow()
 
     private val _currentCity = MutableStateFlow(DefaultData.LOCATIONS.CITY)
     override val currentCity = _currentCity.asStateFlow()
 
-    private val _searchMode = MutableStateFlow(false)
+    private val _searchMode = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_MODE)
     override val searchMode = _searchMode.asStateFlow()
 
     private val _cities = MutableStateFlow(locations.cities)
@@ -89,8 +90,6 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel(), I
     }
 
     override fun updateFavorite(city: City) {
-
-//        city = city.copy()
         city.favorite = !city.favorite
     }
 

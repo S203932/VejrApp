@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat.getString
 //import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.ViewModel
 import com.example.vejrapp.R
+import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.presentation.settings.models.SettingsModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -26,11 +27,17 @@ interface ISettingsViewModel {
 class SettingsViewModelPreview @Inject constructor() :
     ISettingsViewModel {
     override val temperatureUnit: StateFlow<SettingsModel>
-        get() = TODO("Not yet implemented")
+        get() {
+            return MutableStateFlow(DefaultData.SETTINGS.TEMPERATURE)
+        }
     override val windSpeedUnit: StateFlow<SettingsModel>
-        get() = TODO("Not yet implemented")
+        get() {
+            return MutableStateFlow(DefaultData.SETTINGS.WIND_SPEED)
+        }
     override val pressureUnit: StateFlow<SettingsModel>
-        get() = TODO("Not yet implemented")
+        get() {
+            return MutableStateFlow(DefaultData.SETTINGS.PRESSURE)
+        }
 
     override fun toggleTemperatureUnit() {
         TODO("Not yet implemented")
@@ -46,7 +53,8 @@ class SettingsViewModelPreview @Inject constructor() :
 }
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel(), ISettingsViewModel {
+class SettingsViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel(),
+    ISettingsViewModel {
     private val _temperatureUnit = MutableStateFlow(
         SettingsModel(
             name = getString(context, R.string.temperature_name),
