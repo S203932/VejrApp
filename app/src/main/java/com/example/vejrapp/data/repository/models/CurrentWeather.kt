@@ -13,8 +13,7 @@ class CurrentWeather(complete: METJSONForecast) {
     val realFeel = currentWeather.data.instant?.details?.dewPointTemperature
     val currentMinTemperature = currentWeather.data.nextOneHours?.details?.airTemperatureMin
     val currentMaxTemperature = currentWeather.data.nextOneHours?.details?.airTemperatureMax
-    val currentPercentageRain =
-        currentWeather.data.nextOneHours?.details?.probabilityOfPrecipitation
+    val currentPercentageRain = currentWeather.data.nextOneHours?.details?.probabilityOfPrecipitation
     val currentWindSpeed = currentWeather.data.instant?.details?.windSpeed
 
 
