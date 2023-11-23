@@ -11,10 +11,11 @@ import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastEn
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
 import com.example.vejrapp.data.repository.models.CurrentWeather
+import com.example.vejrapp.presentation.settings.models.SettingsModel
 import java.time.ZonedDateTime
 
 class DefaultData {
-    object LOCATIONS{
+    object LOCATIONS {
         private val copenhagen = City(
             name = "Copenhagen",
             country = "Denmark",
@@ -31,10 +32,12 @@ class DefaultData {
             population = 1152556
         )
         val CITY: City = copenhagen
-
         val CITIES = listOf<City>(copenhagen, sofia)
+        val SEARCH_MODE: Boolean = false
+        val SEARCH_TEXT: String = ""
     }
-    object LOCATIONFORECAST{
+
+    object LOCATIONFORECAST {
         val COMPLETE = METJSONForecast(
             geometry = PointGeometry(
                 coordinates = listOf(0F, 0F, 0F),
@@ -53,5 +56,29 @@ class DefaultData {
         )
 
         val CURRENT_WEATHER = CurrentWeather(COMPLETE)
+    }
+
+    object SETTINGS {
+        val TEMPERATURE = SettingsModel(
+            name = "Temperature",
+            choices = mapOf(
+                Pair(false, "Celsius"),
+                Pair(true, "Fahrenheit")
+            )
+        )
+        val WIND_SPEED = SettingsModel(
+            name = "Wind speed",
+            choices = mapOf(
+                Pair(false, "m/s"),
+                Pair(true, "km/h")
+            )
+        )
+        val PRESSURE = SettingsModel(
+            name = "Pressure",
+            choices = mapOf(
+                Pair(false, "Bar"),
+                Pair(true, "Pa")
+            )
+        )
     }
 }
