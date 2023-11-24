@@ -1,9 +1,15 @@
 package com.example.vejrapp.data.repository.models
 
-import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
+import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 
 // More usable version of METJSONForecast
-class CurrentWeather(complete: METJSONForecast) {
+class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
+
+    // Get weather data, expire date and data timestamp
+    private val complete = metjsonForecastTimestamped.metJsonForecast
+    val expires = metjsonForecastTimestamped.expires
+    val lastModified = metjsonForecastTimestamped.lastModified
+
     // Top half of dayPage information
     private val currentWeather = complete.properties.timeseries[0]
     val currentTemperature = currentWeather.data.instant?.details?.airTemperature
@@ -13,7 +19,8 @@ class CurrentWeather(complete: METJSONForecast) {
     val realFeel = currentWeather.data.instant?.details?.dewPointTemperature
     val currentMinTemperature = currentWeather.data.nextOneHours?.details?.airTemperatureMin
     val currentMaxTemperature = currentWeather.data.nextOneHours?.details?.airTemperatureMax
-    val currentPercentageRain = currentWeather.data.nextOneHours?.details?.probabilityOfPrecipitation
+    val currentPercentageRain =
+        currentWeather.data.nextOneHours?.details?.probabilityOfPrecipitation
     val currentWindSpeed = currentWeather.data.instant?.details?.windSpeed
 
 

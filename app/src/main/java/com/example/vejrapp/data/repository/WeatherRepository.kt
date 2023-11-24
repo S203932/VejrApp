@@ -49,7 +49,7 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
                 latitude = city.latitude,
                 longitude = city.longitude
             )
-            currentWeather.value = CurrentWeather(complete.metJsonForecast)
+            currentWeather.value = CurrentWeather(complete)
             Log.d("API call", complete.toString())
         }
     }

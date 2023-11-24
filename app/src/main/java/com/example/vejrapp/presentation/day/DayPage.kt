@@ -44,12 +44,14 @@ import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.presentation.search.ISearchViewModel
 import com.example.vejrapp.presentation.search.SearchBar
 import com.example.vejrapp.presentation.search.SearchViewModelPreview
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun DayPage(
     navController: NavHostController,
     searchViewModel: ISearchViewModel,
-    dayViewModel: IDayViewModel
+    dayViewModel: IDayViewModel,
 ) {
     Column {
         SearchBar(
@@ -73,12 +75,11 @@ fun DayPage(
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun DayPagePreview() {
     DayPage(
         navController = rememberNavController(),
         searchViewModel = SearchViewModelPreview(),
-        dayViewModel = DayViewModelPreview()
+        dayViewModel = DayViewModelPreview(),
     )
 }
 
@@ -94,7 +95,7 @@ fun TopWeather(dayViewModel: IDayViewModel) {
     ) {
         Row() {
             Text(
-                text = "Monday October 9th",
+                text = prettyDate(currentWeather.expires),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -159,7 +160,7 @@ fun TopWeather(dayViewModel: IDayViewModel) {
                 Spacer(modifier = Modifier.height(30.dp))
                 Row {
                     Text(
-                        text = "23/09 , 15:30",
+                        text = prettyTime(currentWeather.lastModified),
                         fontStyle = FontStyle.Italic,
                         modifier = Modifier
                             .padding(2.dp),
@@ -348,15 +349,15 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
 
 @Composable
 fun LazyRowWithCards(dayViewModel: IDayViewModel) {
-    val hourList = List(24){ index -> index + 1 }
+    val hourList = List(24) { index -> index + 1 }
     LazyRow(
         modifier = Modifier
             // This makes the LazyRow take up the full available width
             .padding(6.dp)
             .wrapContentSize(Alignment.BottomCenter)
     ) {
-        items(hourList) { hourList-> // You can change the number of cards as needed
-            CardWithColumnAndRow(dayViewModel,hourList)
+        items(hourList) { hourList -> // You can change the number of cards as needed
+            CardWithColumnAndRow(dayViewModel, hourList)
             Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
         }
     }
@@ -478,4 +479,13 @@ fun DetailsBox(dayViewModel: IDayViewModel) {
             }
         }
     }
+}
+
+private fun prettyDate(zonedDateTime: ZonedDateTime): String {
+    return zonedDateTime.format(DateTimeFormatter.ofPattern("EEEE, MMMM '%s'.")).toString()
+        .format(zonedDateTime.dayOfMonth.toString())
+}
+
+private fun prettyTime(zonedDateTime: ZonedDateTime): String {
+    return zonedDateTime.format(DateTimeFormatter.ofPattern("hh:mm")).toString()
 }

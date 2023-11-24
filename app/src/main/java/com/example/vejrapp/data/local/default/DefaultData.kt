@@ -55,9 +55,9 @@ class DefaultData {
                 }
             ),
             type = METJSONForecastEnum.Feature
-        ), "", "")
+        ), ZonedDateTime.now(), ZonedDateTime.now())
 
-        val CURRENT_WEATHER = CurrentWeather(COMPLETE.metJsonForecast)
+        val CURRENT_WEATHER = CurrentWeather(COMPLETE)
     }
 
     object SETTINGS {

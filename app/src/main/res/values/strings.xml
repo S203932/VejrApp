@@ -11,6 +11,11 @@
     <string name="favorite_city">Favorite %s</string>
     <string name="unfavorite_city">Unfavorite %s</string>
 
+
+    <!-- Day -->
+    <string name="day_realfeel">Realfeel</string>
+    <string name="day_caution">Caution</string>
+
     <!-- Settings strings -->
 
     <!-- Temperature -->
