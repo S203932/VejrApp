@@ -30,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -40,10 +42,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
+import com.example.vejrapp.data.cropBitmap
+import com.example.vejrapp.data.getBitmapFromImage
+import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.presentation.search.ISearchViewModel
 import com.example.vejrapp.presentation.search.SearchBar
 import com.example.vejrapp.presentation.search.SearchViewModelPreview
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
 @Composable
