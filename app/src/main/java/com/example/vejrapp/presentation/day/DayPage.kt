@@ -44,8 +44,7 @@ import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.presentation.search.ISearchViewModel
 import com.example.vejrapp.presentation.search.SearchBar
 import com.example.vejrapp.presentation.search.SearchViewModelPreview
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+
 
 @Composable
 fun DayPage(
@@ -75,6 +74,7 @@ fun DayPage(
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Preview
 fun DayPagePreview() {
     DayPage(
         navController = rememberNavController(),
@@ -87,8 +87,16 @@ fun DayPagePreview() {
 @Composable
 fun TopWeather(dayViewModel: IDayViewModel) {
     val currentWeather by dayViewModel.currentWeather.collectAsState()
-    val weatherSymbol = currentWeather.currentCondition.toString()
+    val weatherImage = currentWeather.currentCondition.toString()
+    val imageRes = weatherImage.mapToYRImageResource()
     val fontColor = Color.White
+    val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
+
+    // Crop the transparent/whitespace areas
+    val croppedBitmap = cropBitmap(bitmap)
+
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,11 +190,11 @@ fun TopWeather(dayViewModel: IDayViewModel) {
             )
             {
                 Image(
-                    painter = painterResource(R.drawable.cloudy),
+                    bitmap = croppedBitmap.asImageBitmap(),
                     contentDescription = "Weather icon",
                     modifier = Modifier
-                        .height(90.dp)
-                        .width(135.dp)
+                        .width(140.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
                 Row {
                     Icon(
@@ -264,6 +272,8 @@ fun CautionBox() {
 @Composable
 fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
     val currentWeather by dayViewModel.currentWeather.collectAsState()
+    val weatherImage = currentWeather.hourlyCondition[hour]
+    val imageRes = weatherImage.mapToYRImageResource()
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
@@ -281,7 +291,7 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
 
             //Image (you can replace the URL with your image source)
             Image(
-                painter = painterResource(id = R.drawable.cloudy), // Use your own image resource
+                painter = painterResource(id = imageRes), // Use your own image resource
                 contentDescription = null,
                 modifier = Modifier
                     .size(80.dp)

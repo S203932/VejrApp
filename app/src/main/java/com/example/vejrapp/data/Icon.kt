@@ -1,55 +1,84 @@
-package com.example.vejrapp.data.repository.models
+package com.example.vejrapp.data
 
-import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import com.example.vejrapp.R
 
-// More usable version of METJSONForecast
-class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
+fun cropBitmap(originalBitmap: Bitmap): Bitmap {
+    val width = originalBitmap.width
+    val height = originalBitmap.height
 
-    // Get weather data, expire date and data timestamp
-    private val complete = metjsonForecastTimestamped.metJsonForecast
-    val expires = metjsonForecastTimestamped.expires
-    val lastModified = metjsonForecastTimestamped.lastModified
+    var left = 0
+    var top = 0
+    var right = width
+    var bottom = height
 
-    // Top half of dayPage information
-    private val currentWeather = complete.properties.timeseries[0]
-    val currentTemperature = currentWeather.data.instant?.details?.airTemperature
-    val currentCondition = currentWeather.data.nextOneHours?.summary?.symbolCode
-
-    // TODO replace with real calculated realfeel
-    val realFeel = currentWeather.data.instant?.details?.dewPointTemperature
-    val currentMinTemperature = currentWeather.data.nextOneHours?.details?.airTemperatureMin
-    val currentMaxTemperature = currentWeather.data.nextOneHours?.details?.airTemperatureMax
-    val currentPercentageRain =
-        currentWeather.data.nextOneHours?.details?.probabilityOfPrecipitation
-    val currentWindSpeed = currentWeather.data.instant?.details?.windSpeed
-
-
-    // No weather caution information in API data
-    // To make weather caution one must analyze the data oneself and issue warnings accordingly
-
-
-    // Hourly Data
-    val hourlyTemperature = MutableList<Float?>(24) { index ->
-        complete.properties.timeseries[index].data.instant?.details?.airTemperature
-    }
-    val hourlyCondition = MutableList<String>(24) { index ->
-        complete.properties.timeseries[index].data.nextOneHours?.summary?.symbolCode.toString()
+    // Find left edge
+    while (left < width && isColumnTransparent(originalBitmap, left)) {
+        left++
     }
 
-    val hourlyPercentageRain = MutableList<Float?>(24) { index ->
-        complete.properties.timeseries[index].data.nextOneHours?.details?.probabilityOfPrecipitation
+    // Find top edge
+    while (top < height && isRowTransparent(originalBitmap, top)) {
+        top++
     }
 
-    // The middle of DayPage
-    // There is no visibility in API Data, can only say how much fog
-    val humidity = currentWeather.data.instant?.details?.relativeHumidity
-    val uVIndex = currentWeather.data.instant?.details?.ultravioletIndexClearSky
-    val pressure = currentWeather.data.instant?.details?.airPressureAtSeaLevel
+    // Find right edge
+    while (right > left && isColumnTransparent(originalBitmap, right - 1)) {
+        right--
+    }
 
+    // Find bottom edge
+    while (bottom > top && isRowTransparent(originalBitmap, bottom - 1)) {
+        bottom--
+    }
 
+    // Create a new Bitmap with the cropped area
+    val croppedBitmap = Bitmap.createBitmap(originalBitmap, left, top, right - left, bottom - top)
+
+    return croppedBitmap
 }
 
-/*
+private fun isColumnTransparent(bitmap: Bitmap, column: Int): Boolean {
+    for (row in 0 until bitmap.height) {
+        if (bitmap.getPixel(column, row) != 0) {
+            return false
+        }
+    }
+    return true
+}
+
+private fun isRowTransparent(bitmap: Bitmap, row: Int): Boolean {
+    for (column in 0 until bitmap.width) {
+        if (bitmap.getPixel(column, row) != 0) {
+            return false
+        }
+    }
+    return true
+}
+
+fun getBitmapFromImage(context: Context, drawable: Int): Bitmap {
+    val db = ContextCompat.getDrawable(context, drawable)
+
+    //create bitmap
+    val bit = Bitmap.createBitmap(
+        db!!.intrinsicWidth, db.intrinsicHeight, Bitmap.Config.ARGB_8888
+    )
+
+    // create a variable for canvas.
+    val canvas = Canvas(bit)
+
+    //set bounds for bitmap.
+    db.setBounds(0, 0, canvas.width, canvas.height)
+    db.draw(canvas)
+
+    // return bitmap.
+    return bit
+}
+
 @DrawableRes
 fun String.mapToYRImageResource(): Int =
     when (this) {
@@ -389,5 +418,3 @@ fun String.mapToYRImageResource(): Int =
             R.drawable.cloudy
         }
     }
-*/
-
