@@ -33,10 +33,10 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
     IWeatherRepository {
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    private var complete = DefaultData.defaultComplete
-    override var city = DefaultData.defaultCity
+    private var complete = DefaultData.LOCATIONFORECAST.COMPLETE
+    override var city = DefaultData.LOCATIONS.CITY
     override var currentWeather =
-        MutableStateFlow<CurrentWeather>(DefaultData.defaultCurrentWeather)
+        MutableStateFlow<CurrentWeather>(DefaultData.LOCATIONFORECAST.CURRENT_WEATHER)
 
     // Get forecast for the default city when starting the app
     init {

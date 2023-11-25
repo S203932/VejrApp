@@ -7,16 +7,17 @@ import com.example.vejrapp.data.repository.WeatherRepository
 import com.example.vejrapp.data.repository.models.CurrentWeather
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 interface IDayViewModel {
-    val currentWeather: MutableStateFlow<CurrentWeather>
+    val currentWeather: StateFlow<CurrentWeather>
     fun update()
 }
 
 class DayViewModelPreview() : IDayViewModel {
     override val currentWeather =
-        MutableStateFlow<CurrentWeather>(DefaultData.defaultCurrentWeather)
+        MutableStateFlow<CurrentWeather>(DefaultData.LOCATIONFORECAST.CURRENT_WEATHER)
 
     override fun update() {
         TODO("Not yet implemented")

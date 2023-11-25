@@ -8,32 +8,58 @@ import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepD
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastUnits
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastEnum
+import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
 import com.example.vejrapp.data.repository.models.CurrentWeather
+import com.example.vejrapp.presentation.settings.models.SettingsModel
 import com.example.vejrapp.data.repository.models.WeekWeather
 import java.time.ZonedDateTime
 
-object DefaultData {
-    private val copenhagen = City(
-        name = "Copenhagen",
-        country = "Denmark",
-        latitude = 55.67594F,
-        longitude = 12.56553F,
-        population = 1153615
+class DefaultData {
+    object LOCATIONS {
+        private val copenhagen = City(
+            name = "Copenhagen",
+            country = "Denmark",
+            latitude = 55.67594F,
+            longitude = 12.56553F,
+            population = 1153615
 
-    )
-    private val sofia = City(
-        name = "Sofia",
-        country = "Bulgaria",
-        latitude = 42.69751F,
-        longitude = 23.32415F,
-        population = 1152556
-    )
-    val defaultCity: City = copenhagen
+        )
+        private val sofia = City(
+            name = "Sofia",
+            country = "Bulgaria",
+            latitude = 42.69751F,
+            longitude = 23.32415F,
+            population = 1152556
+        )
+        val CITY: City = copenhagen
+        val CITIES = listOf<City>(copenhagen, sofia)
+        val SEARCH_MODE: Boolean = false
+        val SEARCH_TEXT: String = ""
+    }
 
-    val cities = listOf<City>(copenhagen, sofia)
+    object LOCATIONFORECAST {
 
+        val COMPLETE = METJSONForecastTimestamped(METJSONForecast(
+            geometry = PointGeometry(
+                coordinates = listOf(0F, 0F, 0F),
+                type = PointGeometryEnum.Point
+            ),
+            properties = Forecast(
+                meta = ForecastMeta(units = ForecastUnits(), updatedAt = ZonedDateTime.now()),
+                timeseries = List(24) {
+                    ForecastTimeStep(
+                        time = ZonedDateTime.now().plusHours(it.toLong()),
+                        data = ForecastTimeStepData()
+                    )
+                }
+            ),
+            type = METJSONForecastEnum.Feature
+        ), ZonedDateTime.now(), ZonedDateTime.now())
+
+        val CURRENT_WEATHER = CurrentWeather(COMPLETE)
+    }
     val defaultComplete = METJSONForecast(
         geometry = PointGeometry(
             coordinates = listOf(0F, 0F, 0F),
@@ -55,4 +81,27 @@ object DefaultData {
 
     // Added weekWeather
     val defaultWeekWeather = WeekWeather(defaultComplete)
+    object SETTINGS {
+        val TEMPERATURE = SettingsModel(
+            name = "Temperature",
+            choices = mapOf(
+                Pair(false, "Celsius"),
+                Pair(true, "Fahrenheit")
+            )
+        )
+        val WIND_SPEED = SettingsModel(
+            name = "Wind speed",
+            choices = mapOf(
+                Pair(false, "m/s"),
+                Pair(true, "km/h")
+            )
+        )
+        val PRESSURE = SettingsModel(
+            name = "Pressure",
+            choices = mapOf(
+                Pair(false, "Bar"),
+                Pair(true, "Pa")
+            )
+        )
+    }
 }

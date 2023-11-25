@@ -15,9 +15,9 @@ class Locations(private val context: Context) {
         context.assets.open(citiesAssetPath).bufferedReader().use(BufferedReader::readText),
         Array<City>::class.java
     ).toList()
-
+    
     // TODO Get favorite city from data store
-    val selectedCity = DefaultData.defaultCity
+    val selectedCity = DefaultData.LOCATIONS.CITY
 
 //    fun getCityFromLocation(): City {
 //
