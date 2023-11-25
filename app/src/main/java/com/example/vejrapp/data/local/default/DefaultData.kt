@@ -12,8 +12,8 @@ import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTi
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
 import com.example.vejrapp.data.repository.models.CurrentWeather
-import com.example.vejrapp.presentation.settings.models.SettingsModel
 import com.example.vejrapp.data.repository.models.WeekWeather
+import com.example.vejrapp.presentation.settings.models.SettingsModel
 import java.time.ZonedDateTime
 
 class DefaultData {
@@ -48,7 +48,7 @@ class DefaultData {
             ),
             properties = Forecast(
                 meta = ForecastMeta(units = ForecastUnits(), updatedAt = ZonedDateTime.now()),
-                timeseries = List(24) {
+                timeseries = List(200) {
                     ForecastTimeStep(
                         time = ZonedDateTime.now().plusHours(it.toLong()),
                         data = ForecastTimeStepData()
@@ -59,7 +59,11 @@ class DefaultData {
         ), ZonedDateTime.now(), ZonedDateTime.now())
 
         val CURRENT_WEATHER = CurrentWeather(COMPLETE)
+
+        // Added weekweather
+        val WEEK_WEATHER = WeekWeather(COMPLETE)
     }
+
     val defaultComplete = METJSONForecast(
         geometry = PointGeometry(
             coordinates = listOf(0F, 0F, 0F),
@@ -77,10 +81,6 @@ class DefaultData {
         type = METJSONForecastEnum.Feature
     )
 
-    val defaultCurrentWeather = CurrentWeather(defaultComplete)
-
-    // Added weekWeather
-    val defaultWeekWeather = WeekWeather(defaultComplete)
     object SETTINGS {
         val TEMPERATURE = SettingsModel(
             name = "Temperature",
