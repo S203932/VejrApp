@@ -14,7 +14,8 @@ import com.example.vejrapp.presentation.search.SearchViewModel
 @Preview
 fun WeekPage(
     navController: NavHostController = rememberNavController(),
-    searchViewModel: SearchViewModel = viewModel()
+    searchViewModel: SearchViewModel = viewModel(),
+    weekViewModel: WeekViewModel = viewModel(),
 ) {
 
     Column {
@@ -25,7 +26,9 @@ fun WeekPage(
             navController = navController,
             searchViewModel = searchViewModel
         )
-        WeekView()
+        WeekView(
+            weekViewModel = weekViewModel,
+        )
     }
 
 }

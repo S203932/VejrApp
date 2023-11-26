@@ -49,6 +49,7 @@ import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.presentation.search.ISearchViewModel
 import com.example.vejrapp.presentation.search.SearchBar
 import com.example.vejrapp.presentation.search.SearchViewModelPreview
+import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -366,7 +367,9 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
 
 @Composable
 fun LazyRowWithCards(dayViewModel: IDayViewModel) {
-    val hourList = List(24) { index -> index + 1 }
+    val currentWeather by dayViewModel.currentWeather.collectAsState()
+    val startHour = LocalTime.now().hour
+    val hourList = List(24) { index -> (index + startHour) % 24 }
     LazyRow(
         modifier = Modifier
             // This makes the LazyRow take up the full available width

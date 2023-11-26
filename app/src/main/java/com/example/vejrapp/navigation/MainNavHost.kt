@@ -31,10 +31,11 @@ import androidx.navigation.compose.composable
 import com.example.vejrapp.presentation.day.DayPage
 import com.example.vejrapp.presentation.day.DayViewModel
 import com.example.vejrapp.presentation.search.SearchViewModel
-import com.example.vejrapp.presentation.settings.SettingsViewModel
 import com.example.vejrapp.presentation.settings.Settings
+import com.example.vejrapp.presentation.settings.SettingsViewModel
 import com.example.vejrapp.presentation.theme.LinearGradient
 import com.example.vejrapp.presentation.week.WeekPage
+import com.example.vejrapp.presentation.week.WeekViewModel
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -44,6 +45,7 @@ fun MainNavHost(
     settingsViewModel: SettingsViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
     dayViewModel: DayViewModel = viewModel(),
+    weekViewModel: WeekViewModel = viewModel(),
 
     modifier: Modifier = Modifier
 ) {
@@ -56,7 +58,7 @@ fun MainNavHost(
             LinearGradient()
             val screens = listOf(
                 Route.Today.name,
-                Route.Tomorrow.name,
+                //Route.Tomorrow.name,
                 Route.Week.name
 
             )
@@ -65,7 +67,7 @@ fun MainNavHost(
                 initialPageOffsetFraction = 0f
             ) {
                 // provide pageCount
-                3
+                2
             }
             val scope = rememberCoroutineScope()
             Box(modifier = Modifier.fillMaxSize()) {
@@ -84,7 +86,7 @@ fun MainNavHost(
                                 dayViewModel = dayViewModel
                             )
                         }
-
+                        /*
                         Route.Tomorrow.name -> {
                             // Content specific to Tomorrow
                             DayPage(
@@ -94,11 +96,14 @@ fun MainNavHost(
                             )
                         }
 
+                         */
+
                         Route.Week.name -> {
-                            // Content specific to Tomorrow
+                            // Content specific to Week
                             WeekPage(
                                 navController = navController,
-                                searchViewModel = searchViewModel
+                                searchViewModel = searchViewModel,
+                                weekViewModel = weekViewModel
                             )
                         }
                     }
@@ -149,6 +154,7 @@ fun MainNavHost(
         }
     }
 }
+
 private fun cancelAndNavigateToStart(navController: NavHostController) {
     navController.popBackStack(Route.Today.name, inclusive = false)
 }
