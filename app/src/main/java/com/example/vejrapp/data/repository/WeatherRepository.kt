@@ -1,6 +1,7 @@
 package com.example.vejrapp.data.repository
 
 import android.util.Log
+import com.example.vejrapp.data.local.datastore.WeatherCacheDataStore
 import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.remote.locationforecast.Locationforecast
@@ -29,7 +30,10 @@ class WeatherRepositoryPreview() : IWeatherRepository {
     }
 }
 
-class WeatherRepository @Inject constructor(private val locationforecast: Locationforecast) :
+class WeatherRepository @Inject constructor(
+    private val locationforecast: Locationforecast,
+    val weatherCache: WeatherCacheDataStore
+) :
     IWeatherRepository {
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -49,8 +53,10 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
                 latitude = city.latitude,
                 longitude = city.longitude
             )
-            currentWeather.value = CurrentWeather(complete)
-            Log.d("API call", complete.toString())
+            var tempCurrentWeather = CurrentWeather(complete)
+            currentWeather.value = tempCurrentWeather
+
+            weatherCache.Log.d("API call", complete.toString())
         }
     }
 }
