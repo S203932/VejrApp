@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.local.search.Locations
 import com.example.vejrapp.data.local.search.models.City
+import com.example.vejrapp.data.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -57,7 +58,10 @@ class SearchViewModelPreview @Inject constructor() :
 }
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(locations: Locations) : ViewModel(), ISearchViewModel {
+class SearchViewModel @Inject constructor(
+    locations: Locations,
+    val weatherRepository: WeatherRepository
+) : ViewModel(), ISearchViewModel {
     private val _searchText = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_TEXT)
     override val searchText = _searchText.asStateFlow()
 
@@ -95,6 +99,9 @@ class SearchViewModel @Inject constructor(locations: Locations) : ViewModel(), I
 
     override fun updateCurrentCity(city: City) {
         _currentCity.value = city
+        // TODO Check if correct
+        weatherRepository.city = city
+        weatherRepository.updateComplete()
     }
 
     override fun updateSearchMode(searchMode: Boolean) {
