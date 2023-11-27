@@ -329,7 +329,7 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
 
                 // Text
                 Text(
-                    text = currentWeather.hourlyTemperature[hour].toString() + "%",
+                    text = currentWeather.hourlyPercentageRain[hour].toString() + "%",
                     fontSize = 16.sp,
                     modifier = Modifier.padding(start = 4.dp)
                 )
