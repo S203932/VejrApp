@@ -4,4 +4,32 @@
     <string name="search_label">Change location</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="week_view">Week_View</string>
+    <string name="allDaysAllWeek">AllDaysAllWeek</string>
+
+
+    <!-- SearchBar strings -->
+    <string name="favorite_city">Favorite %s</string>
+    <string name="unfavorite_city">Unfavorite %s</string>
+
+
+    <!-- Day -->
+    <string name="day_realfeel">Realfeel</string>
+    <string name="day_caution">Caution</string>
+
+    <!-- Settings strings -->
+
+    <!-- Temperature -->
+    <string name="temperature_name">Temperature</string>
+    <string name="temperature_choice_celsius">Celsius</string>
+    <string name="temperature_choice_fahrenheit">Fahrenheit</string>
+
+    <!-- Wind speed -->
+    <string name="wind_speed_name">Wind speed</string>
+    <string name="wind_speed_choice_ms">m/s</string>
+    <string name="wind_speed_choice_kmh">km/h</string>
+
+    <!-- Pressure -->
+    <string name="pressure_name">Pressure</string>
+    <string name="pressure_choice_bar">Bar</string>
+    <string name="pressure_choice_pa">Pascal</string>
 </resources>
