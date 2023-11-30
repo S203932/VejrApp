@@ -3,6 +3,7 @@ package com.example.vejrapp.data.remote.locationforecast.models
 import com.google.gson.annotations.SerializedName
 import java.time.ZonedDateTime
 
+// Used for desrelization of the API data
 // Forecast for a specific time step
 data class ForecastTimeStep(
     @SerializedName("data") val data: ForecastTimeStepData, // Forecast for a specific time

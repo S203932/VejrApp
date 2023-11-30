@@ -101,4 +101,3 @@ class SettingsViewModel @Inject constructor(@ApplicationContext context: Context
         _pressureUnit.value = _pressureUnit.value.copy(checked = !_pressureUnit.value.checked)
     }
 }
-

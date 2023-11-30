@@ -221,7 +221,6 @@ fun SearchBar(
     }
 }
 
-
 @Preview
 @Composable
 fun StartOrderPreviewSearchBar() {
@@ -231,5 +230,3 @@ fun StartOrderPreviewSearchBar() {
         onNextButtonClicked = {},
     )
 }
-
-

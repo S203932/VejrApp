@@ -1,5 +1,4 @@
 package com.example.vejrapp.presentation.search
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vejrapp.data.local.default.DefaultData
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
-
 interface ISearchViewModel {
     val searchText: StateFlow<String>
     val currentCity: StateFlow<City>

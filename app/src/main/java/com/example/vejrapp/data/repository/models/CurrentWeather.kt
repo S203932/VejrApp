@@ -6,7 +6,6 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.Period
 
-
 // More usable version of METJSONForecast
 class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
 
@@ -35,10 +34,8 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
         currentWeather.data.nextOneHours?.details?.probabilityOfPrecipitation
     val currentWindSpeed = currentWeather.data.instant?.details?.windSpeed
 
-
     // No weather caution information in API data
     // To make weather caution one must analyze the data oneself and issue warnings accordingly
-
 
     // Hourly Data after the current time (from the next hour and forward 24 hours)
     val hourlyTemperature = MutableList<Float?>(24) { index ->
@@ -57,7 +54,6 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
     val humidity = currentWeather.data.instant?.details?.relativeHumidity
     val uVIndex = currentWeather.data.instant?.details?.ultravioletIndexClearSky
     val pressure = currentWeather.data.instant?.details?.airPressureAtSeaLevel
-
 
     fun currentTimeData(complete: METJSONForecast): Int {
         var x = 0
@@ -454,4 +450,3 @@ fun String.mapToYRImageResource(): Int =
         }
     }
 */
-

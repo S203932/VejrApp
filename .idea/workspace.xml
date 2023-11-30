@@ -9,18 +9,52 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98cd4b2e-83a8-4aba-84ba-715be352a7a5" name="Changes" comment="updated weekModel">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/week/WeekViewModel.kt" afterDir="false" />
+    <list default="true" id="4bf63fd6-ac89-4a3e-aba3-5990cc685668" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/navigation/MainNavHost.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/navigation/MainNavHost.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/example/vejrapp/ExampleInstrumentedTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/example/vejrapp/ExampleInstrumentedTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/WeatherScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/WeatherScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/Icon.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/Icon.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/PreferencesDataStore.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/PreferencesDataStore.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/local/default/DefaultData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/local/default/DefaultData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/local/search/Locations.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/local/search/Locations.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/local/search/models/City.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/local/search/models/City.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/Locationforecast.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/Locationforecast.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/LocationforecastImplementation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/LocationforecastImplementation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/LocationforecastModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/LocationforecastModule.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/Forecast.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/Forecast.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastMeta.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastMeta.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastSummary.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastSummary.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastTimePeriod.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastTimePeriod.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastTimeStep.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastTimeStep.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastTimeStepData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastTimeStepData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastUnits.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/ForecastUnits.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/METJSONForecast.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/METJSONForecast.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/METJSONForecastEnum.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/METJSONForecastEnum.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/METJSONForecastTimestamped.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/METJSONForecastTimestamped.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/NextHours.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/NextHours.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/PointGeometry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/PointGeometry.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/PointGeometryEnum.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/remote/locationforecast/models/PointGeometryEnum.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/repository/models/CurrentWeather.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/repository/models/CurrentWeather.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/navigation/Route.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/navigation/Route.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/day/DayPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/day/DayPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/day/DayViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/day/DayViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/search/SearchBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/search/SearchBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/search/SearchViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/search/SearchViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/settings/Settings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/settings/Settings.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/settings/SettingsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/settings/SettingsViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/settings/models/SettingsModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/settings/models/SettingsModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/theme/Color.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/theme/Color.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/theme/LinearGradient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/theme/LinearGradient.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/week/Week.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/week/Week.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/week/WeekPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/presentation/week/WeekPage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -28,7 +62,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\Bruger\.android\avd\Pixel_7_Pro_API_34.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\Bruger\.android\avd\Pixel_7_Pro_API_26.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -85,6 +119,11 @@
     <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="d06af6b18136ac252dee31fdaa14e54ce5900a39" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -109,6 +148,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2WWHzeJ1ZON7nChZtrcY5ZCiaxc" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -116,10 +158,19 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;PROJECT_TRUSTED_KEY&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;
+    &quot;ScreenshotViewer.SavePath&quot;: &quot;C:/Users/Bruger/Desktop&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;development&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Bruger/Desktop&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -146,7 +197,7 @@
       <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
+      <option name="DEBUGGER_TYPE" value="Java" />
       <Auto>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
         <option name="SHOW_STATIC_VARS" value="true" />
@@ -212,7 +263,7 @@
       <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
+      <option name="DEBUGGER_TYPE" value="Java" />
       <Auto>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
         <option name="SHOW_STATIC_VARS" value="true" />
@@ -279,7 +330,7 @@
       <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
+      <option name="DEBUGGER_TYPE" value="Java" />
       <Auto>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
         <option name="SHOW_STATIC_VARS" value="true" />
@@ -346,7 +397,7 @@
       <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
+      <option name="DEBUGGER_TYPE" value="Java" />
       <Auto>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
         <option name="SHOW_STATIC_VARS" value="true" />
@@ -413,7 +464,7 @@
       <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
+      <option name="DEBUGGER_TYPE" value="Java" />
       <Auto>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
         <option name="SHOW_STATIC_VARS" value="true" />
@@ -480,7 +531,7 @@
       <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
+      <option name="DEBUGGER_TYPE" value="Java" />
       <Auto>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
         <option name="SHOW_STATIC_VARS" value="true" />
@@ -531,22 +582,23 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Compose Preview.SearchingPreview" />
-        <item itemvalue="Compose Preview.LazyRowWithCards" />
-        <item itemvalue="Compose Preview.Showing" />
         <item itemvalue="Compose Preview.TopWeather (1)" />
         <item itemvalue="Compose Preview.TopWeather" />
+        <item itemvalue="Compose Preview.Showing" />
+        <item itemvalue="Compose Preview.SearchingPreview" />
+        <item itemvalue="Compose Preview.LazyRowWithCards" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="98cd4b2e-83a8-4aba-84ba-715be352a7a5" name="Changes" comment="updated weekModel" />
+      <changelist id="4bf63fd6-ac89-4a3e-aba3-5990cc685668" name="Changes" comment="" />
       <created>1696841679608</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696841679608</updated>
+      <workItem from="1701340966992" duration="1469000" />
     </task>
     <task id="LOCAL-00001" summary="Created new branch for the development of the pop up page and settings page">
       <created>1697537070980</created>
@@ -614,6 +666,9 @@
     <option name="localTasksCounter" value="12" />
     <servers />
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -652,24 +707,14 @@
     <option name="LAST_COMMIT_MESSAGE" value="updated weekModel" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/repository/models/WeekWeather.kt</url>
-          <line>88</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/vejrapp/data/repository/models/CurrentWeather.kt</url>
-          <line>58</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast" memberName="geometry" />
       </pinned-members>
     </pin-to-top-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

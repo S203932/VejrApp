@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
+// Function to create the gradiant background in the app
 @Composable
 fun LinearGradient() {
     val gradient = Brush.linearGradient(

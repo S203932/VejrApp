@@ -46,7 +46,7 @@ class ZonedDateTimeDeserializer() : JsonDeserializer<ZonedDateTime> {
     }
 }
 
-
+// Used for deserialization of the API data
 class BodyInterceptor() : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -65,8 +65,9 @@ class BodyInterceptor() : Interceptor {
     }
 }
 
+// The actual fetching of the API data
 class LocationforecastImplementation : Locationforecast {
-
+    // The base URL from where we fetch the data
     private val baseUrl = "https://api.met.no/weatherapi/locationforecast/2.0/"
 
     private val customHttpClient = OkHttpClient().newBuilder()

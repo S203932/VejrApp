@@ -2,6 +2,7 @@ package com.example.vejrapp.data.remote.locationforecast.models
 
 import com.google.gson.annotations.SerializedName
 
+// Used for deserialization of the API data
 // Forecast for a specific time
 data class ForecastTimeStepData(
     @SerializedName("instant") val instant: NextHours? = null, // Parameters which applies to this exact point in time

@@ -16,6 +16,8 @@ import com.example.vejrapp.data.repository.models.WeekWeather
 import com.example.vejrapp.presentation.settings.models.SettingsModel
 import java.time.ZonedDateTime
 
+// The default data used for the repository data, when the api call wasn't
+// called yet or was unsuccessfull
 class DefaultData {
     object LOCATIONS {
         private val copenhagen = City(

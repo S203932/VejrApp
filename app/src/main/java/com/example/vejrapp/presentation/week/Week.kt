@@ -36,7 +36,6 @@ import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import java.time.format.TextStyle
 import java.util.Locale
 
-
 @Composable
 fun DayCard(
     avgTemp: String,
