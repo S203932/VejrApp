@@ -513,13 +513,13 @@ fun DetailsBox(dayViewModel: IDayViewModel) {
 
 // Method to format the date information from the
 // repository
-private fun prettyDate(zonedDateTime: ZonedDateTime): String {
+fun prettyDate(zonedDateTime: ZonedDateTime): String {
     return zonedDateTime.format(DateTimeFormatter.ofPattern("EEEE, MMMM '%s'.")).toString()
         .format(zonedDateTime.dayOfMonth.toString())
 }
 
 // Method to format the hour information from the
 // repository
-private fun prettyTime(zonedDateTime: ZonedDateTime): String {
+fun prettyTime(zonedDateTime: ZonedDateTime): String {
     return zonedDateTime.format(DateTimeFormatter.ofPattern("hh:mm")).toString()
 }

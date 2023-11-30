@@ -16,7 +16,7 @@ import org.junit.Test
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-class DayPageKtTest {
+class UnitTests {
 
     private val complete = METJSONForecastTimestamped(METJSONForecast(
         geometry = PointGeometry(
