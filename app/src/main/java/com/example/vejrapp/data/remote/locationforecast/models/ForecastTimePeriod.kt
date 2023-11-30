@@ -2,6 +2,7 @@ package com.example.vejrapp.data.remote.locationforecast.models
 
 import com.google.gson.annotations.SerializedName
 
+// Used for desrelization of the API data
 // Weather parameters valid for a specified time period.
 data class ForecastTimePeriod(
     @SerializedName("air_pressure_at_sea_level") val airPressureAtSeaLevel: Float? = null, // Air pressure at sea level

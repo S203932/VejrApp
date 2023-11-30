@@ -24,7 +24,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.navigation.MainNavHost
 import com.example.vejrapp.navigation.Route
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherAppBar(
@@ -53,7 +52,6 @@ fun WeatherAppBar(
     )
 }
 
-
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +62,6 @@ fun WeatherApp(navController: NavHostController = rememberNavController()) {
     /*val currentScreen = Route.valueOf(
         backStackEntry?.destination?.route ?: Route.AllDaysAllWeek.name
     )
-
 
      */
     MainNavHost(navController = navController)
@@ -85,7 +82,6 @@ fun WeatherApp(navController: NavHostController = rememberNavController()) {
 
     // ) { innerPadding ->
 }
-
 
 @Composable
 fun PictureBackground() {

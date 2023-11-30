@@ -2,6 +2,7 @@ package com.example.vejrapp.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
+// Colors used for the linear gradient background
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)

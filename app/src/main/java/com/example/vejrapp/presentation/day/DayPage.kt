@@ -53,7 +53,7 @@ import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-
+// The page displayed at the landing screeen/main screen/ todays weather
 @Composable
 fun DayPage(
     navController: NavHostController,
@@ -79,6 +79,7 @@ fun DayPage(
     }
 }
 
+//Preview of the daypage
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,6 +92,12 @@ fun DayPagePreview() {
     )
 }
 
+// The topsection of the today screen
+// Contains the:
+//  - Date and day of week
+//  - Current condition
+//  - Current temperature
+//  - Minimum and maximum temperature
 //@Preview
 @Composable
 fun TopWeather(dayViewModel: IDayViewModel) {
@@ -242,7 +249,9 @@ fun TopWeather(dayViewModel: IDayViewModel) {
     }
 }
 
-
+// The caution box in the weather screen to display
+// caution alerts to the user (showing dummy data
+//  the moment)
 @Composable
 @Preview
 fun CautionBox() {
@@ -274,9 +283,9 @@ fun CautionBox() {
     }
 }
 
-
-//Inserting Urban's stuff
-
+// In the lazyrow of the hour view
+// this is the composable generating
+// each hour section within the hour view
 @Composable
 fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
     val currentWeather by dayViewModel.currentWeather.collectAsState()
@@ -364,7 +373,7 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
 //        }
 //    }
 //}
-
+// the lazy row for the hourly view
 @Composable
 fun LazyRowWithCards(dayViewModel: IDayViewModel) {
     val currentWeather by dayViewModel.currentWeather.collectAsState()
@@ -392,7 +401,8 @@ fun LazyRowWithCards(dayViewModel: IDayViewModel) {
 
 //}
 
-
+// The bottom section of the main screen displaying
+// the additional parameters of the day
 @Composable
 fun DetailsBox(dayViewModel: IDayViewModel) {
     val fontColor = Color.Black
@@ -501,11 +511,15 @@ fun DetailsBox(dayViewModel: IDayViewModel) {
     }
 }
 
+// Method to format the date information from the
+// repository
 private fun prettyDate(zonedDateTime: ZonedDateTime): String {
     return zonedDateTime.format(DateTimeFormatter.ofPattern("EEEE, MMMM '%s'.")).toString()
         .format(zonedDateTime.dayOfMonth.toString())
 }
 
+// Method to format the hour information from the
+// repository
 private fun prettyTime(zonedDateTime: ZonedDateTime): String {
     return zonedDateTime.format(DateTimeFormatter.ofPattern("hh:mm")).toString()
 }

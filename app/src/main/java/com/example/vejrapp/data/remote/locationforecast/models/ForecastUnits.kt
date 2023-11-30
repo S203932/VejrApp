@@ -1,7 +1,6 @@
 package com.example.vejrapp.data.remote.locationforecast.models
-
 import com.google.gson.annotations.SerializedName
-
+// Used for deserialization of the API data
 data class ForecastUnits(
     @SerializedName("air_pressure_at_sea_level") val airPressureAtSeaLevel: String? = null, // hPa
     @SerializedName("air_temperature") val airTemperature: String? = null, // C

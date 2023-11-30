@@ -30,7 +30,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.presentation.settings.models.SettingsModel
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(
@@ -71,17 +70,26 @@ fun Settings(
                     contentDescription = null
                 )
             }
-            Setting(modifier, setting = temperatureUnit, onToggle = { settingsViewModel.toggleTemperatureUnit() })
-            Setting(modifier, setting = windSpeedUnit, onToggle = { settingsViewModel.toggleWindSpeedUnit() })
-            Setting(modifier, setting = pressureUnit, onToggle = { settingsViewModel.togglePressureUnit() })
+            Setting(
+                modifier,
+                setting = temperatureUnit,
+                onToggle = { settingsViewModel.toggleTemperatureUnit() })
+            Setting(
+                modifier,
+                setting = windSpeedUnit,
+                onToggle = { settingsViewModel.toggleWindSpeedUnit() })
+            Setting(
+                modifier,
+                setting = pressureUnit,
+                onToggle = { settingsViewModel.togglePressureUnit() })
         }
     }
 }
 
 @Composable
 fun Setting(
-    modifier: Modifier= Modifier, setting: State<SettingsModel>, onToggle: ()->Unit
-){
+    modifier: Modifier = Modifier, setting: State<SettingsModel>, onToggle: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -112,5 +120,5 @@ fun Setting(
 @Preview(showBackground = true)
 @Composable
 fun SettingPreview() {
-        Settings(rememberNavController(), SettingsViewModelPreview())
+    Settings(rememberNavController(), SettingsViewModelPreview())
 }

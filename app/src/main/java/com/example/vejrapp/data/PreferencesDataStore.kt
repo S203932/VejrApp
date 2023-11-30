@@ -1,5 +1,4 @@
 package com.example.vejrapp.data
-
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -10,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import okio.IOException
-
-
+// Used for caching
+// not yet implemented
 class PreferencesDataStore (
  private val dataStore: DataStore<Preferences>
 ) {
@@ -46,5 +45,3 @@ class PreferencesDataStore (
             preferences[DATA_KEY] ?: true
         }
 }
-
-

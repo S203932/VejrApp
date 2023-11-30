@@ -10,11 +10,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
+// Interface to determine the things needed in dayviewmodel
 interface IDayViewModel {
     val currentWeather: StateFlow<CurrentWeather>
     fun update()
 }
 
+// preview of the dayviewmodel
 class DayViewModelPreview() : IDayViewModel {
     override val currentWeather =
         MutableStateFlow<CurrentWeather>(DefaultData.LOCATIONFORECAST.CURRENT_WEATHER)
@@ -24,6 +26,9 @@ class DayViewModelPreview() : IDayViewModel {
     }
 }
 
+// the actual dayviewmodel that contains
+// the currentWeather object generated from the information
+// in the api call
 @HiltViewModel
 class DayViewModel @Inject constructor(private val weatherRepository: WeatherRepository) :
     ViewModel(), IDayViewModel {

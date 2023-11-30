@@ -6,6 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
+// Interface for the locationforecast used when fetching the API data
 interface Locationforecast {
     @Headers("User-Agent: VejrApp https://github.com/S203932/VejrApp")
     @GET("complete")
