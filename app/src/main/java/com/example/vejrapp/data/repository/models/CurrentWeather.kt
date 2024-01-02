@@ -48,9 +48,8 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
     }
 
     // The middle of DayPage
-    // There is no visibility in API Data, can only say how much fog
     val humidity = currentWeather.data.instant?.details?.relativeHumidity
-    val uVIndex = currentWeather.data.instant?.details?.ultravioletIndexClearSky
+    val uvIndex = currentWeather.data.instant?.details?.ultravioletIndexClearSky
     val pressure = currentWeather.data.instant?.details?.airPressureAtSeaLevel
 
     fun currentTimeData(complete: METJSONForecast): Int {

@@ -43,13 +43,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
+import com.example.vejrapp.UI.search.ISearchViewModel
+import com.example.vejrapp.UI.search.SearchBar
+import com.example.vejrapp.UI.search.SearchViewModelPreview
 import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.UI.search.ISearchViewModel
-import com.example.vejrapp.UI.search.SearchBar
-import com.example.vejrapp.UI.search.SearchViewModelPreview
 import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -72,15 +72,11 @@ fun DayPage(
             item { CautionBox() }
             item { LazyRowWithCards(dayViewModel) }
             item { DetailsBox(dayViewModel) }
-//            item {
-//                Spacer(modifier = Modifier.height(6.dp))
-//                WeekView()
-//            }
         }
     }
 }
 
-//Preview of the daypage
+// Preview of the daypage
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,8 +106,6 @@ fun TopWeather(dayViewModel: IDayViewModel) {
 
     // Crop the transparent/whitespace areas
     val croppedBitmap = cropBitmap(bitmap)
-
-
 
     Column(
         modifier = Modifier
@@ -198,9 +192,7 @@ fun TopWeather(dayViewModel: IDayViewModel) {
                 }
 
             }
-
             Spacer(modifier = Modifier.width(50.dp))
-
             Column(
                 modifier = Modifier
             )
@@ -307,9 +299,7 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
                 .padding(5.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-
         ) {
-
             //Image (you can replace the URL with your image source)
             Image(
                 painter = painterResource(id = imageRes), // Use your own image resource
@@ -362,28 +352,11 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
                 fontSize = 16.sp,
                 modifier = Modifier.padding(4.dp)
             )
-
-            // Row with Image and Text
-
         }
     }
     Spacer(modifier = Modifier.width(4.dp))
 }
 
-//@Composable
-//fun LazyRowWithCards(weatherTypeList: List<WeatherType>
-// ) {
-//    LazyRow(
-//        modifier = Modifier
-//            .fillMaxSize() // This makes the LazyRow take up the full available width
-//            .padding(8.dp)
-//    ) {
-//        items(weatherTypeList) { weatherType ->
-//            CardWithColumnAndRow(weatherType = weatherType)
-//            Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
-//        }
-//    }
-//}
 // the lazy row for the hourly view
 @Composable
 fun LazyRowWithCards(dayViewModel: IDayViewModel) {
@@ -403,14 +376,6 @@ fun LazyRowWithCards(dayViewModel: IDayViewModel) {
     }
 }
 
-//@OptIn(ExperimentalFoundationApi::class)
-//@Preview
-//@Composable
-//fun CardWithColumnAndRowPreview() {
-//    LazyRowWithCards()
-//    //LazyRowWithCards(weatherTypeList = DataSource().loadWeatherType,
-
-//}
 
 // The bottom section of the main screen displaying
 // the additional parameters of the day
@@ -461,26 +426,6 @@ fun DetailsBox(dayViewModel: IDayViewModel) {
 
             Column(modifier = Modifier.padding(4.dp)) {
                 Icon(
-                    painter = painterResource(R.drawable.outline_visibility_24),
-                    contentDescription = "Humidity",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    tint = fontColor
-                )
-                Text(
-                    text = "Visibility",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-                Text(
-                    text = "n/a",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-            }
-
-            Column(modifier = Modifier.padding(4.dp)) {
-                Icon(
                     painter = painterResource(R.drawable.outline_wb_sunny_24),
                     contentDescription = "Humidity",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -493,7 +438,7 @@ fun DetailsBox(dayViewModel: IDayViewModel) {
                     color = fontColor
                 )
                 Text(
-                    text = currentWeather.uVIndex.toString(),
+                    text = currentWeather.uvIndex.toString(),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = fontColor
                 )
