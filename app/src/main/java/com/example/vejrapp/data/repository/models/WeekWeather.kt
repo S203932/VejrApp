@@ -8,6 +8,7 @@ import java.time.Period
 class WeekWeather(complete: METJSONForecastTimestamped) {
 
     private val weatherData = complete.metJsonForecast.properties.timeseries
+    val expires = complete.expires
 
 
     private val day1 = weatherData[dateCalculator(1)]

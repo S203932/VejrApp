@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.vejrapp.R
@@ -33,6 +37,9 @@ import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
+import com.example.vejrapp.presentation.day.prettyDate
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -61,7 +68,7 @@ fun DayCard(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp)
+            .height(60.dp)
     ) {
         Row(
             modifier = Modifier
@@ -81,40 +88,43 @@ fun DayCard(
             )
             Spacer(modifier = Modifier.width(7.dp))
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {//MIN MAX Temperature
-                Text(text = maxTemp, color = fontColor, fontSize = 13.sp)
-                Text(text = minTemp, color = fontColor, fontSize = 13.sp)
+                Text(text = maxTemp, color = fontColor, fontSize = 16.sp)
+                Text(text = minTemp, color = fontColor, fontSize = 16.sp)
             }
             Spacer(modifier = Modifier.width(7.dp))
             Image(
                 bitmap = croppedBitmap.asImageBitmap(),
                 //painter = weatherIcon, //Weather Symbol for the day
                 contentDescription = null,
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(7.dp)
+                    .size(50.dp)
             )
             Spacer(modifier = Modifier.width(7.dp))
             Image(
                 painter = rainIcon, //Rain Icon
                 contentDescription = null,
-                modifier = Modifier.align(Alignment.CenterVertically),
+                modifier = Modifier.align(Alignment.CenterVertically).size(20.dp),
             )
             Spacer(modifier = Modifier.width(1.dp))
             Text(
                 text = precipitation, //Rain Forecast
                 modifier = Modifier.align(Alignment.CenterVertically),
                 color = fontColor,
-                fontSize = 13.sp
+                fontSize = 16.sp
             )
             Spacer(modifier = Modifier.width(50.dp))
 
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
-                    text = dayOfTheWeek
+                    text = dayOfTheWeek.take(3)
                     /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
                     color = fontColor,
                     fontSize = 14.sp
                 )
                 Text(
-                    text = dayAndMonth
+                    text = dayAndMonth.substring(8,10) +"/"+ dayAndMonth.substring(5,7)
                     /* text = "${DateFormat.DATE_FIELD}"*/,
                     color = fontColor,
                     fontSize = 12.sp
@@ -125,7 +135,7 @@ fun DayCard(
     }
 }
 
-//@Preview
+
 @Composable
 fun WeekView(
     weekViewModel: IWeekViewModel
@@ -137,6 +147,18 @@ fun WeekView(
             .padding(8.dp)
             .wrapContentSize(Alignment.BottomCenter)
     ) {
+        Row() {
+            Text(
+                text = prettyDate(weekWeather.expires),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                color = Color.Black
+            )
+
+        }
+        Spacer(modifier = Modifier.height(5.dp))
         DayCard(
             avgTemp = weekWeather.day1Temp.toString() + "°",
             maxTemp = weekWeather.day1Max.toString() + "°",
@@ -238,4 +260,10 @@ fun WeekView(
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
+}
+
+@Preview
+@Composable
+fun WeekViewPreview() {
+    WeekView(weekViewModel = WeekViewModelPreview())
 }
