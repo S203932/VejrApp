@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -212,23 +213,27 @@ fun TopWeather(dayViewModel: IDayViewModel) {
                         .align(Alignment.CenterHorizontally)
                 )
                 Row {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_umbrella_24),
-                        contentDescription = "Weather icon",
-                        modifier = Modifier
-                            .height(30.dp)
-                            .width(30.dp)
-                            .rotate(180F),
-                        tint = fontColor
+                    // Remove rain if no data is available
+                    if (currentWeather.currentPercentageRain != null) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_umbrella_24),
+                            contentDescription = "Weather icon",
+                            modifier = Modifier
+                                .height(30.dp)
+                                .width(30.dp)
+                                .rotate(180F),
+                            tint = fontColor
 
-                    )
-                    Text(
-                        text = currentWeather.currentPercentageRain.toString() + "%",
-                        modifier = Modifier
-                            .padding(2.dp),
-                        color = fontColor
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
+                        )
+                        Text(
+                            text = currentWeather.currentPercentageRain.toString() + "%",
+                            modifier = Modifier
+                                .padding(2.dp),
+                            color = fontColor
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                    }
+
                     Icon(
                         painter = painterResource(R.drawable.baseline_air_24),
                         contentDescription = "Weather icon",
@@ -296,7 +301,6 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .width(100.dp) // Set the card's width
-            .height(200.dp),
     ) {
         Column(
             modifier = Modifier
@@ -319,31 +323,38 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
             Text(
                 text = currentWeather.hourlyTemperature[hour].toString() + "°",
                 fontSize = 28.sp,
-                modifier = Modifier.padding(4.dp)
+                modifier = Modifier
+                    .padding(4.dp)
+                    // Try to center the text more by offsetting the degree symbol
+                    .offset(x = 4.dp)
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                Arrangement.Center
-            ) {
-                //Image (you can replace the URL with your image source)
-                Image(
-                    painter = painterResource(id = R.drawable.baseline_umbrella_24), // Use your own image resource
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .clip(shape = MaterialTheme.shapes.medium)
-                        .rotate(180F)
-                )
+            // Remove rain if no data is available
+            if (currentWeather.currentPercentageRain != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    Arrangement.Center
+                ) {
+                    //Image (you can replace the URL with your image source)
+                    Image(
+                        painter = painterResource(id = R.drawable.baseline_umbrella_24), // Use your own image resource
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clip(shape = MaterialTheme.shapes.medium)
+                            .rotate(180F)
+                    )
 
-                // Text
-                Text(
-                    text = currentWeather.hourlyPercentageRain[hour].toString() + "%",
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(start = 4.dp)
-                )
+                    // Text
+                    Text(
+                        text = currentWeather.hourlyPercentageRain[hour].toString() + "%",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
             }
-            Spacer(modifier = Modifier.height(4.dp))
+
             // Third Text
             Text(
                 text = String.format("%02d:00", hour),
