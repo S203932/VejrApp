@@ -43,7 +43,7 @@ class DefaultData {
 
     object LOCATIONFORECAST {
 
-        val COMPLETE = METJSONForecastTimestamped(METJSONForecast(
+        val COMPLETE: METJSONForecastTimestamped = METJSONForecastTimestamped(METJSONForecast(
             geometry = PointGeometry(
                 coordinates = listOf(0F, 0F, 0F),
                 type = PointGeometryEnum.Point
@@ -58,7 +58,7 @@ class DefaultData {
                 }
             ),
             type = METJSONForecastEnum.Feature
-        ), ZonedDateTime.now(), ZonedDateTime.now())
+        ), ZonedDateTime.now())
 
         val CURRENT_WEATHER = CurrentWeather(COMPLETE)
 

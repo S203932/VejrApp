@@ -14,9 +14,9 @@ interface Locationforecast {
         @Query("altitude") altitude: Int? = null,
         @Query("lat") latitude: Float,
         @Query("lon") longitude: Float
-    ): METJSONForecastTimestamped
+    ): METJSONForecastTimestamped?
 
     @Headers("User-Agent: VejrApp https://github.com/S203932/VejrApp")
     @GET("status")
-    suspend fun getStatus(): Status
+    suspend fun getStatus(): Status?
 }
