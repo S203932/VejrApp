@@ -12,7 +12,6 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
     // Get weather data, expire date and data timestamp
     private val complete = metjsonForecastTimestamped.metJsonForecast
     val expires = metjsonForecastTimestamped.expires
-    val lastModified = metjsonForecastTimestamped.lastModified
 
     private val weatherData = complete.properties.timeseries
 
@@ -21,8 +20,7 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
     private val currentWeather = complete.properties.timeseries[currentTimeData(complete)]
     val currentTemperature = currentWeather.data.instant?.details?.airTemperature
     val currentCondition = currentWeather.data.nextOneHours?.summary?.symbolCode
-    val timeStampHour = complete.properties.meta.updatedAt.toLocalTime()
-    val timeStampDate = complete.properties.meta.updatedAt.toLocalDate()
+    val updatedAt = complete.properties.meta.updatedAt
 
 
     // TODO replace with real calculated realfeel

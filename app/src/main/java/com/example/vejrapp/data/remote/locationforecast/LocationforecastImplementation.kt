@@ -1,5 +1,6 @@
 package com.example.vejrapp.data.remote.locationforecast
 
+import android.util.Log
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.remote.locationforecast.models.Status
 import com.google.gson.GsonBuilder
@@ -53,13 +54,20 @@ class BodyInterceptor() : Interceptor {
         val response = chain.proceed(request)
 
         val body = JsonObject()
-        body.add(
-            "met_json_forecast",
-            JsonParser().parse(response.body?.string())
-        )
-        body.addProperty("expires", response.header("expires").toString())
-        body.addProperty("last_modified", response.header("last-modified").toString())
 
+        // Try to parse body as JSON. Body may be HTML if an error is met
+        try {
+            body.add(
+                "met_json_forecast",
+                JsonParser().parse(response.body?.string())
+            )
+            body.addProperty("expires", response.header("expires").toString())
+
+        } catch (error: Exception) {
+            Log.d("API call", "Error encountered in BodyInterceptor $error")
+        }
+
+        // The body will be empty if the response body was invalid.
         return response.newBuilder()
             .body(gson.toJson(body).toResponseBody(response.body?.contentType())).build()
     }
@@ -83,11 +91,19 @@ class LocationforecastImplementation : Locationforecast {
 
     override suspend fun getComplete(
         altitude: Int?, latitude: Float, longitude: Float
-    ): METJSONForecastTimestamped {
-        return apiClient.getComplete(altitude, latitude, longitude)
+    ): METJSONForecastTimestamped? {
+        return try {
+            apiClient.getComplete(altitude, latitude, longitude)
+        } catch (error: Exception) {
+            null
+        }
     }
 
-    override suspend fun getStatus(): Status {
-        return apiClient.getStatus()
+    override suspend fun getStatus(): Status? {
+        return try {
+            apiClient.getStatus()
+        } catch (error: Exception) {
+            null
+        }
     }
 }

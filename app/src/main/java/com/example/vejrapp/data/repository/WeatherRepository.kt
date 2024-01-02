@@ -46,7 +46,6 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
     IWeatherRepository {
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    private var complete = DefaultData.LOCATIONFORECAST.COMPLETE
     override var city = DefaultData.LOCATIONS.CITY
     override var currentWeather =
         MutableStateFlow<CurrentWeather>(DefaultData.LOCATIONFORECAST.CURRENT_WEATHER)
@@ -64,13 +63,20 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
 
     override fun updateComplete() {
         scope.launch {
-            complete = locationforecast.getComplete(
+            val complete = locationforecast.getComplete(
                 latitude = city.latitude,
                 longitude = city.longitude
             )
-            currentWeather.value = CurrentWeather(complete)
-            weekWeather.value = WeekWeather(complete)
-            Log.d("API call", complete.toString())
+
+            if (complete != null) {
+                Log.d(
+                    "API call",
+                    "Data from ${complete.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}."
+                )
+
+                currentWeather.value = CurrentWeather(complete)
+                weekWeather.value = WeekWeather(complete)
+            }
         }
     }
 }
