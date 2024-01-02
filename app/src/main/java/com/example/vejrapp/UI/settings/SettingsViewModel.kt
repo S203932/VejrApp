@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.settings
+package com.example.vejrapp.UI.settings
 
 import android.content.Context
 import androidx.core.content.ContextCompat.getString
@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.ViewModel
 import com.example.vejrapp.R
 import com.example.vejrapp.data.local.default.DefaultData
-import com.example.vejrapp.presentation.settings.models.SettingsModel
+import com.example.vejrapp.UI.settings.models.SettingsModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow

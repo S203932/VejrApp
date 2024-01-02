@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.theme
+package com.example.vejrapp.UI.theme
 
 import androidx.compose.ui.graphics.Color
 

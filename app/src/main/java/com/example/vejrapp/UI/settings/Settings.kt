@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.settings
+package com.example.vejrapp.UI.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.vejrapp.presentation.settings.models.SettingsModel
+import com.example.vejrapp.UI.settings.models.SettingsModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.day
+package com.example.vejrapp.UI.day
 
 import com.example.vejrapp.data.remote.locationforecast.models.Forecast
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastMeta

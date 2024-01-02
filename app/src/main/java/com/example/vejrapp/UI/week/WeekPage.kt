@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.week
+package com.example.vejrapp.UI.week
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -6,8 +6,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.presentation.search.SearchBar
-import com.example.vejrapp.presentation.search.SearchViewModel
+import com.example.vejrapp.UI.search.SearchBar
+import com.example.vejrapp.UI.search.SearchViewModel
 
 @Composable
 fun WeekPage(

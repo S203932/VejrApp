@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.week
+package com.example.vejrapp.UI.week
 
 import androidx.lifecycle.ViewModel
 import com.example.vejrapp.data.local.default.DefaultData
