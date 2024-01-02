@@ -183,7 +183,7 @@ fun TopWeather(dayViewModel: IDayViewModel) {
                 Spacer(modifier = Modifier.height(30.dp))
                 Row {
                     Text(
-                        text = prettyTime(currentWeather.lastModified),
+                        text = prettyTime(currentWeather.updatedAt),
                         fontStyle = FontStyle.Italic,
                         modifier = Modifier
                             .padding(2.dp),
