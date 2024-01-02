@@ -28,14 +28,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.vejrapp.presentation.day.DayPage
-import com.example.vejrapp.presentation.day.DayViewModel
-import com.example.vejrapp.presentation.search.SearchViewModel
-import com.example.vejrapp.presentation.settings.Settings
-import com.example.vejrapp.presentation.settings.SettingsViewModel
-import com.example.vejrapp.presentation.theme.LinearGradient
-import com.example.vejrapp.presentation.week.WeekPage
-import com.example.vejrapp.presentation.week.WeekViewModel
+import com.example.vejrapp.UI.day.DayPage
+import com.example.vejrapp.UI.day.DayViewModel
+import com.example.vejrapp.UI.search.SearchViewModel
+import com.example.vejrapp.UI.settings.Settings
+import com.example.vejrapp.UI.settings.SettingsViewModel
+import com.example.vejrapp.UI.theme.LinearGradient
+import com.example.vejrapp.UI.week.WeekPage
+import com.example.vejrapp.UI.week.WeekViewModel
 
 
 @OptIn(ExperimentalFoundationApi::class)

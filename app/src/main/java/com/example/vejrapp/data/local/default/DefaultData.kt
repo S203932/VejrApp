@@ -13,7 +13,7 @@ import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
 import com.example.vejrapp.data.repository.models.CurrentWeather
 import com.example.vejrapp.data.repository.models.WeekWeather
-import com.example.vejrapp.presentation.settings.models.SettingsModel
+import com.example.vejrapp.UI.settings.models.SettingsModel
 import java.time.ZonedDateTime
 
 // The default data used for the repository data, when the api call wasn't

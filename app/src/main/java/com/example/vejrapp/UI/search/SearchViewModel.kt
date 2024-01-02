@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.search
+package com.example.vejrapp.UI.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vejrapp.data.local.default.DefaultData

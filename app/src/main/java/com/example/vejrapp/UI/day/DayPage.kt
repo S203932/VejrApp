@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.day
+package com.example.vejrapp.UI.day
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -47,9 +47,9 @@ import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.presentation.search.ISearchViewModel
-import com.example.vejrapp.presentation.search.SearchBar
-import com.example.vejrapp.presentation.search.SearchViewModelPreview
+import com.example.vejrapp.UI.search.ISearchViewModel
+import com.example.vejrapp.UI.search.SearchBar
+import com.example.vejrapp.UI.search.SearchViewModelPreview
 import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

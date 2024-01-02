@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.day
+package com.example.vejrapp.UI.day
 
 
 import androidx.lifecycle.ViewModel
