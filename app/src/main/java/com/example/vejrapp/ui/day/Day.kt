@@ -170,7 +170,7 @@ fun TopWeather() {
                     bitmap = croppedBitmap.asImageBitmap(),
                     contentDescription = "Weather icon",
                     modifier = Modifier
-                        .width(140.dp)
+                        .size(120.dp)
                         .align(Alignment.CenterHorizontally)
                 )
                 Row {
