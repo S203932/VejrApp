@@ -400,7 +400,7 @@ fun ApiTimestamp() {
     val fontColor = Color.White
 
     Text(
-        text = "${stringResource(R.string.day_feels_like)} ${
+        text = "${stringResource(R.string.day_timestamp)} ${
             prettyTime(
                 applyTimezone(
                     currentWeather.updatedAt,

@@ -3,6 +3,7 @@ package com.example.vejrapp.data.repository.models
 import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
+import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.Period
@@ -59,9 +60,8 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped, val
             val e =
                 (humidity!! / 100) * 6.105F * exp((17.27F * currentTemperature!!) / (237.7F + currentTemperature))
             val at = currentTemperature + (0.33F * e) - (0.7F * currentWindSpeed!!) - 4F
-
             // Round to 1 decimal place
-            "%.1f".format(at).toFloat()
+            at.toBigDecimal().setScale(1, RoundingMode.HALF_UP).toFloat()
 
         } catch (error: Exception) {
             null
