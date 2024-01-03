@@ -1,4 +1,4 @@
-package com.example.vejrapp.UI.theme
+package com.example.vejrapp.ui.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

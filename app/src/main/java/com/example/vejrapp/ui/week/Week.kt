@@ -1,4 +1,4 @@
-package com.example.vejrapp.UI.week
+package com.example.vejrapp.ui.week
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -29,17 +29,34 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
 import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
-import com.example.vejrapp.UI.day.prettyDate
+import com.example.vejrapp.navigation.Route
+import com.example.vejrapp.ui.day.prettyDate
+import com.example.vejrapp.ui.search.SearchBar
 import java.time.format.TextStyle
 import java.util.Locale
+
+@Composable
+fun WeekPage(navController: NavHostController = rememberNavController()) {
+
+    Column {
+        SearchBar(
+            onNextButtonClicked = {
+                navController.navigate(Route.Settings.name)
+            }
+        )
+        WeekView()
+    }
+}
 
 @Composable
 fun DayCard(
@@ -124,7 +141,7 @@ fun DayCard(
                     fontSize = 14.sp
                 )
                 Text(
-                    text = dayAndMonth.substring(8,10) +"/"+ dayAndMonth.substring(5,7)
+                    text = dayAndMonth.substring(8, 10) + "/" + dayAndMonth.substring(5, 7)
                     /* text = "${DateFormat.DATE_FIELD}"*/,
                     color = fontColor,
                     fontSize = 12.sp
@@ -137,9 +154,9 @@ fun DayCard(
 
 
 @Composable
-fun WeekView(
-    weekViewModel: IWeekViewModel
-) {
+fun WeekView() {
+    val weekViewModel = hiltViewModel<WeekViewModel>()
+
     val weekWeather by weekViewModel.weekWeather.collectAsState()
     Column {
         Row() {
@@ -267,10 +284,4 @@ fun WeekView(
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
-}
-
-@Preview
-@Composable
-fun WeekViewPreview() {
-    WeekView(weekViewModel = WeekViewModelPreview())
 }

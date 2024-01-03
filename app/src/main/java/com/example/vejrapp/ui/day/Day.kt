@@ -1,6 +1,5 @@
-package com.example.vejrapp.UI.day
+package com.example.vejrapp.ui.day
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,67 +35,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
-import com.example.vejrapp.UI.search.ISearchViewModel
-import com.example.vejrapp.UI.search.SearchBar
-import com.example.vejrapp.UI.search.SearchViewModelPreview
 import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.navigation.Route
+import com.example.vejrapp.ui.search.SearchBar
 import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-// The page displayed at the landing screeen/main screen/ todays weather
+// The page displayed at the landing screen/main screen/ today's weather
 @Composable
-fun DayPage(
-    navController: NavHostController,
-    searchViewModel: ISearchViewModel,
-    dayViewModel: IDayViewModel,
-) {
+fun Day(navController: NavHostController) {
     Column {
-        SearchBar(
-            onNextButtonClicked = { navController.navigate(Route.Settings.name) },
-            navController = navController,
-            searchViewModel = searchViewModel
-        )
+        SearchBar(onNextButtonClicked = { navController.navigate(Route.Settings.name) })
         LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            item { TopWeather(dayViewModel) }
+            item { TopWeather() }
             item { CautionBox() }
-            item { LazyRowWithCards(dayViewModel) }
-            item { DetailsBox(dayViewModel) }
+            item { LazyRowWithCards() }
+            item { DetailsBox() }
         }
     }
 }
 
-// Preview of the daypage
-@SuppressLint("StateFlowValueCalledInComposition")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
-fun DayPagePreview() {
-    DayPage(
-        navController = rememberNavController(),
-        searchViewModel = SearchViewModelPreview(),
-        dayViewModel = DayViewModelPreview(),
-    )
-}
+fun TopWeather() {
+    val dayViewModel: DayViewModel = hiltViewModel<DayViewModel>()
 
-// The topsection of the today screen
-// Contains the:
-//  - Date and day of week
-//  - Current condition
-//  - Current temperature
-//  - Minimum and maximum temperature
-//@Preview
-@Composable
-fun TopWeather(dayViewModel: IDayViewModel) {
     val currentWeather by dayViewModel.currentWeather.collectAsState()
     val weatherImage = currentWeather.currentCondition.toString()
     val imageRes = weatherImage.mapToYRImageResource()
@@ -250,7 +219,6 @@ fun TopWeather(dayViewModel: IDayViewModel) {
 // caution alerts to the user (showing dummy data
 //  the moment)
 @Composable
-@Preview
 fun CautionBox() {
     val fontColor = Color.White
     Card(
@@ -284,7 +252,9 @@ fun CautionBox() {
 // this is the composable generating
 // each hour section within the hour view
 @Composable
-fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
+fun CardWithColumnAndRow(hour: Int) {
+    val dayViewModel = hiltViewModel<DayViewModel>()
+
     val currentWeather by dayViewModel.currentWeather.collectAsState()
     val weatherImage = currentWeather.hourlyCondition[hour]
     val imageRes = weatherImage.mapToYRImageResource()
@@ -359,8 +329,7 @@ fun CardWithColumnAndRow(dayViewModel: IDayViewModel, hour: Int) {
 
 // the lazy row for the hourly view
 @Composable
-fun LazyRowWithCards(dayViewModel: IDayViewModel) {
-    val currentWeather by dayViewModel.currentWeather.collectAsState()
+fun LazyRowWithCards() {
     val startHour = LocalTime.now().hour
     val hourList = List(24) { index -> (index + startHour) % 24 }
     LazyRow(
@@ -370,7 +339,7 @@ fun LazyRowWithCards(dayViewModel: IDayViewModel) {
             .wrapContentSize(Alignment.BottomCenter)
     ) {
         items(hourList) { hourList -> // You can change the number of cards as needed
-            CardWithColumnAndRow(dayViewModel, hourList)
+            CardWithColumnAndRow(hourList)
             Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
         }
     }
@@ -380,7 +349,9 @@ fun LazyRowWithCards(dayViewModel: IDayViewModel) {
 // The bottom section of the main screen displaying
 // the additional parameters of the day
 @Composable
-fun DetailsBox(dayViewModel: IDayViewModel) {
+fun DetailsBox() {
+    val dayViewModel = hiltViewModel<DayViewModel>()
+
     val fontColor = Color.Black
     val currentWeather by dayViewModel.currentWeather.collectAsState()
     Card(

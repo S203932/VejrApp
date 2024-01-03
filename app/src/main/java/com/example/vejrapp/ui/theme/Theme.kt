@@ -1,4 +1,4 @@
-package com.example.vejrapp.UI.theme
+package com.example.vejrapp.ui.theme
 
 import android.app.Activity
 import android.os.Build

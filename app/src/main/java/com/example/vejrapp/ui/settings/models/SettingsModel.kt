@@ -1,4 +1,4 @@
-package com.example.vejrapp.UI.settings.models
+package com.example.vejrapp.ui.settings.models
 
 data class SettingsModel(
     val name: String,

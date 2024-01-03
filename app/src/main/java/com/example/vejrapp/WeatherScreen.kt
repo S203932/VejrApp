@@ -14,12 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.navigation.MainNavHost
 import com.example.vejrapp.navigation.Route
@@ -56,31 +54,8 @@ fun WeatherAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherApp(navController: NavHostController = rememberNavController()) {
-    // Get current back stack entry
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    // Get the name of the current screen
-    /*val currentScreen = Route.valueOf(
-        backStackEntry?.destination?.route ?: Route.AllDaysAllWeek.name
-    )
-
-     */
     MainNavHost(navController = navController)
-    //Scaffold(
 
-    /*topBar = {
-        /* WeatherAppBar(
-             currentScreen = currentScreen,
-             canNavigateBack = navController.previousBackStackEntry != null,
-             navigateUp = { navController.navigateUp() }
-         )*/
-
-
-    }
-
-     */
-
-
-    // ) { innerPadding ->
 }
 
 @Composable
