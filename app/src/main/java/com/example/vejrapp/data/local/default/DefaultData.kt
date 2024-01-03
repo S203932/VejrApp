@@ -13,7 +13,7 @@ import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
 import com.example.vejrapp.data.repository.models.CurrentWeather
 import com.example.vejrapp.data.repository.models.WeekWeather
-import com.example.vejrapp.presentation.settings.models.SettingsModel
+import com.example.vejrapp.ui.settings.models.SettingsModel
 import java.time.ZonedDateTime
 
 // The default data used for the repository data, when the api call wasn't
@@ -21,19 +21,21 @@ import java.time.ZonedDateTime
 class DefaultData {
     object LOCATIONS {
         private val copenhagen = City(
-            name = "Copenhagen",
             country = "Denmark",
             latitude = 55.67594F,
             longitude = 12.56553F,
-            population = 1153615
+            name = "Copenhagen",
+            population = 1153615,
+            timezone = "Europe/Copenhagen"
 
         )
         private val sofia = City(
-            name = "Sofia",
             country = "Bulgaria",
             latitude = 42.69751F,
             longitude = 23.32415F,
-            population = 1152556
+            name = "Sofia",
+            population = 1152556,
+            timezone = "Europe/Sofia"
         )
         val CITY: City = copenhagen
         val CITIES = listOf<City>(copenhagen, sofia)
@@ -43,7 +45,7 @@ class DefaultData {
 
     object LOCATIONFORECAST {
 
-        val COMPLETE = METJSONForecastTimestamped(METJSONForecast(
+        val COMPLETE: METJSONForecastTimestamped = METJSONForecastTimestamped(METJSONForecast(
             geometry = PointGeometry(
                 coordinates = listOf(0F, 0F, 0F),
                 type = PointGeometryEnum.Point
@@ -58,9 +60,9 @@ class DefaultData {
                 }
             ),
             type = METJSONForecastEnum.Feature
-        ), ZonedDateTime.now(), ZonedDateTime.now())
+        ), ZonedDateTime.now())
 
-        val CURRENT_WEATHER = CurrentWeather(COMPLETE)
+        val CURRENT_WEATHER = CurrentWeather(COMPLETE, LOCATIONS.CITY)
 
         // Added weekweather
         val WEEK_WEATHER = WeekWeather(COMPLETE)

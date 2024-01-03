@@ -1,60 +1,19 @@
-package com.example.vejrapp.presentation.settings
+package com.example.vejrapp.ui.settings
 
+//import androidx.core.content.ContextCompat.getString
 import android.content.Context
 import androidx.core.content.ContextCompat.getString
-//import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.ViewModel
 import com.example.vejrapp.R
-import com.example.vejrapp.data.local.default.DefaultData
-import com.example.vejrapp.presentation.settings.models.SettingsModel
+import com.example.vejrapp.ui.settings.models.SettingsModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-interface ISettingsViewModel {
-    val temperatureUnit: StateFlow<SettingsModel>
-    val windSpeedUnit: StateFlow<SettingsModel>
-    val pressureUnit: StateFlow<SettingsModel>
-
-    fun toggleTemperatureUnit()
-    fun toggleWindSpeedUnit()
-    fun togglePressureUnit()
-}
-
-class SettingsViewModelPreview @Inject constructor() :
-    ISettingsViewModel {
-    override val temperatureUnit: StateFlow<SettingsModel>
-        get() {
-            return MutableStateFlow(DefaultData.SETTINGS.TEMPERATURE)
-        }
-    override val windSpeedUnit: StateFlow<SettingsModel>
-        get() {
-            return MutableStateFlow(DefaultData.SETTINGS.WIND_SPEED)
-        }
-    override val pressureUnit: StateFlow<SettingsModel>
-        get() {
-            return MutableStateFlow(DefaultData.SETTINGS.PRESSURE)
-        }
-
-    override fun toggleTemperatureUnit() {
-        TODO("Not yet implemented")
-    }
-
-    override fun toggleWindSpeedUnit() {
-        TODO("Not yet implemented")
-    }
-
-    override fun togglePressureUnit() {
-        TODO("Not yet implemented")
-    }
-}
-
 @HiltViewModel
-class SettingsViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel(),
-    ISettingsViewModel {
+class SettingsViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
     private val _temperatureUnit = MutableStateFlow(
         SettingsModel(
             name = getString(context, R.string.temperature_name),
@@ -64,7 +23,7 @@ class SettingsViewModel @Inject constructor(@ApplicationContext context: Context
             )
         )
     )
-    override val temperatureUnit = _temperatureUnit.asStateFlow()
+    val temperatureUnit = _temperatureUnit.asStateFlow()
 
     private val _windSpeedUnit = MutableStateFlow(
         SettingsModel(
@@ -75,7 +34,7 @@ class SettingsViewModel @Inject constructor(@ApplicationContext context: Context
             )
         )
     )
-    override val windSpeedUnit = _windSpeedUnit.asStateFlow()
+    val windSpeedUnit = _windSpeedUnit.asStateFlow()
 
     private val _pressureUnit = MutableStateFlow(
         SettingsModel(
@@ -86,18 +45,18 @@ class SettingsViewModel @Inject constructor(@ApplicationContext context: Context
             )
         )
     )
-    override val pressureUnit = _pressureUnit.asStateFlow()
+    val pressureUnit = _pressureUnit.asStateFlow()
 
-    override fun toggleTemperatureUnit() {
+    fun toggleTemperatureUnit() {
         _temperatureUnit.value =
             _temperatureUnit.value.copy(checked = !_temperatureUnit.value.checked)
     }
 
-    override fun toggleWindSpeedUnit() {
+    fun toggleWindSpeedUnit() {
         _windSpeedUnit.value = _windSpeedUnit.value.copy(checked = !_windSpeedUnit.value.checked)
     }
 
-    override fun togglePressureUnit() {
+    fun togglePressureUnit() {
         _pressureUnit.value = _pressureUnit.value.copy(checked = !_pressureUnit.value.checked)
     }
 }

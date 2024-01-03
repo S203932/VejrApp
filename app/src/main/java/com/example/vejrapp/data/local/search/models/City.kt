@@ -9,16 +9,18 @@ import com.example.vejrapp.R
 // Class to describe each individual city within the json database
 // The information about the city is:
 // - the country it's in
-// - the name
 // - the latitude and longitiude for the city in question
+// - the name
 // - the population of the city (not necessary, but can be a usable fact feature later)
+// . the timezone of the city
 // - the favorite status of the city (whether the city is favorited or not)
 data class City(
     val country: String,
-    val name: String,
     val latitude: Float,
     val longitude: Float,
+    val name: String,
     val population: Int,
+    val timezone: String,
     var favorite: Boolean = false,
 ) {
     // function to be used when searching

@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.search
+package com.example.vejrapp.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
@@ -49,21 +49,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vejrapp.R
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     onNextButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier,
-    searchViewModel: ISearchViewModel,
-    navController: NavController,
+    modifier: Modifier = Modifier
 ) {
+    val searchViewModel = hiltViewModel<SearchViewModel>()
 
     val searchText by searchViewModel.searchText.collectAsState()
     val cities = searchViewModel.cities.collectAsState()
@@ -219,14 +216,4 @@ fun SearchBar(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun StartOrderPreviewSearchBar() {
-    SearchBar(
-        searchViewModel = SearchViewModelPreview(),
-        navController = rememberNavController(),
-        onNextButtonClicked = {},
-    )
 }

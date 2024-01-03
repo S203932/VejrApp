@@ -8,7 +8,7 @@ import java.io.BufferedReader
 
 class Locations(private val context: Context) {
 
-    private val citiesAssetPath = "filtered_dataset_100000.json"
+    private val citiesAssetPath = "filtered_dataset_100000_tz.json"
     private val gson = Gson()
 
     val cities = gson.fromJson(

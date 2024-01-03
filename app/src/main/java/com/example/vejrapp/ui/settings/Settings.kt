@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.settings
+package com.example.vejrapp.ui.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,23 +23,19 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.vejrapp.presentation.settings.models.SettingsModel
+import com.example.vejrapp.ui.settings.models.SettingsModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(
     navController: NavController,
-    settingsViewModel: ISettingsViewModel,
-    onSelectionChanged: (String) -> Unit = {},
-    onCancelButtonClicked: () -> Unit = {},
-    onNextButtonClicked: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val settingsViewModel = hiltViewModel<SettingsViewModel>()
 
     val temperatureUnit = settingsViewModel.temperatureUnit.collectAsState()
     val windSpeedUnit = settingsViewModel.windSpeedUnit.collectAsState()
@@ -58,7 +54,6 @@ fun Settings(
             IconButton(
                 onClick = {
                     navController.popBackStack()
-                    //onNextButtonClicked
                 }
             ) {
                 Icon(
@@ -115,10 +110,4 @@ fun Setting(
 
         Switch(checked = setting.value.checked, onCheckedChange = { onToggle() })
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SettingPreview() {
-    Settings(rememberNavController(), SettingsViewModelPreview())
 }

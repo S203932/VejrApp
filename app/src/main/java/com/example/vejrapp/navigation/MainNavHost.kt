@@ -24,29 +24,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.vejrapp.presentation.day.DayPage
-import com.example.vejrapp.presentation.day.DayViewModel
-import com.example.vejrapp.presentation.search.SearchViewModel
-import com.example.vejrapp.presentation.settings.Settings
-import com.example.vejrapp.presentation.settings.SettingsViewModel
-import com.example.vejrapp.presentation.theme.LinearGradient
-import com.example.vejrapp.presentation.week.WeekPage
-import com.example.vejrapp.presentation.week.WeekViewModel
+import com.example.vejrapp.ui.day.Day
+import com.example.vejrapp.ui.settings.Settings
+import com.example.vejrapp.ui.theme.LinearGradient
+import com.example.vejrapp.ui.week.WeekPage
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainNavHost(
     navController: NavHostController,
-    settingsViewModel: SettingsViewModel = viewModel(),
-    searchViewModel: SearchViewModel = viewModel(),
-    dayViewModel: DayViewModel = viewModel(),
-    weekViewModel: WeekViewModel = viewModel(),
-
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -80,10 +70,8 @@ fun MainNavHost(
                     when (route) {
                         Route.Today.name -> {
                             // Content specific to Today
-                            DayPage(
-                                navController = navController,
-                                searchViewModel = searchViewModel,
-                                dayViewModel = dayViewModel
+                            Day(
+                                navController = navController
                             )
                         }
                         /*
@@ -101,9 +89,7 @@ fun MainNavHost(
                         Route.Week.name -> {
                             // Content specific to Week
                             WeekPage(
-                                navController = navController,
-                                searchViewModel = searchViewModel,
-                                weekViewModel = weekViewModel
+                                navController = navController
                             )
                         }
                     }
@@ -135,21 +121,12 @@ fun MainNavHost(
                         }
                     }
                 }
-
-
             }
         }
         composable(route = Route.Settings.name) {
             Settings(
-                onNextButtonClicked = {
-                    navController.previousBackStackEntry
-                },
-                onCancelButtonClicked = {
-                    cancelAndNavigateToStart(navController)
-                },
                 modifier = Modifier.fillMaxHeight(),
                 navController = navController,
-                settingsViewModel = settingsViewModel
             )
         }
     }
