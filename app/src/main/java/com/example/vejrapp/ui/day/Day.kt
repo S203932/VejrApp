@@ -3,6 +3,8 @@ package com.example.vejrapp.ui.day
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -355,6 +357,7 @@ fun LazyRowWithCards() {
 
 // The bottom section of the main screen displaying
 // the additional parameters of the day
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DetailsBox() {
     val dayViewModel = hiltViewModel<DayViewModel>()
@@ -366,7 +369,7 @@ fun DetailsBox() {
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
-            .height(130.dp)
+//            .height(130.dp)
             .padding(6.dp)
     ) {
         Text(
@@ -377,11 +380,13 @@ fun DetailsBox() {
                 .align(Alignment.CenterHorizontally),
             color = fontColor
         )
-        Row(
+        FlowRow(
+            maxItemsInEachRow = 4,
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
-                .fillMaxWidth(),
-            Arrangement.SpaceEvenly
-
+                .fillMaxWidth()
+                .padding(10.dp)
         ) {
             Detail(
                 painterId = R.drawable.baseline_water_drop_24,
@@ -389,7 +394,6 @@ fun DetailsBox() {
                 value = currentWeather.humidity,
                 unit = "%"
             )
-
             Detail(
                 painterId = R.drawable.outline_wb_sunny_24,
                 text = "UV index",
