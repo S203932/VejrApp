@@ -21,19 +21,21 @@ import java.time.ZonedDateTime
 class DefaultData {
     object LOCATIONS {
         private val copenhagen = City(
-            name = "Copenhagen",
             country = "Denmark",
             latitude = 55.67594F,
             longitude = 12.56553F,
-            population = 1153615
+            name = "Copenhagen",
+            population = 1153615,
+            timezone = "Europe/Copenhagen"
 
         )
         private val sofia = City(
-            name = "Sofia",
             country = "Bulgaria",
             latitude = 42.69751F,
             longitude = 23.32415F,
-            population = 1152556
+            name = "Sofia",
+            population = 1152556,
+            timezone = "Europe/Sofia"
         )
         val CITY: City = copenhagen
         val CITIES = listOf<City>(copenhagen, sofia)
@@ -60,7 +62,7 @@ class DefaultData {
             type = METJSONForecastEnum.Feature
         ), ZonedDateTime.now())
 
-        val CURRENT_WEATHER = CurrentWeather(COMPLETE)
+        val CURRENT_WEATHER = CurrentWeather(COMPLETE, LOCATIONS.CITY)
 
         // Added weekweather
         val WEEK_WEATHER = WeekWeather(COMPLETE)

@@ -42,10 +42,12 @@ import androidx.navigation.NavHostController
 import com.example.vejrapp.R
 import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
+import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.ui.search.SearchBar
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -147,7 +149,12 @@ fun TopWeather() {
                 Spacer(modifier = Modifier.height(30.dp))
                 Row {
                     Text(
-                        text = prettyTime(currentWeather.updatedAt),
+                        text = prettyTime(
+                            applyTimezone(
+                                currentWeather.updatedAt,
+                                currentWeather.city
+                            )
+                        ),
                         fontStyle = FontStyle.Italic,
                         modifier = Modifier
                             .padding(2.dp),
@@ -351,9 +358,10 @@ fun LazyRowWithCards() {
 @Composable
 fun DetailsBox() {
     val dayViewModel = hiltViewModel<DayViewModel>()
+    val currentWeather by dayViewModel.currentWeather.collectAsState()
 
     val fontColor = Color.Black
-    val currentWeather by dayViewModel.currentWeather.collectAsState()
+
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
@@ -361,80 +369,69 @@ fun DetailsBox() {
             .height(130.dp)
             .padding(6.dp)
     ) {
-        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text(
-                text = "Details",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(4.dp),
-                color = fontColor
-            )
-        }
+        Text(
+            text = "Details",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(4.dp)
+                .align(Alignment.CenterHorizontally),
+            color = fontColor
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
             Arrangement.SpaceEvenly
 
         ) {
-            Column(modifier = Modifier.padding(4.dp)) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_water_drop_24),
-                    contentDescription = "Humidity",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    tint = fontColor
-                )
-                Text(
-                    text = "Humidity",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-                Text(
-                    text = currentWeather.humidity.toString() + "%",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-            }
+            Detail(
+                painterId = R.drawable.baseline_water_drop_24,
+                text = "Humidity",
+                value = currentWeather.humidity,
+                unit = "%"
+            )
 
-            Column(modifier = Modifier.padding(4.dp)) {
-                Icon(
-                    painter = painterResource(R.drawable.outline_wb_sunny_24),
-                    contentDescription = "Humidity",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    tint = fontColor
-                )
-                Text(
-                    text = "UV index",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-                Text(
-                    text = currentWeather.uvIndex.toString(),
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-            }
-
-            Column(modifier = Modifier.padding(4.dp)) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_compress_24),
-                    contentDescription = "Humidity",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    tint = fontColor
-                )
-                Text(
-                    text = "Pressure",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-                Text(
-                    text = currentWeather.pressure.toString() + " hPa",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-            }
+            Detail(
+                painterId = R.drawable.outline_wb_sunny_24,
+                text = "UV index",
+                value = currentWeather.uvIndex
+            )
+            Detail(
+                painterId = R.drawable.baseline_compress_24,
+                text = "Pressure",
+                value = currentWeather.pressure,
+                unit = "hPa"
+            )
         }
+    }
+}
+
+@Composable
+fun Detail(painterId: Int, text: String, value: Float?, unit: String = "") {
+
+    if (value == null) {
+        return
+    }
+
+    val fontColor = Color.Black
+
+    Column(modifier = Modifier.padding(4.dp)) {
+        Icon(
+            painter = painterResource(painterId),
+            contentDescription = text,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            tint = fontColor
+        )
+        Text(
+            text = text,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            color = fontColor
+        )
+        Text(
+            text = "$value $unit",
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            color = fontColor
+        )
     }
 }
 
@@ -449,4 +446,9 @@ fun prettyDate(zonedDateTime: ZonedDateTime): String {
 // repository
 fun prettyTime(zonedDateTime: ZonedDateTime): String {
     return zonedDateTime.format(DateTimeFormatter.ofPattern("hh:mm")).toString()
+}
+
+// Method to apply a time zone to a
+fun applyTimezone(zonedDateTime: ZonedDateTime, city: City): ZonedDateTime {
+    return zonedDateTime.withZoneSameInstant(ZoneId.of(city.timezone))
 }

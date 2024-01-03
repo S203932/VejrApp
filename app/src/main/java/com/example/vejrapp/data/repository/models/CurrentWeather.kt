@@ -1,13 +1,15 @@
 package com.example.vejrapp.data.repository.models
 
+import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.Period
+import kotlin.math.exp
 
 // More usable version of METJSONForecast
-class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
+class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped, val city: City) {
 
     // Get weather data, expire date and data timestamp
     private val complete = metjsonForecastTimestamped.metJsonForecast
@@ -22,10 +24,6 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
     val currentCondition = currentWeather.data.nextOneHours?.summary?.symbolCode
     val updatedAt = complete.properties.meta.updatedAt
 
-
-    // TODO replace with real calculated realfeel
-    // Realfeel is related to heat index, formulas for heat index may be applied
-    val realFeel = currentWeather.data.instant?.details?.dewPointTemperature
     val currentMinTemperature = calculateMin(complete, 0)
     val currentMaxTemperature = calculateMax(complete, 0)
     val currentPercentageRain =
@@ -51,6 +49,23 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
     val humidity = currentWeather.data.instant?.details?.relativeHumidity
     val uvIndex = currentWeather.data.instant?.details?.ultravioletIndexClearSky
     val pressure = currentWeather.data.instant?.details?.airPressureAtSeaLevel
+
+    val realFeel = calculateRealFeel()
+
+    private fun calculateRealFeel(): Float? {
+        // Calculated using Australian apparent temperature (https://en.wikipedia.org/wiki/Wind_chill)
+        return try {
+            val e =
+                (humidity!! / 100) * 6.105F * exp((17.27F * currentTemperature!!) / (237.7F + currentTemperature))
+            val at = currentTemperature + (0.33F * e) - (0.7F * currentWindSpeed!!) - 4F
+
+            // Round to 1 decimal place
+            "%.1f".format(at).toFloat()
+
+        } catch (error: Exception) {
+            null
+        }
+    }
 
     fun currentTimeData(complete: METJSONForecast): Int {
         var x = 0
