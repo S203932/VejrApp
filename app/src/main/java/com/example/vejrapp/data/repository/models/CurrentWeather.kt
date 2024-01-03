@@ -15,6 +15,7 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped, val
     private val complete = metjsonForecastTimestamped.metJsonForecast
     val expires = metjsonForecastTimestamped.expires
 
+    val units = complete.properties.meta.units
     private val weatherData = complete.properties.timeseries
 
 
@@ -50,9 +51,9 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped, val
     val uvIndex = currentWeather.data.instant?.details?.ultravioletIndexClearSky
     val pressure = currentWeather.data.instant?.details?.airPressureAtSeaLevel
 
-    val realFeel = calculateRealFeel()
+    val feelsLike = calculateFeelsLike()
 
-    private fun calculateRealFeel(): Float? {
+    private fun calculateFeelsLike(): Float? {
         // Calculated using Australian apparent temperature (https://en.wikipedia.org/wiki/Wind_chill)
         return try {
             val e =

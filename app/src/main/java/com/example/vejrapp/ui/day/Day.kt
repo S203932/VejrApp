@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -63,6 +64,7 @@ fun Day(navController: NavHostController) {
             item { CautionBox() }
             item { LazyRowWithCards() }
             item { DetailsBox() }
+            item { ApiTimestamp() }
         }
     }
 }
@@ -84,25 +86,36 @@ fun TopWeather() {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Row() {
-            Text(
-                text = prettyDate(currentWeather.expires),
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                color = fontColor
-            )
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
-            Column(
-                modifier = Modifier
-            )
-            {
-                //Current Temp
+        // Day timestamp
+        Text(
+            text = prettyDate(currentWeather.expires),
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth(),
+            color = fontColor
+        )
+        // TODO evaluate local time
+//        Text(
+//            text = "Local time 12:23",
+//            fontWeight = FontWeight.Bold,
+//            textAlign = TextAlign.Center,
+//            modifier = Modifier
+//                .fillMaxWidth(),
+//            color = fontColor
+//        )
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            // Temperature block
+            Column {
+                //Current temperature
                 Text(
-                    text = currentWeather.currentTemperature.toString() + "°",
+                    text = "${currentWeather.currentTemperature}°",
                     fontSize = 50.sp,
                     fontStyle = FontStyle.Italic,
                     modifier = Modifier
@@ -110,116 +123,36 @@ fun TopWeather() {
                     textAlign = TextAlign.Center,
                     color = fontColor
                 )
-                //Realfeel Temp
+                //Min-Max temperature
                 Text(
-                    text = "Realfeel " + currentWeather.realFeel.toString() + "°", //TODO actual realfeel
+                    text = stringResource(R.string.day_temp_range).format(
+                        currentWeather.currentMinTemperature,
+                        currentWeather.currentMaxTemperature
+                    ),
                     fontSize = 20.sp,
+                    color = fontColor,
+                    modifier = Modifier
+                        .padding(2.dp)
+                )
+                // Feels like temperature
+                Text(
+                    text = stringResource(R.string.day_feels_like).format(currentWeather.feelsLike),
+                    fontSize = 22.sp,
                     modifier = Modifier
                         .padding(0.dp),
                     textAlign = TextAlign.Center,
                     color = fontColor
                 )
-                //Min-Max Row
-                Row {
-                    //Max Temp
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_arrow_upward_24),
-                        contentDescription = "Max",
-                        tint = fontColor
-                    )
-                    Text(
-                        text = currentWeather.currentMaxTemperature.toString() + "°",
-                        modifier = Modifier
-                            .padding(2.dp),
-                        color = fontColor
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    //Min Temp
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_arrow_downward_24),
-                        contentDescription = "Min",
-                        tint = fontColor
-                    )
-                    Text(
-                        text = currentWeather.currentMinTemperature.toString() + "°",
-                        modifier = Modifier
-                            .padding(2.dp),
-                        color = fontColor
-                    )
-
-                }
-                Spacer(modifier = Modifier.height(30.dp))
-                Row {
-                    Text(
-                        text = prettyTime(
-                            applyTimezone(
-                                currentWeather.updatedAt,
-                                currentWeather.city
-                            )
-                        ),
-                        fontStyle = FontStyle.Italic,
-                        modifier = Modifier
-                            .padding(2.dp),
-                        color = fontColor
-                    )
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_sync_24),
-                        contentDescription = "Update data",
-                        tint = fontColor
-                    )
-                }
-
             }
-            Spacer(modifier = Modifier.width(50.dp))
-            Column(
+            Spacer(modifier = Modifier.width(25.dp))
+
+            // Weather icon
+            Image(
+                bitmap = croppedBitmap.asImageBitmap(),
+                contentDescription = "Weather icon",
                 modifier = Modifier
+                    .size(175.dp)
             )
-            {
-                Image(
-                    bitmap = croppedBitmap.asImageBitmap(),
-                    contentDescription = "Weather icon",
-                    modifier = Modifier
-                        .size(120.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
-                Row {
-                    // Remove rain if no data is available
-                    if (currentWeather.currentPercentageRain != null) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_umbrella_24),
-                            contentDescription = "Weather icon",
-                            modifier = Modifier
-                                .height(30.dp)
-                                .width(30.dp)
-                                .rotate(180F),
-                            tint = fontColor
-
-                        )
-                        Text(
-                            text = currentWeather.currentPercentageRain.toString() + "%",
-                            modifier = Modifier
-                                .padding(2.dp),
-                            color = fontColor
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                    }
-
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_air_24),
-                        contentDescription = "Weather icon",
-                        modifier = Modifier
-                            .height(30.dp)
-                            .width(30.dp),
-                        tint = fontColor
-                    )
-                    Text(
-                        text = currentWeather.currentWindSpeed.toString() + " m/s",
-                        modifier = Modifier
-                            .padding(2.dp),
-                        color = fontColor
-                    )
-                }
-            }
         }
     }
 }
@@ -244,13 +177,13 @@ fun CautionBox() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Caution:",
+                text = stringResource(R.string.day_caution),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 color = fontColor
             )
             Text(
-                text = "Rainy weather in coming days",
+                text = stringResource(R.string.day_caution_rainy_coming_days),
                 color = fontColor
             )
         }
@@ -290,7 +223,7 @@ fun CardWithColumnAndRow(hour: Int) {
 
             // Second Text
             Text(
-                text = currentWeather.hourlyTemperature[hour].toString() + "°",
+                text = "${currentWeather.hourlyTemperature[hour]}°",
                 fontSize = 28.sp,
                 modifier = Modifier
                     .padding(4.dp)
@@ -306,7 +239,7 @@ fun CardWithColumnAndRow(hour: Int) {
                 ) {
                     //Image (you can replace the URL with your image source)
                     Image(
-                        painter = painterResource(id = R.drawable.baseline_umbrella_24), // Use your own image resource
+                        painter = painterResource(R.drawable.baseline_umbrella_24), // Use your own image resource
                         contentDescription = null,
                         modifier = Modifier
                             .size(20.dp)
@@ -316,7 +249,7 @@ fun CardWithColumnAndRow(hour: Int) {
 
                     // Text
                     Text(
-                        text = currentWeather.hourlyPercentageRain[hour].toString() + "%",
+                        text = "${currentWeather.hourlyPercentageRain[hour]}%",
                         fontSize = 16.sp,
                         modifier = Modifier.padding(start = 4.dp)
                     )
@@ -326,8 +259,7 @@ fun CardWithColumnAndRow(hour: Int) {
 
             // Third Text
             Text(
-                text = String.format("%02d:00", hour),
-                //LocalContext.current.getString(weatherType.stringResourceId),
+                text = "%02d:00".format(hour),
                 fontSize = 16.sp,
                 modifier = Modifier.padding(4.dp)
             )
@@ -369,11 +301,10 @@ fun DetailsBox() {
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
-//            .height(130.dp)
             .padding(6.dp)
     ) {
         Text(
-            text = "Details",
+            text = stringResource(R.string.day_details),
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(4.dp)
@@ -390,27 +321,46 @@ fun DetailsBox() {
         ) {
             Detail(
                 painterId = R.drawable.baseline_water_drop_24,
-                text = "Humidity",
+                text = stringResource(R.string.day_humidity),
                 value = currentWeather.humidity,
-                unit = "%"
+                unit = currentWeather.units.relativeHumidity
+            )
+            Detail(
+                painterId = R.drawable.baseline_air_24,
+                text = stringResource(R.string.day_wind_speed),
+                value = currentWeather.currentWindSpeed,
+                unit = currentWeather.units.windSpeed
             )
             Detail(
                 painterId = R.drawable.outline_wb_sunny_24,
-                text = "UV index",
+                text = stringResource(R.string.day_uv_index),
                 value = currentWeather.uvIndex
             )
             Detail(
+                painterId = R.drawable.baseline_umbrella_24,
+                rotateIcon = true,
+                text = stringResource(R.string.day_rain),
+                value = currentWeather.currentPercentageRain,
+                unit = currentWeather.units.probabilityOfPrecipitation
+            )
+            Detail(
                 painterId = R.drawable.baseline_compress_24,
-                text = "Pressure",
+                text = stringResource(R.string.day_pressure),
                 value = currentWeather.pressure,
-                unit = "hPa"
+                unit = currentWeather.units.airPressureAtSeaLevel
             )
         }
     }
 }
 
 @Composable
-fun Detail(painterId: Int, text: String, value: Float?, unit: String = "") {
+fun Detail(
+    painterId: Int,
+    rotateIcon: Boolean = false,
+    text: String,
+    value: Float?,
+    unit: String? = ""
+) {
 
     if (value == null) {
         return
@@ -419,10 +369,13 @@ fun Detail(painterId: Int, text: String, value: Float?, unit: String = "") {
     val fontColor = Color.Black
 
     Column(modifier = Modifier.padding(4.dp)) {
+
         Icon(
             painter = painterResource(painterId),
             contentDescription = text,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .rotate(if (rotateIcon) 180F else 0F),
             tint = fontColor
         )
         Text(
@@ -437,6 +390,29 @@ fun Detail(painterId: Int, text: String, value: Float?, unit: String = "") {
             color = fontColor
         )
     }
+}
+
+@Composable
+fun ApiTimestamp() {
+    val dayViewModel = hiltViewModel<DayViewModel>()
+    val currentWeather by dayViewModel.currentWeather.collectAsState()
+
+    val fontColor = Color.White
+
+    Text(
+        text = "${stringResource(R.string.day_feels_like)} ${
+            prettyTime(
+                applyTimezone(
+                    currentWeather.updatedAt,
+                    currentWeather.city
+                )
+            )
+        }",
+        fontStyle = FontStyle.Italic,
+        color = fontColor,
+        modifier = Modifier
+            .padding(6.dp)
+    )
 }
 
 // Method to format the date information from the
