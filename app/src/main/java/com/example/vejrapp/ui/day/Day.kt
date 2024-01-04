@@ -1,7 +1,10 @@
 package com.example.vejrapp.ui.day
 
+import android.graphics.Typeface
+import android.widget.TextClock
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -33,6 +36,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -40,12 +44,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.vejrapp.R
 import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
-import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.ui.search.SearchBar
@@ -53,25 +57,25 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.TimeZone
 
 // The page displayed at the landing screen/main screen/ today's weather
 @Composable
 fun Day(navController: NavHostController) {
-    Column {
+    Column(verticalArrangement = Arrangement.SpaceBetween) {
         SearchBar(onNextButtonClicked = { navController.navigate(Route.Settings.name) })
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        LazyColumn {
             item { TopWeather() }
             item { CautionBox() }
             item { LazyRowWithCards() }
             item { DetailsBox() }
-            item { ApiTimestamp() }
         }
     }
 }
 
 @Composable
 fun TopWeather() {
-    val dayViewModel: DayViewModel = hiltViewModel<DayViewModel>()
+    val dayViewModel = hiltViewModel<DayViewModel>()
 
     val currentWeather by dayViewModel.currentWeather.collectAsState()
     val weatherImage = currentWeather.currentCondition.toString()
@@ -86,30 +90,41 @@ fun TopWeather() {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        // Day timestamp
-        Text(
-            text = prettyDate(currentWeather.expires),
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
+        Box(
             modifier = Modifier
                 .fillMaxWidth(),
-            color = fontColor
-        )
-        // TODO evaluate local time
-//        Text(
-//            text = "Local time 12:23",
-//            fontWeight = FontWeight.Bold,
-//            textAlign = TextAlign.Center,
-//            modifier = Modifier
-//                .fillMaxWidth(),
-//            color = fontColor
-//        )
+            contentAlignment = Alignment.Center
+        ) {
+            val clockTypeface =
+                LocalFontFamilyResolver.current.resolve(
+                    fontWeight = FontWeight.Bold,
+                ).value as Typeface
 
+            AndroidView(
+                factory = { context ->
+                    TextClock(context).apply {
+                        format12Hour?.let {
+                            this.format12Hour = context.getString(R.string.day_text_clock_12)
+                        }
+                        format24Hour?.let {
+                            this.format24Hour = context.getString(R.string.day_text_clock_24)
+                        }
+                        textSize.let { this.textSize = 16F }
+
+                        setTextColor(context.getColor(R.color.white))
+                        timeZone = currentWeather.city.timezone
+                        typeface = clockTypeface
+                    }
+                }, update = { view ->
+                    view.timeZone = currentWeather.city.timezone
+                }
+            )
+        }
         Row(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
         ) {
             // Temperature block
             Column {
@@ -144,8 +159,6 @@ fun TopWeather() {
                     color = fontColor
                 )
             }
-            Spacer(modifier = Modifier.width(25.dp))
-
             // Weather icon
             Image(
                 bitmap = croppedBitmap.asImageBitmap(),
@@ -167,7 +180,6 @@ fun CautionBox() {
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         modifier = Modifier
             .fillMaxWidth()
-            .height(70.dp)
             .padding(6.dp)
     ) {
         Column(
@@ -190,7 +202,7 @@ fun CautionBox() {
     }
 }
 
-// In the lazyrow of the hour view
+// In the LazyRow of the hour view
 // this is the composable generating
 // each hour section within the hour view
 @Composable
@@ -329,7 +341,7 @@ fun DetailsBox() {
                 painterId = R.drawable.baseline_air_24,
                 text = stringResource(R.string.day_wind_speed),
                 value = currentWeather.currentWindSpeed,
-                unit = currentWeather.units.windSpeed
+                unit = " " + currentWeather.units.windSpeed
             )
             Detail(
                 painterId = R.drawable.outline_wb_sunny_24,
@@ -347,7 +359,28 @@ fun DetailsBox() {
                 painterId = R.drawable.baseline_compress_24,
                 text = stringResource(R.string.day_pressure),
                 value = currentWeather.pressure,
-                unit = currentWeather.units.airPressureAtSeaLevel
+                unit = " " + currentWeather.units.airPressureAtSeaLevel
+            )
+            Detail(
+                painterId = R.drawable.baseline_thunderstorm_24,
+                text = stringResource(R.string.day_thunder),
+                value = currentWeather.thunder,
+                unit = currentWeather.units.probabilityOfThunder
+            )
+        }
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = stringResource(R.string.day_data_updated).format(
+                    prettyTime(
+                        applyTimezone(currentWeather.updatedAt, TimeZone.getDefault()),
+                        stringResource(R.string.day_pretty_time)
+                    )
+                ),
+                color = fontColor,
+                modifier = Modifier.padding(10.dp)
             )
         }
     }
@@ -385,50 +418,22 @@ fun Detail(
             color = fontColor
         )
         Text(
-            text = "$value $unit",
+            text = "$value$unit",
             modifier = Modifier.align(Alignment.CenterHorizontally),
             color = fontColor
         )
     }
 }
 
-@Composable
-fun ApiTimestamp() {
-    val dayViewModel = hiltViewModel<DayViewModel>()
-    val currentWeather by dayViewModel.currentWeather.collectAsState()
-
-    val fontColor = Color.White
-
-    Text(
-        text = "${stringResource(R.string.day_timestamp)} ${
-            prettyTime(
-                applyTimezone(
-                    currentWeather.updatedAt,
-                    currentWeather.city
-                )
-            )
-        }",
-        fontStyle = FontStyle.Italic,
-        color = fontColor,
-        modifier = Modifier
-            .padding(6.dp)
-    )
-}
-
-// Method to format the date information from the
-// repository
-fun prettyDate(zonedDateTime: ZonedDateTime): String {
-    return zonedDateTime.format(DateTimeFormatter.ofPattern("EEEE, MMMM '%s'.")).toString()
-        .format(zonedDateTime.dayOfMonth.toString())
-}
-
 // Method to format the hour information from the
 // repository
-fun prettyTime(zonedDateTime: ZonedDateTime): String {
-    return zonedDateTime.format(DateTimeFormatter.ofPattern("hh:mm")).toString()
+fun prettyTime(zonedDateTime: ZonedDateTime, stringResource: String): String {
+    return zonedDateTime.format(DateTimeFormatter.ofPattern(stringResource))
+        .toString()
 }
 
 // Method to apply a time zone to a
-fun applyTimezone(zonedDateTime: ZonedDateTime, city: City): ZonedDateTime {
-    return zonedDateTime.withZoneSameInstant(ZoneId.of(city.timezone))
+fun applyTimezone(zonedDateTime: ZonedDateTime, timeZone: TimeZone): ZonedDateTime {
+
+    return zonedDateTime.withZoneSameInstant(ZoneId.of(timeZone.id))
 }
