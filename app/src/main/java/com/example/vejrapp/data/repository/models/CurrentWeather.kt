@@ -47,6 +47,13 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped, val
         complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.probabilityOfPrecipitation
     }
 
+    val hourlyPercentageRainDumbMin = MutableList<Float?>(24) { index ->
+        complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.precipitationAmountMin
+    }
+
+    val hourlyPercentageRainDumbMax = MutableList<Float?>(24) { index ->
+        complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.precipitationAmountMax
+    }
     // The middle of DayPage
     val humidity = currentWeather.data.instant?.details?.relativeHumidity
     val uvIndex = currentWeather.data.instant?.details?.ultravioletIndexClearSky
