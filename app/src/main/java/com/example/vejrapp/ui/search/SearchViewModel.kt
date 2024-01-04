@@ -1,4 +1,4 @@
-package com.example.vejrapp.ui.search
+package com.example.vejrapp.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
@@ -33,13 +34,16 @@ class SearchViewModel @Inject constructor(
     val cities = searchText
         .debounce(100L)
         .combine(_cities) { text, cities ->
-            if (text.isBlank()) {
-                cities
-            } else {
-                cities.filter {
-                    it.doesMatchSearchQuery(text)
-                }
+            val updatedCities = cities.map {
+                if (it.name == currentCity.value.name) currentCity.value else it
             }
+            val sortedCities = if (text.isBlank()) {
+                updatedCities.sortedWith(compareByDescending<City> { it.favorite }.thenBy { it.name })
+            } else {
+                updatedCities.filter { it.doesMatchSearchQuery(text) }
+                    .sortedWith(compareByDescending<City> { it.favorite }.thenBy { it.name })
+            }
+            sortedCities
         }
         .stateIn(
             viewModelScope,
@@ -52,7 +56,15 @@ class SearchViewModel @Inject constructor(
     }
 
     fun updateFavorite(city: City) {
-        city.favorite = !city.favorite
+        val updatedCities = _cities.value.map {
+            if (it.name == city.name) {
+                val updatedCity = it.copy(favorite = !it.favorite)
+                updatedCity
+            } else {
+                it
+            }
+        }
+        _cities.value = updatedCities
     }
 
     fun updateCurrentCity(city: City) {

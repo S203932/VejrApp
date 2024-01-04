@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Column
@@ -42,7 +41,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
@@ -57,21 +55,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.collectAsState
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vejrapp.R
-import kotlinx.coroutines.flow.collect
+import com.example.vejrapp.presentation.search.SearchViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     onNextButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val searchViewModel = hiltViewModel<SearchViewModel>()
-
     val searchText by searchViewModel.searchText.collectAsState()
     val cities = searchViewModel.cities.collectAsState().value
     val searchMode by searchViewModel.searchMode.collectAsState()
@@ -105,17 +99,16 @@ fun SearchBar(
                         }
                     },
                     interactionSource = remember { MutableInteractionSource() }
-                        .also { interactionSource -> LaunchedEffect(interactionSource){
-                            interactionSource.interactions.collect {
-                                if(it is PressInteraction.Release)
-                                        {
-                                            searchViewModel.onSearchTextChange("")
-                                            searchViewModel.updateSearchMode(true)
-                                        }
+                        .also { interactionSource ->
+                            LaunchedEffect(interactionSource) {
+                                interactionSource.interactions.collect {
+                                    if (it is PressInteraction.Release) {
+                                        searchViewModel.onSearchTextChange("")
+                                        searchViewModel.updateSearchMode(true)
                                     }
                                 }
-                              }
-                    ,
+                            }
+                        },
                     modifier = Modifier
                         .fillMaxWidth()
                         .motionEventSpy {}
