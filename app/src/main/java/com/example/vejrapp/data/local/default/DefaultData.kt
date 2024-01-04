@@ -26,8 +26,8 @@ class DefaultData {
             latitude = 55.67594F,
             longitude = 12.56553F,
             population = 1153615
-
         )
+
         private val sofia = City(
             name = "Sofia",
             country = "Bulgaria",

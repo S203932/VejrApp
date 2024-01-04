@@ -49,6 +49,13 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped) {
         complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.probabilityOfPrecipitation
     }
 
+    val hourlyPercentageRainDumbMin = MutableList<Float?>(24) { index ->
+        complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.precipitationAmountMin
+    }
+
+    val hourlyPercentageRainDumbMax = MutableList<Float?>(24) { index ->
+        complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.precipitationAmountMax
+    }
     // The middle of DayPage
     // There is no visibility in API Data, can only say how much fog
     val humidity = currentWeather.data.instant?.details?.relativeHumidity
