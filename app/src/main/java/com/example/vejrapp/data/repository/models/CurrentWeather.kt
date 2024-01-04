@@ -56,6 +56,7 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped, val
     }
     // The middle of DayPage
     val humidity = currentWeather.data.instant?.details?.relativeHumidity
+    val thunder = currentWeather.data.instant?.details?.probabilityOfThunder
     val uvIndex = currentWeather.data.instant?.details?.ultravioletIndexClearSky
     val pressure = currentWeather.data.instant?.details?.airPressureAtSeaLevel
 
@@ -63,10 +64,11 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped, val
 
     private fun calculateFeelsLike(): Float? {
         // Calculated using Australian apparent temperature (https://en.wikipedia.org/wiki/Wind_chill)
+        // TODO check if this should be changed
         return try {
             val e =
-                (humidity!! / 100) * 6.105F * exp((17.27F * currentTemperature!!) / (237.7F + currentTemperature))
-            val at = currentTemperature + (0.33F * e) - (0.7F * currentWindSpeed!!) - 4F
+                (humidity!! / 100) * 6.105F * exp((17.27F * currentTemperature!!) / (237.7 + currentTemperature))
+            val at = currentTemperature + (0.33F * e) - (0.70F * currentWindSpeed!!) - 4.00F
             // Round to 1 decimal place
             at.toBigDecimal().setScale(1, RoundingMode.HALF_UP).toFloat()
 

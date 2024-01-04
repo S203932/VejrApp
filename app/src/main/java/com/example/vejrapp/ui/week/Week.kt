@@ -27,8 +27,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,7 +38,6 @@ import com.example.vejrapp.data.getBitmapFromImage
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.day.prettyDate
 import com.example.vejrapp.ui.search.SearchBar
 import java.time.format.TextStyle
 import java.util.Locale
@@ -160,14 +157,14 @@ fun WeekView() {
     val weekWeather by weekViewModel.weekWeather.collectAsState()
     Column {
         Row() {
-            Text(
-                text = prettyDate(weekWeather.expires),
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                color = Color.White
-            )
+//            Text(
+//                text = prettyDate(weekWeather.expires),
+//                fontWeight = FontWeight.Bold,
+//                textAlign = TextAlign.Center,
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+//                color = Color.White
+//            )
 
         }
         Column(
