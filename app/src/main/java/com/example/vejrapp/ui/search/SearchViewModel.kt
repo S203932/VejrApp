@@ -1,4 +1,4 @@
-package com.example.vejrapp.presentation.search
+package com.example.vejrapp.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
-
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
