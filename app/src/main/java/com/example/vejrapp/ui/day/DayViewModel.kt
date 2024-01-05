@@ -13,8 +13,4 @@ import javax.inject.Inject
 class DayViewModel @Inject constructor(private val weatherRepository: WeatherRepository) :
     ViewModel() {
     val currentWeather = weatherRepository.currentWeather
-
-    fun update() {
-        weatherRepository.updateComplete()
-    }
 }

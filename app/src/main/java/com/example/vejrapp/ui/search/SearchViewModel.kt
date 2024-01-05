@@ -68,9 +68,8 @@ class SearchViewModel @Inject constructor(
 
     fun updateCurrentCity(city: City) {
         _currentCity.value = city
-        // TODO Check if correct
         weatherRepository.city = city
-        weatherRepository.updateComplete()
+        weatherRepository.getComplete()
     }
 
     fun updateSearchMode(searchMode: Boolean) {

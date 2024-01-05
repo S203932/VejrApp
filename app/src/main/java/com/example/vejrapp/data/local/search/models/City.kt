@@ -38,4 +38,8 @@ data class City(
     fun favoriteDescriptionId(): Int {
         return if (favorite) R.string.favorite_city else R.string.unfavorite_city
     }
+
+    fun uniqueId(): String {
+        return "$latitude-$longitude"
+    }
 }

@@ -9,8 +9,4 @@ import javax.inject.Inject
 class WeekViewModel @Inject constructor(private val weatherRepository: WeatherRepository) :
     ViewModel() {
     val weekWeather = weatherRepository.weekWeather
-
-    fun update() {
-        weatherRepository.updateComplete()
-    }
 }
