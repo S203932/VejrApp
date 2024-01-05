@@ -8,7 +8,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WeekViewModel @Inject constructor(private val weatherRepository: WeatherRepository) :
     ViewModel() {
-    val weekWeather = weatherRepository.weekWeather
+    val weatherData = weatherRepository.weatherData
 
     fun update() {
         weatherRepository.updateComplete()

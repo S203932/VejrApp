@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.remote.locationforecast.Locationforecast
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.data.repository.models.WeekWeather
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,11 +16,6 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
     var city = DefaultData.LOCATIONS.CITY
     var weatherData =
         MutableStateFlow<WeatherData>(DefaultData.LOCATIONFORECAST.WEATHER_DATA)
-
-
-    // Added weekWeather
-    var weekWeather =
-        MutableStateFlow<WeekWeather>(DefaultData.LOCATIONFORECAST.WEEK_WEATHER)
 
 
     // Get forecast for the default city when starting the app
@@ -43,7 +37,6 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
                 )
 
                 weatherData.value = WeatherData(complete, city)
-                weekWeather.value = WeekWeather(complete)
             }
         }
     }

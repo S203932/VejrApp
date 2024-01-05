@@ -12,6 +12,8 @@ class WeatherData(metjsonForecastTimestamped: METJSONForecastTimestamped, val ci
     /// Get weather data, expire date and data timestamp
     private val complete = metjsonForecastTimestamped.metJsonForecast
     val expires = metjsonForecastTimestamped.expires
+    val units = complete.properties.meta.units
+    val updatedAt = complete.properties.meta.updatedAt
 
     private var weatherData = complete.properties.timeseries
     val data = Data()
@@ -33,8 +35,6 @@ class WeatherData(metjsonForecastTimestamped: METJSONForecastTimestamped, val ci
 
 
     // Now I need to sort all the data from weatherData/TimeSeries into Data class
-
-
     private fun sortData() {
 
         if (weatherData[0].time.zone != ZoneId.of(city.timezone)) {
@@ -65,68 +65,6 @@ class WeatherData(metjsonForecastTimestamped: METJSONForecastTimestamped, val ci
     fun applyTimezone(zonedDateTime: ZonedDateTime, city: City): ZonedDateTime {
         return zonedDateTime.withZoneSameInstant(ZoneId.of(city.timezone))
     }
-
-
-    /*
-        // Top half of dayPage information
-        private val weatherData = complete.properties.timeseries[currentTimeData(complete)]
-        val currentTemperature = weatherData.data.instant?.details?.airTemperature
-        val currentCondition = weatherData.data.nextOneHours?.summary?.symbolCode
-        val updatedAt = complete.properties.meta.updatedAt
-
-        val currentMinTemperature = calculateMin(complete, 0)
-        val currentMaxTemperature = calculateMax(complete, 0)
-        val currentPercentageRain =
-            weatherData.data.nextOneHours?.details?.probabilityOfPrecipitation
-        val currentWindSpeed = weatherData.data.instant?.details?.windSpeed
-
-        // No weather caution information in API data
-        // To make weather caution one must analyze the data oneself and issue warnings accordingly
-
-        // Hourly Data after the current time (from the next hour and forward 24 hours)
-        val hourlyTemperature = MutableList<Float?>(24) { index ->
-            complete.properties.timeseries[currentTimeData(complete) + index].data.instant?.details?.airTemperature
-        }
-        val hourlyCondition = MutableList<String>(24) { index ->
-            complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.summary?.symbolCode.toString()
-        }
-
-        val hourlyPercentageRain = MutableList<Float?>(24) { index ->
-            complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.probabilityOfPrecipitation
-        }
-
-        // The middle of DayPage
-        val humidity = weatherData.data.instant?.details?.relativeHumidity
-        val uvIndex = weatherData.data.instant?.details?.ultravioletIndexClearSky
-        val pressure = weatherData.data.instant?.details?.airPressureAtSeaLevel
-        val humidity = currentWeather.data.instant?.details?.relativeHumidity
-        val thunder = currentWeather.data.instant?.details?.probabilityOfThunder
-        val uvIndex = currentWeather.data.instant?.details?.ultravioletIndexClearSky
-        val pressure = currentWeather.data.instant?.details?.airPressureAtSeaLevel
-
-        val feelsLike = calculateFeelsLike()
-     */
-    // Temporary Outcomment realFeel as it uses values not initialized
-
-
-    /*
-    private fun calculateFeelsLike(): Float? {
-        // Calculated using Australian apparent temperature (https://en.wikipedia.org/wiki/Wind_chill)
-        // TODO check if this should be changed
-        return try {
-            val e =
-                (humidity!! / 100) * 6.105F * exp((17.27F * currentTemperature!!) / (237.7 + currentTemperature))
-            val at = currentTemperature + (0.33F * e) - (0.70F * currentWindSpeed!!) - 4.00F
-            // Round to 1 decimal place
-            at.toBigDecimal().setScale(1, RoundingMode.HALF_UP).toFloat()
-
-        } catch (error: Exception) {
-            null
-        }
-    }
-
-     */
-
 
 }
 

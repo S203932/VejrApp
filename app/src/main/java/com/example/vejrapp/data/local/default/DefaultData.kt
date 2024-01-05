@@ -12,7 +12,6 @@ import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTi
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.data.repository.models.WeekWeather
 import com.example.vejrapp.ui.settings.models.SettingsModel
 import java.time.ZonedDateTime
 
@@ -64,8 +63,6 @@ class DefaultData {
 
         val WEATHER_DATA = WeatherData(COMPLETE, LOCATIONS.CITY)
 
-        // Added weekweather
-        val WEEK_WEATHER = WeekWeather(COMPLETE)
     }
 
     val defaultComplete = METJSONForecast(

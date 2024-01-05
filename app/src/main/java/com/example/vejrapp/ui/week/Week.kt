@@ -37,9 +37,9 @@ import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
+import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.ui.search.SearchBar
-import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
@@ -154,131 +154,86 @@ fun DayCard(
 fun WeekView() {
     val weekViewModel = hiltViewModel<WeekViewModel>()
 
-    val weekWeather by weekViewModel.weekWeather.collectAsState()
+    val weatherData by weekViewModel.weatherData.collectAsState()
+
     Column {
         Row() {
-//            Text(
-//                text = prettyDate(weekWeather.expires),
-//                fontWeight = FontWeight.Bold,
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                color = Color.White
-//            )
-
         }
         Column(
             modifier = Modifier
                 .padding(8.dp)
                 .wrapContentSize(Alignment.BottomCenter)
         ) {
-            DayCard(
-                avgTemp = weekWeather.day1Temp.toString() + "°",
-                maxTemp = weekWeather.day1Max.toString() + "°",
-                minTemp = weekWeather.day1Min.toString() + "°",
-                dayOfTheWeek = weekWeather.day1Date.dayOfWeek.getDisplayName(
-                    TextStyle.FULL,
-                    Locale.getDefault()
-                ),
-                dayAndMonth = weekWeather.day1Date.toString(),
-                precipitation = weekWeather.day1Rain.toString() + "%",
-                rainIcon = painterResource(id = R.drawable.umbrella),
-                weatherIcon = weekWeather.day1Condition
-                    ?: WeatherSymbol.heavysnowshowers_polartwilight
-                //painterResource(id = R.drawable.clouds)
-            )
-            Spacer(modifier = Modifier.height(8.dp)) // Add spacing between cards
-            DayCard(
-                avgTemp = weekWeather.day2Temp.toString() + "°",
-                maxTemp = weekWeather.day2Max.toString() + "°",
-                minTemp = weekWeather.day2Min.toString() + "°",
-                dayOfTheWeek = weekWeather.day2Date.dayOfWeek.getDisplayName(
-                    TextStyle.FULL,
-                    Locale.getDefault()
-                ),
-                dayAndMonth = weekWeather.day2Date.toString(),
-                precipitation = weekWeather.day2Rain.toString() + "%",
-                rainIcon = painterResource(id = R.drawable.umbrella),
-                weatherIcon = weekWeather.day2Condition
-                    ?: WeatherSymbol.heavysnowshowers_polartwilight
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            weatherData.data.days.forEach {
+                val indexOfHour12ish = getHourClosestToMidday(it)
 
-            DayCard(
-                avgTemp = weekWeather.day3Temp.toString() + "°",
-                maxTemp = weekWeather.day3Max.toString() + "°",
-                minTemp = weekWeather.day3Min.toString() + "°",
-                dayOfTheWeek = weekWeather.day3Date.dayOfWeek.getDisplayName(
-                    TextStyle.FULL,
-                    Locale.getDefault()
-                ),
-                dayAndMonth = weekWeather.day2Date.toString(),
-                precipitation = weekWeather.day2Rain.toString() + "%",
-                rainIcon = painterResource(id = R.drawable.umbrella),
-                weatherIcon = weekWeather.day3Condition
-                    ?: WeatherSymbol.heavysnowshowers_polartwilight
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            DayCard(
-                avgTemp = weekWeather.day4Temp.toString() + "°",
-                maxTemp = weekWeather.day4Max.toString() + "°",
-                minTemp = weekWeather.day4Min.toString() + "°",
-                dayOfTheWeek = weekWeather.day4Date.dayOfWeek.getDisplayName(
-                    TextStyle.FULL,
-                    Locale.getDefault()
-                ),
-                dayAndMonth = weekWeather.day4Date.toString(),
-                precipitation = weekWeather.day4Rain.toString() + "%",
-                rainIcon = painterResource(id = R.drawable.umbrella),
-                weatherIcon = weekWeather.day4Condition
-                    ?: WeatherSymbol.heavysnowshowers_polartwilight
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            DayCard(
-                avgTemp = weekWeather.day5Temp.toString() + "°",
-                maxTemp = weekWeather.day5Max.toString() + "°",
-                minTemp = weekWeather.day5Min.toString() + "°",
-                dayOfTheWeek = weekWeather.day5Date.dayOfWeek.getDisplayName(
-                    TextStyle.FULL,
-                    Locale.getDefault()
-                ),
-                dayAndMonth = weekWeather.day5Date.toString(),
-                precipitation = weekWeather.day5Rain.toString() + "%",
-                rainIcon = painterResource(id = R.drawable.umbrella),
-                weatherIcon = weekWeather.day5Condition
-                    ?: WeatherSymbol.heavysnowshowers_polartwilight
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            DayCard(
-                avgTemp = weekWeather.day6Temp.toString() + "°",
-                maxTemp = weekWeather.day6Max.toString() + "°",
-                minTemp = weekWeather.day6Min.toString() + "°",
-                dayOfTheWeek = weekWeather.day6Date.dayOfWeek.getDisplayName(
-                    TextStyle.FULL,
-                    Locale.getDefault()
-                ),
-                dayAndMonth = weekWeather.day6Date.toString(),
-                precipitation = weekWeather.day6Rain.toString() + "%",
-                rainIcon = painterResource(id = R.drawable.umbrella),
-                weatherIcon = weekWeather.day6Condition
-                    ?: WeatherSymbol.heavysnowshowers_polartwilight
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            DayCard(
-                avgTemp = weekWeather.day7Temp.toString() + "°",
-                maxTemp = weekWeather.day7Max.toString() + "°",
-                minTemp = weekWeather.day7Min.toString() + "°",
-                dayOfTheWeek = weekWeather.day7Date.dayOfWeek.getDisplayName(
-                    TextStyle.FULL,
-                    Locale.getDefault()
-                ),
-                dayAndMonth = weekWeather.day7Date.toString(),
-                precipitation = weekWeather.day7Rain.toString() + "%",
-                rainIcon = painterResource(id = R.drawable.umbrella),
-                weatherIcon = weekWeather.day7Condition
-                    ?: WeatherSymbol.heavysnowshowers_polartwilight
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                // Need to calculate index of the hour I want to use
+                // I can find min and max air temperature in nextSixHours
+                // Rain/percipitation can also be found in nextSixHours
+                // Condition can also be found in next six hours
+                // Instant is gonna be average of the data closest to 12 a clock midday
+
+                // All the data will be taken from the hour closest to midday
+
+                DayCard(
+                    avgTemp = it.hours[indexOfHour12ish].data.instant?.details?.airTemperature
+                        .toString() + "°",
+                    maxTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMax
+                        .toString() + "°",
+                    minTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMin
+                        .toString() + "°",
+                    dayOfTheWeek = it.hours[0].time.dayOfWeek.getDisplayName(
+                        java.time.format.TextStyle.FULL,
+                        Locale.getDefault()
+                    ),
+                    dayAndMonth = it.hours[0].time.toString(),
+                    precipitation = it.hours[indexOfHour12ish].data.nextSixHours?.details?.probabilityOfPrecipitation
+                        .toString() + "%",
+                    rainIcon = painterResource(id = R.drawable.umbrella),
+                    weatherIcon = it.hours[indexOfHour12ish].data.nextSixHours?.summary?.symbolCode
+                        ?: WeatherSymbol.heavysnowshowers_polartwilight
+                )
+
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+            }
         }
+
     }
 }
+
+private fun getHourClosestToMidday(day: WeatherData.Day): Int {
+    var index = 0
+    for (hour in day.hours) {
+        if (12 - day.hours[index].time.hour > 12 - hour.time.hour) {
+            index = day.hours.indexOf(day.hours.find {
+                it.time.hour == it.time.hour
+            })
+        }
+    }
+    return index
+}
+
+
+private fun calculateMaxTemperature(weatherData: WeatherData): Float {
+    var maxTemp = -1000F
+    for (item in weatherData.data.days[0].hours) {
+        if (item.data.instant?.details?.airTemperature ?: -3000f > maxTemp) {
+            maxTemp = item.data.instant?.details?.airTemperature ?: -1000F
+        }
+    }
+    return maxTemp
+}
+
+
+private fun calculateMinTemperature(weatherData: WeatherData): Float {
+    var minTemp = -1000F
+    for (item in weatherData.data.days[0].hours) {
+        if (item.data.instant?.details?.airTemperature ?: -3000f > minTemp) {
+            minTemp = item.data.instant?.details?.airTemperature ?: -1000F
+        }
+    }
+    return minTemp
+}
+
