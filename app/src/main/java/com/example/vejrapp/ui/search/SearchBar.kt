@@ -7,6 +7,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,8 +34,10 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -53,17 +57,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vejrapp.R
+import com.example.vejrapp.ui.search.SearchViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     onNextButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val searchViewModel = hiltViewModel<SearchViewModel>()
-
     val searchText by searchViewModel.searchText.collectAsState()
-    val cities = searchViewModel.cities.collectAsState()
+    val cities = searchViewModel.cities.collectAsState().value
     val searchMode by searchViewModel.searchMode.collectAsState()
     val currentCity by searchViewModel.currentCity.collectAsState()
 
@@ -94,6 +98,17 @@ fun SearchBar(
                             searchViewModel.updateSearchMode(true)
                         }
                     },
+                    interactionSource = remember { MutableInteractionSource() }
+                        .also { interactionSource ->
+                            LaunchedEffect(interactionSource) {
+                                interactionSource.interactions.collect {
+                                    if (it is PressInteraction.Release) {
+                                        searchViewModel.onSearchTextChange("")
+                                        searchViewModel.updateSearchMode(true)
+                                    }
+                                }
+                            }
+                        },
                     modifier = Modifier
                         .fillMaxWidth()
                         .motionEventSpy {}
@@ -178,7 +193,7 @@ fun SearchBar(
                     .fillMaxSize()
                     .padding(8.dp),
             ) {
-                items(cities.value) { city ->
+                items(cities) { city ->
                     Row(
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -203,8 +218,9 @@ fun SearchBar(
                         )
                         IconButton(
                             modifier = Modifier.align(alignment = Alignment.Bottom),
-                            onClick = { searchViewModel.updateFavorite(city) }
-
+                            onClick = {
+                                searchViewModel.updateFavorite(city) // Call the updateFavorite function
+                            }
                         ) {
                             Icon(
                                 imageVector = city.favoriteIcon(),

@@ -16,10 +16,10 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
     private val _temperatureUnit = MutableStateFlow(
         SettingsModel(
-            name = getString(context, R.string.temperature_name),
+            name = getString(context, R.string.settings_temperature_name),
             choices = mapOf(
-                Pair(false, getString(context, R.string.temperature_choice_celsius)),
-                Pair(true, getString(context, R.string.temperature_choice_fahrenheit))
+                Pair(false, getString(context, R.string.settings_temperature_choice_celsius)),
+                Pair(true, getString(context, R.string.settings_temperature_choice_fahrenheit))
             )
         )
     )
@@ -27,10 +27,10 @@ class SettingsViewModel @Inject constructor(@ApplicationContext context: Context
 
     private val _windSpeedUnit = MutableStateFlow(
         SettingsModel(
-            name = getString(context, R.string.wind_speed_name),
+            name = getString(context, R.string.settings_wind_speed_name),
             choices = mapOf(
-                Pair(false, getString(context, R.string.wind_speed_choice_ms)),
-                Pair(true, getString(context, R.string.wind_speed_choice_kmh))
+                Pair(false, getString(context, R.string.settings_wind_speed_choice_ms)),
+                Pair(true, getString(context, R.string.settings_wind_speed_choice_kmh))
             )
         )
     )
@@ -38,10 +38,10 @@ class SettingsViewModel @Inject constructor(@ApplicationContext context: Context
 
     private val _pressureUnit = MutableStateFlow(
         SettingsModel(
-            name = getString(context, R.string.pressure_name),
+            name = getString(context, R.string.settings_pressure_name),
             choices = mapOf(
-                Pair(false, getString(context, R.string.pressure_choice_bar)),
-                Pair(true, getString(context, R.string.pressure_choice_pa))
+                Pair(false, getString(context, R.string.settings_pressure_choice_bar)),
+                Pair(true, getString(context, R.string.settings_pressure_choice_pa))
             )
         )
     )
