@@ -261,6 +261,21 @@ fun CardWithColumnAndRow(hour: Int) {
 
                     // Text
                     Text(
+                        text = "${currentWeather.hourlyPercentageRainMin[hour]?.toInt()}/${currentWeather.hourlyPercentageRainMax[hour]?.toInt()} mm",
+                        //text = "${currentWeather.hourlyPercentageRain[hour]}%",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+            if (currentWeather.currentPercentageRain != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    Arrangement.Center
+                ) {
+                    Text(
                         text = "${currentWeather.hourlyPercentageRain[hour]}%",
                         fontSize = 16.sp,
                         modifier = Modifier.padding(start = 4.dp)
@@ -268,7 +283,6 @@ fun CardWithColumnAndRow(hour: Int) {
                 }
                 Spacer(modifier = Modifier.height(4.dp))
             }
-
             // Third Text
             Text(
                 text = "%02d:00".format(hour),
@@ -356,6 +370,13 @@ fun DetailsBox() {
                 unit = currentWeather.units.probabilityOfPrecipitation
             )
             Detail(
+                painterId = R.drawable.baseline_umbrella_24,
+                rotateIcon = true,
+                text = stringResource(R.string.day_rain),
+                value = currentWeather.currentPercentageRain,
+                unit = " " + currentWeather.units.precipitationAmount
+            )
+            Detail(
                 painterId = R.drawable.baseline_compress_24,
                 text = stringResource(R.string.day_pressure),
                 value = currentWeather.pressure,
@@ -367,6 +388,7 @@ fun DetailsBox() {
                 value = currentWeather.thunder,
                 unit = currentWeather.units.probabilityOfThunder
             )
+
         }
         Column(
             verticalArrangement = Arrangement.Bottom,

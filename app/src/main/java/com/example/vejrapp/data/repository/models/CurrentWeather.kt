@@ -25,6 +25,10 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped, val
     val currentTemperature = currentWeather.data.instant?.details?.airTemperature
     val currentCondition = currentWeather.data.nextOneHours?.summary?.symbolCode
     val updatedAt = complete.properties.meta.updatedAt
+    val currentPrecipitationMin = currentWeather.data.instant?.details?.precipitationAmountMin
+
+    val currentPrecipitationMax = currentWeather.data.instant?.details?.precipitationAmountMax
+    val currentPrecipitation = currentWeather.data.instant?.details?.precipitationAmount
 
     val currentMinTemperature = calculateMin(complete, 0)
     val currentMaxTemperature = calculateMax(complete, 0)
@@ -47,13 +51,15 @@ class CurrentWeather(metjsonForecastTimestamped: METJSONForecastTimestamped, val
         complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.probabilityOfPrecipitation
     }
 
-    val hourlyPercentageRainDumbMin = MutableList<Float?>(24) { index ->
+    val hourlyPercentageRainMin = MutableList<Float?>(24) { index ->
         complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.precipitationAmountMin
     }
 
-    val hourlyPercentageRainDumbMax = MutableList<Float?>(24) { index ->
+    val hourlyPercentageRainMax = MutableList<Float?>(24) { index ->
         complete.properties.timeseries[currentTimeData(complete) + index].data.nextOneHours?.details?.precipitationAmountMax
     }
+
+
     // The middle of DayPage
     val humidity = currentWeather.data.instant?.details?.relativeHumidity
     val thunder = currentWeather.data.instant?.details?.probabilityOfThunder
