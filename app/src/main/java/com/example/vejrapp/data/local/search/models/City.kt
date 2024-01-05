@@ -40,6 +40,6 @@ data class City(
     }
 
     fun uniqueId(): String {
-        return "$latitude-$longitude"
+        return "$latitude/$longitude"
     }
 }

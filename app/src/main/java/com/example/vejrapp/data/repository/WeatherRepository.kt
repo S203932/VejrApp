@@ -12,6 +12,7 @@ import com.example.vejrapp.data.remote.locationforecast.locationforecastGson
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.repository.models.CurrentWeather
 import com.example.vejrapp.data.repository.models.WeekWeather
+import com.example.vejrapp.ui.day.applyTimezone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,8 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.time.ZonedDateTime
+import java.util.TimeZone
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
@@ -48,30 +51,39 @@ class WeatherRepository @Inject constructor(
 
     fun getComplete() {
         scope.launch {
-            val cache = getCompleteFromCache()
-            var complete: METJSONForecastTimestamped? = null
+            var complete: METJSONForecastTimestamped? = getCompleteFromCache().getOrNull()
+            var updateFromApi = true
+
             // Check if cache has data
-            complete = if (cache.isSuccess && cache.getOrNull() != null) {
-                println("FROM CACHE")
-                locationforecastGson.fromJson<METJSONForecastTimestamped>(
-                    cache.getOrNull(),
-                    METJSONForecastTimestamped::class.java
-                )
+            if (complete != null) {
+                // Check if cache data is expired by comparing time zone corrected timestamp to current time
+                updateFromApi = applyTimezone(
+                    complete.expires,
+                    TimeZone.getDefault()
+                ).isBefore(ZonedDateTime.now())
+            }
+
+            // Update data from API
+            if (updateFromApi) {
+                complete = updateComplete()
             } else {
-                // Get data from API
-                println("FROM API")
-                updateComplete()
+                Log.d(
+                    WEATHER_DATA_TAG,
+                    "Using cached data for ${city.name} with uniqueId ${city.uniqueId()} from ${complete!!.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}"
+                )
             }
 
             // Apply data to composable functions
             if (complete != null) {
                 currentWeather.value = CurrentWeather(complete, city)
                 weekWeather.value = WeekWeather(complete)
+            } else {
+                Log.d(WEATHER_DATA_TAG, "Unable to establish connection to API server")
             }
         }
     }
 
-    private suspend fun getCompleteFromCache(): Result<String?> {
+    private suspend fun getCompleteFromCache(): Result<METJSONForecastTimestamped?> {
         return Result.runCatching {
             val flow = userDataStorePreferences.data
                 .catch { error ->
@@ -83,14 +95,11 @@ class WeatherRepository @Inject constructor(
                 }
                 .map { preferences -> preferences[stringPreferencesKey(city.uniqueId())] }
             val value = flow.firstOrNull()
-            value
-//            if (value != null) {
-//                locationforecastGson.fromJson<METJSONForecastTimestamped>(
-//                    value.toString(),
-//                    METJSONForecastTimestamped::class.java
-//                )
-//            }
-//            null
+            locationforecastGson.fromJson<METJSONForecastTimestamped>(
+                value.toString(),
+                METJSONForecastTimestamped::class.java
+            )
+
         }
     }
 
@@ -102,8 +111,8 @@ class WeatherRepository @Inject constructor(
 
         if (complete != null) {
             Log.d(
-                "API call",
-                "Data from ${complete.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}."
+                WEATHER_DATA_TAG,
+                "Data retrieved for ${city.name} with uniqueId ${city.uniqueId()} from API from ${complete.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}."
             )
 
             // Save data in datastore
@@ -116,5 +125,9 @@ class WeatherRepository @Inject constructor(
             return complete
         }
         return null
+    }
+
+    private companion object {
+        const val WEATHER_DATA_TAG = "WEATHER_DATA"
     }
 }
