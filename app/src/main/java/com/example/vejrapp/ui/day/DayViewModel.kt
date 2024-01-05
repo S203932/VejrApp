@@ -12,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DayViewModel @Inject constructor(private val weatherRepository: WeatherRepository) :
     ViewModel() {
-    val currentWeather = weatherRepository.currentWeather
+    val currentWeather = weatherRepository.weatherData
 
     fun update() {
         weatherRepository.updateComplete()

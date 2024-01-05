@@ -10,7 +10,7 @@ import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastEn
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
-import com.example.vejrapp.data.repository.models.CurrentWeather
+import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.data.repository.models.WeekWeather
 import org.junit.Test
 import java.time.ZoneId
@@ -35,7 +35,7 @@ class UnitTests {
         type = METJSONForecastEnum.Feature
     ), ZonedDateTime.now(), ZonedDateTime.now())
 
-    private val current = CurrentWeather(complete)
+    private val current = WeatherData(complete)
     private val week = WeekWeather(complete)
 
     @Test

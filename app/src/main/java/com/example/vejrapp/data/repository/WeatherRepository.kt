@@ -3,7 +3,7 @@ package com.example.vejrapp.data.repository
 import android.util.Log
 import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.remote.locationforecast.Locationforecast
-import com.example.vejrapp.data.repository.models.CurrentWeather
+import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.data.repository.models.WeekWeather
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,8 +15,8 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
     private val scope = CoroutineScope(Dispatchers.IO)
 
     var city = DefaultData.LOCATIONS.CITY
-    var currentWeather =
-        MutableStateFlow<CurrentWeather>(DefaultData.LOCATIONFORECAST.CURRENT_WEATHER)
+    var weatherData =
+        MutableStateFlow<WeatherData>(DefaultData.LOCATIONFORECAST.WEATHER_DATA)
 
 
     // Added weekWeather
@@ -42,7 +42,7 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
                     "Data from ${complete.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}."
                 )
 
-                currentWeather.value = CurrentWeather(complete, city)
+                weatherData.value = WeatherData(complete, city)
                 weekWeather.value = WeekWeather(complete)
             }
         }

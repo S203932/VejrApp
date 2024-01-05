@@ -5,6 +5,6 @@ import java.time.ZonedDateTime
 
 // Used for deserialization of the API data
 data class METJSONForecastTimestamped(
-    @SerializedName("met_json_forecast") val metJsonForecast: METJSONForecast,
+    @SerializedName("met_json_forecast") var metJsonForecast: METJSONForecast,
     @SerializedName("expires") val expires: ZonedDateTime,
 )

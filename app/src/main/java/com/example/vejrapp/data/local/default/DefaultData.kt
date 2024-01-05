@@ -11,7 +11,7 @@ import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastEn
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
-import com.example.vejrapp.data.repository.models.CurrentWeather
+import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.data.repository.models.WeekWeather
 import com.example.vejrapp.ui.settings.models.SettingsModel
 import java.time.ZonedDateTime
@@ -62,7 +62,7 @@ class DefaultData {
             type = METJSONForecastEnum.Feature
         ), ZonedDateTime.now())
 
-        val CURRENT_WEATHER = CurrentWeather(COMPLETE, LOCATIONS.CITY)
+        val WEATHER_DATA = WeatherData(COMPLETE, LOCATIONS.CITY)
 
         // Added weekweather
         val WEEK_WEATHER = WeekWeather(COMPLETE)

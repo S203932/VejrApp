@@ -6,5 +6,5 @@ import java.time.ZonedDateTime
 // Used for desrelization of the API data
 data class ForecastMeta(
     @SerializedName("units") val units: ForecastUnits,
-    @SerializedName("updated_at") val updatedAt: ZonedDateTime // Update time for this forecast.
+    @SerializedName("updated_at") var updatedAt: ZonedDateTime // Update time for this forecast.
 )
