@@ -10,10 +10,8 @@ import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.remote.locationforecast.Locationforecast
 import com.example.vejrapp.data.remote.locationforecast.locationforecastGson
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
-import com.example.vejrapp.data.repository.models.CurrentWeather
-import com.example.vejrapp.data.repository.models.WeekWeather
-import com.example.vejrapp.ui.day.applyTimezone
 import com.example.vejrapp.data.repository.models.WeatherData
+import com.example.vejrapp.ui.day.applyTimezone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,8 +69,7 @@ class WeatherRepository @Inject constructor(
 
             // Apply data to composable functions
             if (complete != null) {
-                currentWeather.value = CurrentWeather(complete, city)
-                weekWeather.value = WeekWeather(complete)
+                weatherData.value = WeatherData(complete, city)
             } else {
                 Log.d(WEATHER_DATA_TAG, "Unable to establish connection to API server")
             }

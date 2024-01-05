@@ -220,6 +220,8 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
     val weatherImage = hour.data.nextOneHours?.summary?.symbolCode.toString()
     val temperature = hour.data.instant?.details?.airTemperature
     val percentageRain = hour.data.nextOneHours?.details?.probabilityOfPrecipitation
+    val rainMin = hour.data.nextOneHours?.details?.precipitationAmountMin?.toInt()
+    val rainMax = hour.data.nextOneHours?.details?.precipitationAmountMax?.toInt()
     val imageRes = weatherImage.mapToYRImageResource()
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
     Card(
@@ -270,7 +272,7 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
 
                     // Text
                     Text(
-                        text = "${currentWeather.hourlyPercentageRainMin[hour]?.toInt()}/${currentWeather.hourlyPercentageRainMax[hour]?.toInt()} mm",
+                        text = "${rainMin}/${rainMax} mm",
                         //text = "${currentWeather.hourlyPercentageRain[hour]}%",
                         fontSize = 16.sp,
                         modifier = Modifier.padding(start = 4.dp)
@@ -278,7 +280,7 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
                 }
                 Spacer(modifier = Modifier.height(4.dp))
             }
-            if (currentWeather.currentPercentageRain != null) {
+            if (percentageRain != null) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -349,6 +351,8 @@ fun DetailsBox() {
     val pressureUnit = weatherData.units.airPressureAtSeaLevel
     val probabilityThunder = dataCurrentHour.data.instant?.details?.probabilityOfThunder
     val probabilityThunderUnit = weatherData.units.probabilityOfThunder
+    val rainAmount = dataCurrentHour.data.instant?.details?.precipitationAmount
+    val rainAmountUnit = weatherData.units.precipitationAmount
 
     val fontColor = Color.Black
 
@@ -402,8 +406,8 @@ fun DetailsBox() {
                 painterId = R.drawable.baseline_umbrella_24,
                 rotateIcon = true,
                 text = stringResource(R.string.day_rain),
-                value = currentWeather.currentPercentageRain,
-                unit = " " + currentWeather.units.precipitationAmount
+                value = rainAmount,
+                unit = " " + rainAmountUnit
             )
             Detail(
                 painterId = R.drawable.baseline_compress_24,
