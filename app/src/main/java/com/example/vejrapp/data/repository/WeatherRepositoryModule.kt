@@ -1,9 +1,11 @@
 package com.example.vejrapp.data.repository
 
+import android.content.Context
 import com.example.vejrapp.data.remote.locationforecast.Locationforecast
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -12,7 +14,10 @@ import javax.inject.Singleton
 object WeatherRepositoryModule {
     @Singleton
     @Provides
-    fun provideWeatherRepositoryModule(locationforecast: Locationforecast): WeatherRepository {
-        return WeatherRepository(locationforecast)
+    fun provideWeatherRepositoryModule(
+        @ApplicationContext context: Context,
+        locationforecast: Locationforecast
+    ): WeatherRepository {
+        return WeatherRepository(context, locationforecast)
     }
 }

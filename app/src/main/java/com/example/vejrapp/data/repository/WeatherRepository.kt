@@ -1,6 +1,8 @@
 package com.example.vejrapp.data.repository
 
+import android.content.Context
 import android.util.Log
+import androidx.work.WorkManager
 import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.remote.locationforecast.Locationforecast
 import com.example.vejrapp.data.repository.models.CurrentWeather
@@ -11,8 +13,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class WeatherRepository @Inject constructor(private val locationforecast: Locationforecast) {
+class WeatherRepository @Inject constructor(
+    context: Context,
+    private val locationforecast: Locationforecast
+) {
     private val scope = CoroutineScope(Dispatchers.IO)
+
+    private val workManager = WorkManager.getInstance(context)
 
     var city = DefaultData.LOCATIONS.CITY
     var currentWeather =
@@ -26,6 +33,7 @@ class WeatherRepository @Inject constructor(private val locationforecast: Locati
 
     // Get forecast for the default city when starting the app
     init {
+//        workManager.enqueue()
         updateComplete()
     }
 
