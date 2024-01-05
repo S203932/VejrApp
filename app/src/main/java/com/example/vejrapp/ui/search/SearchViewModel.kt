@@ -37,10 +37,10 @@ class SearchViewModel @Inject constructor(
                 if (it.name == currentCity.value.name) currentCity.value else it
             }
             val sortedCities = if (text.isBlank()) {
-                updatedCities.sortedWith(compareByDescending<City> { it.favorite }.thenBy { it.name })
+                updatedCities.sortedWith(compareByDescending<City>() { it.favorite }.thenByDescending { it.population })
             } else {
                 updatedCities.filter { it.doesMatchSearchQuery(text) }
-                    .sortedWith(compareByDescending<City> { it.favorite }.thenBy { it.name })
+                    .sortedWith(compareByDescending<City>() { it.favorite }.thenByDescending { it.population })
             }
             sortedCities
         }
