@@ -270,6 +270,21 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
 
                     // Text
                     Text(
+                        text = "${currentWeather.hourlyPercentageRainMin[hour]?.toInt()}/${currentWeather.hourlyPercentageRainMax[hour]?.toInt()} mm",
+                        //text = "${currentWeather.hourlyPercentageRain[hour]}%",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+            if (currentWeather.currentPercentageRain != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    Arrangement.Center
+                ) {
+                    Text(
                         text = "${percentageRain}%",
                         fontSize = 16.sp,
                         modifier = Modifier.padding(start = 4.dp)
@@ -277,7 +292,6 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
                 }
                 Spacer(modifier = Modifier.height(4.dp))
             }
-
             // Third Text
             Text(
                 // Need to convert this to string or correct hour
@@ -385,6 +399,13 @@ fun DetailsBox() {
                 unit = percentageRainUnit
             )
             Detail(
+                painterId = R.drawable.baseline_umbrella_24,
+                rotateIcon = true,
+                text = stringResource(R.string.day_rain),
+                value = currentWeather.currentPercentageRain,
+                unit = " " + currentWeather.units.precipitationAmount
+            )
+            Detail(
                 painterId = R.drawable.baseline_compress_24,
                 text = stringResource(R.string.day_pressure),
                 value = pressure,
@@ -396,6 +417,7 @@ fun DetailsBox() {
                 value = probabilityThunder,
                 unit = probabilityThunderUnit
             )
+
         }
         Column(
             verticalArrangement = Arrangement.Bottom,

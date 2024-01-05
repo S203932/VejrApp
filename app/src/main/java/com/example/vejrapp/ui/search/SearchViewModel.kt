@@ -26,6 +26,9 @@ class SearchViewModel @Inject constructor(
     private val _currentCity = MutableStateFlow(DefaultData.LOCATIONS.CITY)
     val currentCity = _currentCity.asStateFlow()
 
+    private val _favoriteCities = MutableStateFlow(DefaultData.LOCATIONS.FAVORITE_CITIES)
+    val favoriteCities = _favoriteCities.asStateFlow()
+
     private val _searchMode = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_MODE)
     val searchMode = _searchMode.asStateFlow()
 
@@ -55,22 +58,28 @@ class SearchViewModel @Inject constructor(
     }
 
     fun updateFavorite(city: City) {
-        val updatedCities = _cities.value.map {
-            if (it.name == city.name) {
-                val updatedCity = it.copy(favorite = !it.favorite)
-                updatedCity
-            } else {
-                it
-            }
+        val updatedCity = city.copy(favorite = !city.favorite)
+
+        // Update favorite cities
+        _favoriteCities.value = _favoriteCities.value.map {
+            if (it.name == city.name) updatedCity else it
         }
-        _cities.value = updatedCities
+
+        // Update current city
+        if (city.name == _currentCity.value.name) {
+            _currentCity.value = updatedCity
+        }
+
+        // Update the entire city list
+        _cities.value = _cities.value.map {
+            if (it.name == city.name) updatedCity else it
+        }
     }
 
     fun updateCurrentCity(city: City) {
         _currentCity.value = city
-        // TODO Check if correct
         weatherRepository.city = city
-        weatherRepository.updateComplete()
+        weatherRepository.getComplete()
     }
 
     fun updateSearchMode(searchMode: Boolean) {

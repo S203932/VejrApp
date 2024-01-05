@@ -9,6 +9,9 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -19,9 +22,15 @@ import java.lang.reflect.Type
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-private val gson = GsonBuilder().setLenient().registerTypeAdapter(
-    ZonedDateTime::class.java, ZonedDateTimeDeserializer()
-).create()
+val locationforecastGson = GsonBuilder().setLenient()
+    .registerTypeAdapter(
+        ZonedDateTime::class.java,
+        ZonedDateTimeDeserializer()
+    )
+    .registerTypeAdapter(
+        ZonedDateTime::class.java,
+        ZonedDateTimeSerializer()
+    ).create()
 
 // Deserializer for ZonedDateTime
 class ZonedDateTimeDeserializer() : JsonDeserializer<ZonedDateTime> {
@@ -36,14 +45,24 @@ class ZonedDateTimeDeserializer() : JsonDeserializer<ZonedDateTime> {
                 DateTimeFormatter.RFC_1123_DATE_TIME
             }
         }
-
         return if (json?.asString != null) {
+//            ZonedDateTime.parse(json.asString, formatter())
             ZonedDateTime.parse(json.asString, formatter())
         }
         // Default to the dawn of time if date can't be deserialized
         else {
             ZonedDateTime.parse("1970-01-01T00:00:00Z")
         }
+    }
+}
+
+class ZonedDateTimeSerializer() : JsonSerializer<ZonedDateTime> {
+    override fun serialize(
+        src: ZonedDateTime?,
+        typeOfSrc: Type?,
+        context: JsonSerializationContext?
+    ): JsonElement {
+        return JsonPrimitive(src!!.format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
     }
 }
 
@@ -69,7 +88,8 @@ class BodyInterceptor() : Interceptor {
 
         // The body will be empty if the response body was invalid.
         return response.newBuilder()
-            .body(gson.toJson(body).toResponseBody(response.body?.contentType())).build()
+            .body(locationforecastGson.toJson(body).toResponseBody(response.body?.contentType()))
+            .build()
     }
 }
 
@@ -85,7 +105,7 @@ class LocationforecastImplementation : Locationforecast {
     private val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(customHttpClient.build())
-        .addConverterFactory(GsonConverterFactory.create(gson)).build()
+        .addConverterFactory(GsonConverterFactory.create(locationforecastGson)).build()
 
     private val apiClient: Locationforecast = retrofit.create(Locationforecast::class.java)
 

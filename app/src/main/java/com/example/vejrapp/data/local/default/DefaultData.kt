@@ -40,6 +40,7 @@ class DefaultData {
         val CITIES = listOf<City>(copenhagen, sofia)
         val SEARCH_MODE: Boolean = false
         val SEARCH_TEXT: String = ""
+        val FAVORITE_CITIES = listOf<City>()
     }
 
     object LOCATIONFORECAST {
