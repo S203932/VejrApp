@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.remote.locationforecast.locationforecastGson
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -17,6 +18,7 @@ import java.io.IOException
 class PreferencesDataStore(context: Context) {
     private val userDataStorePreferences = context.userDataStore
 
+    private val gson = Gson()
 
     //Reading WeatherData from DataStore
     suspend fun getPreferenceWeatherData(city: City): Result<METJSONForecastTimestamped?> {
@@ -49,26 +51,14 @@ class PreferencesDataStore(context: Context) {
     }
 
 
-//    suspend fun getPreferenceSelectedCity(city: City): Result<City?> {
-//        return Result.runCatching {
-//            val flow = userDataStorePreferences.data
-//                .catch { error ->
-//                    if (error is IOException) {
-//                        emit(emptyPreferences())
-//                    } else {
-//                        throw error
-//                    }
-//                }
-//                .map { preferences -> preferences[stringPreferencesKey(city.uniqueId())] }
-//            val value = flow.firstOrNull()
-//            locationforecastGson.fromJson<METJSONForecastTimestamped>(
-//                value.toString(),
-//                METJSONForecastTimestamped::class.java
-//            )
-//
-//        }
-//    }
+    suspend fun getPreferenceSelectedCity(): City {
+        val value = getFromKey(SELECTED_CITY_KEY)
+        return gson.fromJson(value.toString(), City::class.java)
+    }
 
+    suspend fun updatePreferenceSelectedCity(city: City) {
+        updateFromKey(SELECTED_CITY_KEY, gson.toJson(city))
+    }
 
     private suspend fun getFromKey(key: Preferences.Key<String>): Result<String?> {
         return Result.runCatching {
@@ -91,6 +81,16 @@ class PreferencesDataStore(context: Context) {
                 preferences[key] = value
             }
         }
+    }
+
+    private companion object {
+
+        val SELECTED_CITY_KEY = stringPreferencesKey(
+            name = "SELECTED_CITY"
+        )
+        val CITIES_KEY = stringPreferencesKey(
+            name = "CITIES"
+        )
     }
 }
 
@@ -132,10 +132,5 @@ class PreferencesDataStore(context: Context) {
 //        }
 //    }
 //
-//    private companion object {
-//
-//        val KEY_NAME = stringPreferencesKey(
-//            name = "name"
-//        )
-//    }
+
 //}
