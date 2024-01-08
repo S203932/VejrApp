@@ -226,10 +226,7 @@ fun SearchBar(
                         }
 
                         IconButton(
-
-                            onClick = {
-                                searchViewModel.updateFavorite(city) // Call the updateFavorite function
-                            }
+                            onClick = { searchViewModel.updateFavorite(city) }
                         ) {
                             Icon(
                                 imageVector = city.favoriteIcon(),

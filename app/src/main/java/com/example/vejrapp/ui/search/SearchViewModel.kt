@@ -27,8 +27,8 @@ class SearchViewModel @Inject constructor(
     private val _currentCity = MutableStateFlow(DefaultData.LOCATIONS.CITY)
     val currentCity = _currentCity.asStateFlow()
 
-    private val _favoriteCities = MutableStateFlow(DefaultData.LOCATIONS.FAVORITE_CITIES)
-    private var favoriteCities = _favoriteCities.asStateFlow()
+//    private val _favoriteCities = MutableStateFlow(DefaultData.LOCATIONS.FAVORITE_CITIES)
+//    private var favoriteCities = _favoriteCities.asStateFlow()
 
     private val _searchMode = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_MODE)
     val searchMode = _searchMode.asStateFlow()
@@ -70,31 +70,34 @@ class SearchViewModel @Inject constructor(
         val updatedCity = city.copy(favorite = !city.favorite)
 
         // Update favorite cities
-        _favoriteCities.value = _favoriteCities.value.map {
-            if (it.uniqueId() == city.uniqueId()) updatedCity else it
-        }
+//        _favoriteCities.value = _favoriteCities.value.map {
+//            if (it.uniqueId() == city.uniqueId()) updatedCity else it
+//        }
 
         // Update current city
-        if (city.uniqueId() == _currentCity.value.uniqueId()) {
-            _currentCity.value = updatedCity
-        }
+//        if (city.uniqueId() == _currentCity.value.uniqueId()) {
+//            _currentCity.value = updatedCity
+//        }
 
         // Update the entire city list
         _cities.value = _cities.value.map {
             if (it.uniqueId() == city.uniqueId()) updatedCity else it
         }
 
+        // Save the new cities list to cache
         locations.saveCities(_cities.value)
     }
 
 
-    fun getFavorite() {
-        //  locations.getFavoriteCities()
-        locations.favoriteCities.value = _cities.value
-    }
+//    fun getFavorite() {
+//        //  locations.getFavoriteCities()
+//        locations.favoriteCities.value = _cities.value
+//    }
 
     fun updateCurrentCity(city: City) {
         _currentCity.value = city
+//        locations.saveSelectedCity(city)
+
         weatherRepository.city = city
         weatherRepository.getComplete()
     }

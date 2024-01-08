@@ -86,5 +86,16 @@ class Locations @Inject constructor(
             }
         }
     }
+
+    fun saveSelectedCities(newCities: City) {
+        scope.launch {
+            Result.runCatching {
+                userDataStorePreferences.edit { preferences ->
+                    preferences[stringPreferencesKey("CITY_PREFERENCES_KEY")] =
+                        gson.toJson(newCities)
+                }
+            }
+        }
+    }
 }
 

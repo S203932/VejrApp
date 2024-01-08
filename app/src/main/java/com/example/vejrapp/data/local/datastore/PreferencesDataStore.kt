@@ -1,6 +1,7 @@
 package com.example.vejrapp.data.local.datastore
 
 import android.content.Context
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -34,7 +35,6 @@ class PreferencesDataStore(context: Context) {
                 value.toString(),
                 METJSONForecastTimestamped::class.java
             )
-
         }
     }
 
@@ -44,6 +44,51 @@ class PreferencesDataStore(context: Context) {
             userDataStorePreferences.edit { preferences ->
                 preferences[stringPreferencesKey(city.uniqueId())] =
                     locationforecastGson.toJson(complete)
+            }
+        }
+    }
+
+
+//    suspend fun getPreferenceSelectedCity(city: City): Result<City?> {
+//        return Result.runCatching {
+//            val flow = userDataStorePreferences.data
+//                .catch { error ->
+//                    if (error is IOException) {
+//                        emit(emptyPreferences())
+//                    } else {
+//                        throw error
+//                    }
+//                }
+//                .map { preferences -> preferences[stringPreferencesKey(city.uniqueId())] }
+//            val value = flow.firstOrNull()
+//            locationforecastGson.fromJson<METJSONForecastTimestamped>(
+//                value.toString(),
+//                METJSONForecastTimestamped::class.java
+//            )
+//
+//        }
+//    }
+
+
+    private suspend fun getFromKey(key: Preferences.Key<String>): Result<String?> {
+        return Result.runCatching {
+            val flow = userDataStorePreferences.data
+                .catch { error ->
+                    if (error is IOException) {
+                        emit(emptyPreferences())
+                    } else {
+                        throw error
+                    }
+                }
+                .map { preferences -> preferences[key] }
+            flow.firstOrNull()
+        }
+    }
+
+    private suspend fun updateFromKey(key: Preferences.Key<String>, value: String) {
+        Result.runCatching {
+            userDataStorePreferences.edit { preferences ->
+                preferences[key] = value
             }
         }
     }
