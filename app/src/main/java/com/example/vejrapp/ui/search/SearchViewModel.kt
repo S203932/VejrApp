@@ -26,7 +26,7 @@ class SearchViewModel @Inject constructor(
     private val _currentCity = MutableStateFlow(DefaultData.LOCATIONS.CITY)
     val currentCity = _currentCity.asStateFlow()
 
-    private val _favoriteCities = MutableStateFlow(locations.cities)
+    private val _favoriteCities = MutableStateFlow(DefaultData.LOCATIONS.FAVORITE_CITIES)
     private var favoriteCities = _favoriteCities.asStateFlow()
 
     private val _searchMode = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_MODE)
