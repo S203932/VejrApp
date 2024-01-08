@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    locations: Locations,
+    val locations: Locations,
     val weatherRepository: WeatherRepository
 ) : ViewModel() {
     private val _searchText = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_TEXT)
@@ -26,8 +26,8 @@ class SearchViewModel @Inject constructor(
     private val _currentCity = MutableStateFlow(DefaultData.LOCATIONS.CITY)
     val currentCity = _currentCity.asStateFlow()
 
-    private val _favoriteCities = MutableStateFlow(DefaultData.LOCATIONS.FAVORITE_CITIES)
-    val favoriteCities = _favoriteCities.asStateFlow()
+    private val _favoriteCities = MutableStateFlow(locations.cities)
+    private var favoriteCities = _favoriteCities.asStateFlow()
 
     private val _searchMode = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_MODE)
     val searchMode = _searchMode.asStateFlow()
@@ -74,6 +74,24 @@ class SearchViewModel @Inject constructor(
         _cities.value = _cities.value.map {
             if (it.name == city.name) updatedCity else it
         }
+    }
+
+    fun initfavorite() {
+        locations.favoriteCities.value.forEach() { city ->
+            _cities.value = _cities.value.map {
+                if (it.name == city.name) city else it
+            }
+        }
+    }
+
+    fun saveFavorites() {
+        locations.favoriteCities.value = _cities.value
+        locations.saveFav()
+    }
+
+    fun getFavorite() {
+        //  locations.getFavoriteCities()
+        locations.favoriteCities.value = _cities.value
     }
 
     fun updateCurrentCity(city: City) {

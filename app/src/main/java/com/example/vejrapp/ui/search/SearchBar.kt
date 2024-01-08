@@ -57,7 +57,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vejrapp.R
-import com.example.vejrapp.ui.search.SearchViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +69,7 @@ fun SearchBar(
     val cities = searchViewModel.cities.collectAsState().value
     val searchMode by searchViewModel.searchMode.collectAsState()
     val currentCity by searchViewModel.currentCity.collectAsState()
+
 
     //There is added a font color, that is the same for all the text within
     val fontColor = Color.Black
@@ -212,6 +212,7 @@ fun SearchBar(
                                         searchViewModel.onSearchTextChange("")
                                         searchViewModel.updateSearchMode(false)
                                         searchViewModel.updateCurrentCity(city)
+                                        searchViewModel.getFavorite()
                                     }
                                 ),
                             color = fontColor
@@ -220,6 +221,7 @@ fun SearchBar(
                             modifier = Modifier.align(alignment = Alignment.Bottom),
                             onClick = {
                                 searchViewModel.updateFavorite(city) // Call the updateFavorite function
+                                searchViewModel.saveFavorites()
                             }
                         ) {
                             Icon(
