@@ -31,8 +31,8 @@ abstract class UserPreferencesModule {
     companion object {
 
         // provides instance of DataStore
-        @Provides
         @Singleton
+        @Provides
         fun provideUserDataStorePreferences(
             @ApplicationContext applicationContext: Context
         ): PreferencesDataStore {

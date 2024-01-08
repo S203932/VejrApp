@@ -9,6 +9,7 @@ import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.remote.locationforecast.locationforecastGson
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -40,6 +41,28 @@ class PreferencesDataStore(context: Context) {
         }
     }
 
+    // Saving Cities in DataStore
+    suspend fun getCitiesFromCache(): Result<List<City>> {
+        return Result.runCatching {
+            val flow = userDataStorePreferences.data
+                .catch { error ->
+                    if (error is IOException) {
+                        emit(emptyPreferences())
+                    } else {
+                        throw error
+                    }
+                }
+                .map { preferences -> preferences[stringPreferencesKey("CITIES_PREFERENCES_KEY")] }
+            val value = flow.firstOrNull()
+            val gson = Gson()
+            val typeToken = object : TypeToken<List<City>>() {}.type
+            gson.fromJson<List<City>>(
+                value.toString(),
+                typeToken
+            )
+        }
+    }
+
     // Saving WeatherData in DataStore
     suspend fun updatePreferenceWeatherData(complete: METJSONForecastTimestamped, city: City) {
         Result.runCatching {
@@ -49,6 +72,16 @@ class PreferencesDataStore(context: Context) {
             }
         }
     }
+
+    // Saving Cities in DataStore
+    suspend fun saveCities(newCities: List<City>) {
+        Result.runCatching {
+            val gson = Gson()
+            userDataStorePreferences.edit { preferences ->
+                preferences[stringPreferencesKey("CITIES_PREFERENCES_KEY")] =
+                    gson.toJson(newCities)
+            }
+        }
 
 
     suspend fun getPreferenceSelectedCity(): City {
@@ -93,6 +126,9 @@ class PreferencesDataStore(context: Context) {
         )
     }
 }
+
+}
+
 
 
 //class MyUserPreferencesRepository @Inject constructor(
