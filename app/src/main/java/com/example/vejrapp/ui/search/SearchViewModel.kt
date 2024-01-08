@@ -76,13 +76,6 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun initfavorite() {
-        locations.favoriteCities.value.forEach() { city ->
-            _cities.value = _cities.value.map {
-                if (it.name == city.name) city else it
-            }
-        }
-    }
 
     fun saveFavorites() {
         locations.favoriteCities.value = _cities.value
