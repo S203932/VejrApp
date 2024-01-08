@@ -7,6 +7,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.remote.locationforecast.locationforecastGson
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -38,6 +40,28 @@ class PreferencesDataStore(context: Context) {
         }
     }
 
+    // Saving Cities in DataStore
+    suspend fun getCitiesFromCache(): Result<List<City>> {
+        return Result.runCatching {
+            val flow = userDataStorePreferences.data
+                .catch { error ->
+                    if (error is IOException) {
+                        emit(emptyPreferences())
+                    } else {
+                        throw error
+                    }
+                }
+                .map { preferences -> preferences[stringPreferencesKey("CITIES_PREFERENCES_KEY")] }
+            val value = flow.firstOrNull()
+            val gson = Gson()
+            val typeToken = object : TypeToken<List<City>>() {}.type
+            gson.fromJson<List<City>>(
+                value.toString(),
+                typeToken
+            )
+        }
+    }
+
     // Saving WeatherData in DataStore
     suspend fun updatePreferenceWeatherData(complete: METJSONForecastTimestamped, city: City) {
         Result.runCatching {
@@ -47,50 +71,17 @@ class PreferencesDataStore(context: Context) {
             }
         }
     }
+
+    // Saving Cities in DataStore
+    suspend fun saveCities(newCities: List<City>) {
+        Result.runCatching {
+            val gson = Gson()
+            userDataStorePreferences.edit { preferences ->
+                preferences[stringPreferencesKey("CITIES_PREFERENCES_KEY")] =
+                    gson.toJson(newCities)
+            }
+        }
+
+    }
 }
 
-
-//class MyUserPreferencesRepository @Inject constructor(
-//    private val userDataStorePreferences: DataStore<Preferences>
-//) : UserPreferencesRepository {
-//
-//    override suspend fun setName(
-//        name: String
-//    ) {
-//        Result.runCatching {
-//            userDataStorePreferences.edit { preferences ->
-//                preferences[KEY_NAME] = name
-//            }
-//        }
-//    }
-//
-//    override suspend fun getName(): Result<String> {
-//        return Result.runCatching {
-//            val flow = userDataStorePreferences.data
-//                .catch { exception ->
-//                    /*
-//                     * dataStore.data throws an IOException when an error
-//                     * is encountered when reading data
-//                     */
-//                    if (exception is IOException) {
-//                        emit(emptyPreferences())
-//                    } else {
-//                        throw exception
-//                    }
-//                }
-//                .map { preferences ->
-//                    // Get our name value, defaulting to "" if not set
-//                    preferences[KEY_NAME]
-//                }
-//            val value = flow.firstOrNull() ?: "" // we only care about the 1st value
-//            value
-//        }
-//    }
-//
-//    private companion object {
-//
-//        val KEY_NAME = stringPreferencesKey(
-//            name = "name"
-//        )
-//    }
-//}

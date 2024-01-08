@@ -1,8 +1,7 @@
 package com.example.vejrapp.data.local.search
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import com.example.vejrapp.data.local.datastore.PreferencesDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +16,7 @@ object LocationsModule {
     @Provides
     fun provideLocations(
         @ApplicationContext context: Context,
-        dataStore: DataStore<Preferences>
+        dataStore: PreferencesDataStore
     ): Locations {
         return Locations(context, dataStore)
     }
