@@ -1,48 +1,55 @@
-//package com.example.vejrapp.data.local.datastore
-//
-//// Used for caching
-//// not yet implemented
-////class PreferencesDataStore (
-//// private val dataStore: DataStore<Preferences>
-////) {
-////    private companion object {
-////        val DATA_KEY = booleanPreferencesKey("DATA_KEY")
-////        const val TAG = "PreferencesStore"
-////    }
-////
-////
-////    suspend fun saveFavorite(isFavorite: Boolean) {
-////        dataStore.edit { preferences ->
-////            preferences[DATA_KEY] = isFavorite
-////        }
-////    }
-////
-////    suspend fun removeFavorite(notFavorite: Boolean) {
-////        dataStore.edit { preferences ->
-////            preferences.remove(DATA_KEY)
-////        }
-////    }
-////
-////    val readFavorite: Flow<Boolean> = dataStore.data
-////        .catch {
-////            if (it is IOException) {
-////                Log.e(TAG, "Error reading data.", it)
-////                emit(emptyPreferences())
-////            } else {
-////                throw it
-////            }
-////        }
-////        .map { preferences ->
-////            preferences[DATA_KEY] ?: true
-////        }
-////}
-//
-//
-//import android.content.Context
-//import androidx.datastore.core.DataStore
-//import androidx.datastore.preferences.core.Preferences
-//import androidx.datastore.preferences.preferencesDataStore
-//
+package com.example.vejrapp.data.local.datastore
+
+import android.content.Context
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.vejrapp.data.local.search.models.City
+import com.example.vejrapp.data.remote.locationforecast.locationforecastGson
+import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import java.io.IOException
+
+
+class PreferencesDataStore(context: Context) {
+    private val userDataStorePreferences = context.userDataStore
+
+
+    //Reading WeatherData from DataStore
+    suspend fun getPreferenceWeatherData(city: City): Result<METJSONForecastTimestamped?> {
+        return Result.runCatching {
+            val flow = userDataStorePreferences.data
+                .catch { error ->
+                    if (error is IOException) {
+                        emit(emptyPreferences())
+                    } else {
+                        throw error
+                    }
+                }
+                .map { preferences -> preferences[stringPreferencesKey(city.uniqueId())] }
+            val value = flow.firstOrNull()
+            locationforecastGson.fromJson<METJSONForecastTimestamped>(
+                value.toString(),
+                METJSONForecastTimestamped::class.java
+            )
+
+        }
+    }
+
+    // Saving WeatherData in DataStore
+    suspend fun updatePreferenceWeatherData(complete: METJSONForecastTimestamped, city: City) {
+        Result.runCatching {
+            userDataStorePreferences.edit { preferences ->
+                preferences[stringPreferencesKey(city.uniqueId())] =
+                    locationforecastGson.toJson(complete)
+            }
+        }
+    }
+}
+
+
 //class MyUserPreferencesRepository @Inject constructor(
 //    private val userDataStorePreferences: DataStore<Preferences>
 //) : UserPreferencesRepository {

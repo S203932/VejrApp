@@ -1,23 +1,15 @@
 package com.example.vejrapp.data.repository
 
 import android.util.Log
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.vejrapp.data.local.datastore.PreferencesDataStore
 import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.remote.locationforecast.Locationforecast
-import com.example.vejrapp.data.remote.locationforecast.locationforecastGson
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.ui.day.applyTimezone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.time.ZonedDateTime
@@ -26,7 +18,7 @@ import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
     private val locationforecast: Locationforecast,
-    private val userDataStorePreferences: DataStore<Preferences>
+    private val dataStore: PreferencesDataStore
 ) {
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -45,7 +37,8 @@ class WeatherRepository @Inject constructor(
 
     fun getComplete() {
         scope.launch {
-            var complete: METJSONForecastTimestamped? = getCompleteFromCache().getOrNull()
+            var complete: METJSONForecastTimestamped? =
+                dataStore.getPreferenceWeatherData(city).getOrNull()
             var updateFromApi = true
 
             // Check if cache has data
@@ -59,7 +52,9 @@ class WeatherRepository @Inject constructor(
 
             // Update data from API
             if (updateFromApi) {
-                complete = updateComplete()
+
+                //here
+                complete = updateCom()
             } else {
                 Log.d(
                     WEATHER_DATA_TAG,
@@ -76,27 +71,8 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    private suspend fun getCompleteFromCache(): Result<METJSONForecastTimestamped?> {
-        return Result.runCatching {
-            val flow = userDataStorePreferences.data
-                .catch { error ->
-                    if (error is IOException) {
-                        emit(emptyPreferences())
-                    } else {
-                        throw error
-                    }
-                }
-                .map { preferences -> preferences[stringPreferencesKey(city.uniqueId())] }
-            val value = flow.firstOrNull()
-            locationforecastGson.fromJson<METJSONForecastTimestamped>(
-                value.toString(),
-                METJSONForecastTimestamped::class.java
-            )
 
-        }
-    }
-
-    private suspend fun updateComplete(): METJSONForecastTimestamped? {
+    private suspend fun updateCom(): METJSONForecastTimestamped? {
         val complete = locationforecast.getComplete(
             latitude = city.latitude,
             longitude = city.longitude
@@ -109,13 +85,8 @@ class WeatherRepository @Inject constructor(
             )
 
             // Save data in datastore
-            Result.runCatching {
-                userDataStorePreferences.edit { preferences ->
-                    preferences[stringPreferencesKey(city.uniqueId())] =
-                        locationforecastGson.toJson(complete)
-                }
-                weatherData.value = WeatherData(complete, city)
-            }
+            dataStore.updatePreferenceWeatherData(complete, city)
+
             return complete
         }
         return null

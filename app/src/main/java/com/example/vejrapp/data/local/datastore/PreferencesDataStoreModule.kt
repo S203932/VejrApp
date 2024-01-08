@@ -35,8 +35,8 @@ abstract class UserPreferencesModule {
         @Singleton
         fun provideUserDataStorePreferences(
             @ApplicationContext applicationContext: Context
-        ): DataStore<Preferences> {
-            return applicationContext.userDataStore
+        ): PreferencesDataStore {
+            return PreferencesDataStore(applicationContext)
         }
     }
 }
