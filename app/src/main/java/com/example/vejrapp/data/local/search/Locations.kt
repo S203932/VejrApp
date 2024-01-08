@@ -34,7 +34,6 @@ class Locations @Inject constructor(
     private val _cities = MutableStateFlow<List<City>>(listOf())
     val cities = _cities.asStateFlow()
 
-
     var favoriteCities = MutableStateFlow<List<City>>(emptyList())
 
     // TODO Get favorite city from data store
@@ -46,6 +45,7 @@ class Locations @Inject constructor(
 
     private fun getCities() {
         scope.launch {
+            // Get from cache if not empty, else load from dataset
             _cities.value = getCitiesFromCache().getOrNull()
                 ?: gson.fromJson(
                     context.assets.open(citiesAssetPath).bufferedReader()

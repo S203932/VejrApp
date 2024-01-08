@@ -38,7 +38,7 @@ class SearchViewModel @Inject constructor(
         .debounce(100L)
         .combine(_cities) { text, cities ->
             val updatedCities = cities.map {
-                if (it.name == currentCity.value.name) currentCity.value else it
+                if (it.uniqueId() == currentCity.value.uniqueId()) currentCity.value else it
             }
             val sortedCities = if (text.isBlank()) {
                 updatedCities.sortedWith(compareByDescending<City>() { it.favorite }.thenByDescending { it.population })
@@ -71,20 +71,20 @@ class SearchViewModel @Inject constructor(
 
         // Update favorite cities
         _favoriteCities.value = _favoriteCities.value.map {
-            if (it.name == city.name) updatedCity else it
+            if (it.uniqueId() == city.uniqueId()) updatedCity else it
         }
 
         // Update current city
-        if (city.name == _currentCity.value.name) {
+        if (city.uniqueId() == _currentCity.value.uniqueId()) {
             _currentCity.value = updatedCity
         }
 
         // Update the entire city list
         _cities.value = _cities.value.map {
-            if (it.name == city.name) updatedCity else it
+            if (it.uniqueId() == city.uniqueId()) updatedCity else it
         }
 
-        locations.saveCities(cities.value)
+        locations.saveCities(_cities.value)
     }
 
 

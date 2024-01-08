@@ -9,6 +9,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -191,34 +192,41 @@ fun SearchBar(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp),
+                    .padding(horizontal = 8.dp),
             ) {
                 items(cities) { city ->
                     Row(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     )
                     {
-                        Text(
-                            text = city.name,
-                            modifier = Modifier
-                                .align(alignment = Alignment.Top)
-                                .fillMaxWidth(0.85f)
-                                .padding(vertical = 16.dp)
-                                .selectable(
-                                    selected = city.name == currentCity.name,
-                                    onClick = {
-                                        keyboardController?.hide()
-                                        focusManager.clearFocus()
-                                        searchViewModel.onSearchTextChange("")
-                                        searchViewModel.updateSearchMode(false)
-                                        searchViewModel.updateCurrentCity(city)
-                                        searchViewModel.getFavorite()
-                                    }
-                                ),
-                            color = fontColor
-                        )
+                        Column(modifier = Modifier
+                            .selectable(
+                                city.uniqueId() == currentCity.uniqueId(),
+                                onClick = {
+                                    keyboardController?.hide()
+                                    focusManager.clearFocus()
+                                    searchViewModel.onSearchTextChange("")
+                                    searchViewModel.updateSearchMode(false)
+                                    searchViewModel.updateCurrentCity(city)
+                                }
+                            )) {
+                            Text(
+                                text = city.name,
+                                fontSize = 18.sp,
+                                color = fontColor,
+                            )
+                            Text(
+                                text = city.country,
+                                fontSize = 14.sp,
+                                color = fontColor,
+                            )
+                        }
+
                         IconButton(
-                            modifier = Modifier.align(alignment = Alignment.Bottom),
+
                             onClick = {
                                 searchViewModel.updateFavorite(city) // Call the updateFavorite function
                             }
