@@ -221,7 +221,6 @@ fun SearchBar(
                             modifier = Modifier.align(alignment = Alignment.Bottom),
                             onClick = {
                                 searchViewModel.updateFavorite(city) // Call the updateFavorite function
-                                searchViewModel.saveFavorites()
                             }
                         ) {
                             Icon(

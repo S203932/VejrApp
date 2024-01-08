@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -30,10 +31,9 @@ class Locations @Inject constructor(
     private val gson = Gson()
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    var cities = gson.fromJson(
-        context.assets.open(citiesAssetPath).bufferedReader().use(BufferedReader::readText),
-        Array<City>::class.java
-    ).toList()
+    private val _cities = MutableStateFlow<List<City>>(listOf())
+    val cities = _cities.asStateFlow()
+
 
     var favoriteCities = MutableStateFlow<List<City>>(emptyList())
 
@@ -41,26 +41,22 @@ class Locations @Inject constructor(
     val selectedCity = DefaultData.LOCATIONS.CITY
 
     init {
-        scope.launch { getFavoriteCities() }
+        getCities()
     }
 
-    fun getFavoriteCities() {
+    private fun getCities() {
         scope.launch {
-            val favoritesCache: List<City>? = getFavoritesFromCache().getOrNull()
-            if (favoritesCache != null) {
-                favoriteCities.value = favoritesCache
-            }
-
+            _cities.value = getCitiesFromCache().getOrNull()
+                ?: gson.fromJson(
+                    context.assets.open(citiesAssetPath).bufferedReader()
+                        .use(BufferedReader::readText),
+                    Array<City>::class.java
+                ).toList()
         }
     }
 
-    fun saveFav() {
-        scope.launch { saveFavorites() }
-    }
 
-
-    private suspend fun getFavoritesFromCache(): Result<List<City>> {
-        val gson = Gson()
+    private suspend fun getCitiesFromCache(): Result<List<City>> {
         return Result.runCatching {
             val flow = userDataStorePreferences.data
                 .catch { error ->
@@ -77,24 +73,18 @@ class Locations @Inject constructor(
                 value.toString(),
                 typeToken
             )
-
         }
     }
 
-    private suspend fun saveFavorites() {
-        val gson = Gson()
-        // val jsonArray = gson.toJsonTree(cities).asJsonArray
-        Result.runCatching {
-            userDataStorePreferences.edit { preferences ->
-                preferences[stringPreferencesKey("CITIES_PREFERENCES_KEY")] =
-                    gson.toJson(favoriteCities.value)
+    fun saveCities(newCities: List<City>) {
+        scope.launch {
+            Result.runCatching {
+                userDataStorePreferences.edit { preferences ->
+                    preferences[stringPreferencesKey("CITIES_PREFERENCES_KEY")] =
+                        gson.toJson(newCities)
+                }
             }
         }
     }
-
-//    fun getCityFromLocation(): City {
-//
-//    }
-
 }
 
