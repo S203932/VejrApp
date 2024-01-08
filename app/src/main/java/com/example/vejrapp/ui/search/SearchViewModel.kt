@@ -13,11 +13,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    locations: Locations,
+    val locations: Locations,
     val weatherRepository: WeatherRepository
 ) : ViewModel() {
     private val _searchText = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_TEXT)
@@ -27,12 +28,12 @@ class SearchViewModel @Inject constructor(
     val currentCity = _currentCity.asStateFlow()
 
     private val _favoriteCities = MutableStateFlow(DefaultData.LOCATIONS.FAVORITE_CITIES)
-    val favoriteCities = _favoriteCities.asStateFlow()
+    private var favoriteCities = _favoriteCities.asStateFlow()
 
     private val _searchMode = MutableStateFlow(DefaultData.LOCATIONS.SEARCH_MODE)
     val searchMode = _searchMode.asStateFlow()
 
-    private val _cities = MutableStateFlow(locations.cities)
+    private val _cities = MutableStateFlow<List<City>>(listOf())
     val cities = searchText
         .debounce(100L)
         .combine(_cities) { text, cities ->
@@ -52,6 +53,14 @@ class SearchViewModel @Inject constructor(
             SharingStarted.WhileSubscribed(5000),
             _cities.value
         )
+
+    init {
+        viewModelScope.launch {
+            locations.cities.collect { cities ->
+                _cities.value = cities
+            }
+        }
+    }
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text
@@ -74,6 +83,14 @@ class SearchViewModel @Inject constructor(
         _cities.value = _cities.value.map {
             if (it.name == city.name) updatedCity else it
         }
+
+        locations.saveCities(cities.value)
+    }
+
+
+    fun getFavorite() {
+        //  locations.getFavoriteCities()
+        locations.favoriteCities.value = _cities.value
     }
 
     fun updateCurrentCity(city: City) {
