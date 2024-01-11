@@ -1,5 +1,8 @@
 package com.example.vejrapp.ui.week
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -87,10 +90,14 @@ fun DayCard(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp),
-        onClick = { expanded = !expanded }
-
-    ) {
+            .height(60.dp)
+            .animateContentSize(  // Add this line for animation
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                )
+            ),
+        onClick = { expanded = !expanded }) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
