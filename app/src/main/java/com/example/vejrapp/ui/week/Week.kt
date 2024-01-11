@@ -15,10 +15,14 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +43,7 @@ import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
+import com.example.vejrapp.ui.day.LazyRowWithCards
 import com.example.vejrapp.ui.search.SearchBar
 import java.util.Locale
 
@@ -55,6 +60,7 @@ fun WeekPage(navController: NavHostController = rememberNavController()) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DayCard(
     avgTemp: String,
@@ -64,12 +70,13 @@ fun DayCard(
     dayAndMonth: String,
     precipitation: String,
     rainIcon: Painter,
-    weatherIcon: WeatherSymbol
+    weatherIcon: WeatherSymbol,
+    dayInt: Int
 ) {
 
     val weatherImage = weatherIcon.toString()
     val imageRes = weatherImage.mapToYRImageResource()
-
+    var expanded by remember { mutableStateOf(false) }
     val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
 
     // Crop the transparent/whitespace areas
@@ -80,7 +87,9 @@ fun DayCard(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
+            .height(60.dp),
+        onClick = { expanded = !expanded }
+
     ) {
         Row(
             modifier = Modifier
@@ -147,6 +156,10 @@ fun DayCard(
             Spacer(modifier = Modifier.width(8.dp))
         }
     }
+    if (expanded) {
+        LazyRowWithCards(day = dayInt)
+    }
+
 }
 
 
@@ -164,8 +177,8 @@ fun WeekView() {
                 .padding(8.dp)
                 .wrapContentSize(Alignment.BottomCenter)
         ) {
-            weatherData.data.days.forEach {
-                val indexOfHour12ish = getHourClosestToMidday(it)
+            weatherData.data.days.forEachIndexed { index, item ->
+                val indexOfHour12ish = getHourClosestToMidday(item)
 
                 // Need to calculate index of the hour I want to use
                 // I can find min and max air temperature in nextSixHours
@@ -176,22 +189,23 @@ fun WeekView() {
                 // All the data will be taken from the hour closest to midday
 
                 DayCard(
-                    avgTemp = it.hours[indexOfHour12ish].data.instant?.details?.airTemperature
+                    avgTemp = item.hours[indexOfHour12ish].data.instant?.details?.airTemperature
                         .toString() + "°",
-                    maxTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMax
+                    maxTemp = item.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMax
                         .toString() + "°",
-                    minTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMin
+                    minTemp = item.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMin
                         .toString() + "°",
-                    dayOfTheWeek = it.hours[0].time.dayOfWeek.getDisplayName(
+                    dayOfTheWeek = item.hours[0].time.dayOfWeek.getDisplayName(
                         java.time.format.TextStyle.FULL,
                         Locale.getDefault()
                     ),
-                    dayAndMonth = it.hours[0].time.toString(),
-                    precipitation = it.hours[indexOfHour12ish].data.nextSixHours?.details?.probabilityOfPrecipitation
+                    dayAndMonth = item.hours[0].time.toString(),
+                    precipitation = item.hours[indexOfHour12ish].data.nextSixHours?.details?.probabilityOfPrecipitation
                         .toString() + "%",
                     rainIcon = painterResource(id = R.drawable.umbrella),
-                    weatherIcon = it.hours[indexOfHour12ish].data.nextSixHours?.summary?.symbolCode
-                        ?: WeatherSymbol.heavysnowshowers_polartwilight
+                    weatherIcon = item.hours[indexOfHour12ish].data.nextSixHours?.summary?.symbolCode
+                        ?: WeatherSymbol.heavysnowshowers_polartwilight,
+                    dayInt = index
                 )
 
 

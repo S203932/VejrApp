@@ -340,6 +340,7 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
 // the lazy row for the hourly view
 @Composable
 fun LazyRowWithCards(day: Int) {
+
     val startHour = LocalTime.now().hour
 
     val dayViewModel = hiltViewModel<DayViewModel>()
