@@ -4,6 +4,7 @@ package com.example.vejrapp.ui.day
 import androidx.lifecycle.ViewModel
 import com.example.vejrapp.data.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 // the actual dayviewmodel that contains
@@ -12,6 +13,5 @@ import javax.inject.Inject
 @HiltViewModel
 class DayViewModel @Inject constructor(private val weatherRepository: WeatherRepository) :
     ViewModel() {
-    val weatherData = weatherRepository.weatherData
-    
+    val weatherData = weatherRepository.weatherData.asStateFlow()
 }

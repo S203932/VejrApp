@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -176,16 +176,13 @@ fun WeekView() {
 
     val weatherData by weekViewModel.weatherData.collectAsState()
 
-    Column {
-        Row() {
-        }
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .wrapContentSize(Alignment.BottomCenter)
-        ) {
-            weatherData.data.days.forEachIndexed { index, item ->
-                val indexOfHour12ish = getHourClosestToMidday(item)
+    LazyColumn(
+        modifier = Modifier
+            .padding(8.dp)
+    ) {
+        items(weatherData.data.days.size) {
+            weatherData.data.days.forEach {
+                val indexOfHour12ish = getHourClosestToMidday(it)
 
                 // Need to calculate index of the hour I want to use
                 // I can find min and max air temperature in nextSixHours
@@ -194,7 +191,6 @@ fun WeekView() {
                 // Instant is gonna be average of the data closest to 12 a clock midday
 
                 // All the data will be taken from the hour closest to midday
-
                 DayCard(
                     avgTemp = item.hours[indexOfHour12ish].data.instant?.details?.airTemperature
                         .toString() + "°",
@@ -214,13 +210,9 @@ fun WeekView() {
                         ?: WeatherSymbol.heavysnowshowers_polartwilight,
                     dayInt = index
                 )
-
-
                 Spacer(modifier = Modifier.height(8.dp))
-
             }
         }
-
     }
 }
 
@@ -236,25 +228,4 @@ private fun getHourClosestToMidday(day: WeatherData.Day): Int {
     return index
 }
 
-
-private fun calculateMaxTemperature(weatherData: WeatherData): Float {
-    var maxTemp = -1000F
-    for (item in weatherData.data.days[0].hours) {
-        if (item.data.instant?.details?.airTemperature ?: -3000f > maxTemp) {
-            maxTemp = item.data.instant?.details?.airTemperature ?: -1000F
-        }
-    }
-    return maxTemp
-}
-
-
-private fun calculateMinTemperature(weatherData: WeatherData): Float {
-    var minTemp = -1000F
-    for (item in weatherData.data.days[0].hours) {
-        if (item.data.instant?.details?.airTemperature ?: -3000f > minTemp) {
-            minTemp = item.data.instant?.details?.airTemperature ?: -1000F
-        }
-    }
-    return minTemp
-}
 

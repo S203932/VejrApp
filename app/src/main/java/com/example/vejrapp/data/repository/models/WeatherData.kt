@@ -1,10 +1,11 @@
 package com.example.vejrapp.data.repository.models
 
-import com.example.vejrapp.data.local.search.models.City
+import com.example.vejrapp.data.local.locations.models.City
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
+import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.util.TimeZone
 
 // More usable version of METJSONForecast
 class WeatherData(metjsonForecastTimestamped: METJSONForecastTimestamped, val city: City) {
@@ -39,7 +40,7 @@ class WeatherData(metjsonForecastTimestamped: METJSONForecastTimestamped, val ci
 
         if (weatherData[0].time.zone != ZoneId.of(city.timezone)) {
             for (item in weatherData) {
-                item.time = applyTimezone(item.time, city)
+                item.time = applyTimezone(item.time, TimeZone.getTimeZone(city.timezone))
             }
         }
 
@@ -60,11 +61,5 @@ class WeatherData(metjsonForecastTimestamped: METJSONForecastTimestamped, val ci
     }
 
     private val functionCall = sortData()
-
-    // Method to apply a time zone
-    fun applyTimezone(zonedDateTime: ZonedDateTime, city: City): ZonedDateTime {
-        return zonedDateTime.withZoneSameInstant(ZoneId.of(city.timezone))
-    }
-
 }
 
