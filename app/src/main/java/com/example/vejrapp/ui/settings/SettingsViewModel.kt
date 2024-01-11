@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.ViewModel
 import com.example.vejrapp.R
 import com.example.vejrapp.ui.settings.models.SettingsModel
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
+    val gson = Gson()
     private val _temperatureUnit = MutableStateFlow(
         SettingsModel(
             name = getString(context, R.string.settings_temperature_name),

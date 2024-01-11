@@ -1,6 +1,6 @@
 package com.example.vejrapp.data.local.default
 
-import com.example.vejrapp.data.local.search.models.City
+import com.example.vejrapp.data.local.locations.models.City
 import com.example.vejrapp.data.remote.locationforecast.models.Forecast
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastMeta
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
