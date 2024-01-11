@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -353,6 +354,43 @@ fun HourCards(day: Int) {
         items(dayData.hours) { hour ->
             CardWithColumnAndRow(hour)
             Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Preview
+@Composable
+fun MiniDetailCard(){
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(6.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.day_details),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(4.dp)
+                .align(Alignment.CenterHorizontally),
+            color = Color.Black
+        )
+        FlowRow(
+            maxItemsInEachRow = 4,
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
+            Detail(
+                painterId = R.drawable.baseline_water_drop_24,
+                text = stringResource(R.string.day_humidity),
+                value = 1F,
+                unit = String()
+            )
+
         }
     }
 }

@@ -65,7 +65,7 @@ fun MainNavHost(
                     state = pagerState,
                     key = { screens[it] },
                     pageSize = PageSize.Fill,
-//                    beyondBoundsPageCount = 1,
+                    beyondBoundsPageCount = 2, //Quickfix for lag
                     verticalAlignment = Alignment.Top,
                 ) { index ->
                     val route = screens[index]
