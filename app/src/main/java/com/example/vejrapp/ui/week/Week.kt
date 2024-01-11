@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
@@ -46,6 +44,7 @@ import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
+import com.example.vejrapp.ui.day.DetailsBox
 import com.example.vejrapp.ui.day.LazyRowWithCards
 import com.example.vejrapp.ui.search.SearchBar
 import java.util.Locale
@@ -76,7 +75,6 @@ fun DayCard(
     weatherIcon: WeatherSymbol,
     dayInt: Int
 ) {
-
     val weatherImage = weatherIcon.toString()
     val imageRes = weatherImage.mapToYRImageResource()
     var expanded by remember { mutableStateOf(false) }
@@ -91,20 +89,33 @@ fun DayCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .animateContentSize(  // Add this line for animation
+            .animateContentSize(
                 animationSpec = spring(
                     dampingRatio = Spring.DampingRatioNoBouncy,
                     stiffness = Spring.StiffnessMedium
                 )
             ),
-        onClick = { expanded = !expanded }) {
+        onClick = { expanded = !expanded }
+    ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(shape = RoundedCornerShape(10.dp)),
+            modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
+            Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                Text(
+                    text = dayOfTheWeek.take(3)
+                    /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = dayAndMonth.substring(8, 10) + "/" + dayAndMonth.substring(5, 7)
+                    /* text = "${DateFormat.DATE_FIELD}"*/,
+                    color = fontColor,
+                    fontSize = 12.sp
+                )
+            }
             Spacer(modifier = Modifier.width(10.dp))
             Text( //Average Temperature
                 text = avgTemp,
@@ -146,27 +157,16 @@ fun DayCard(
             )
             Spacer(modifier = Modifier.width(50.dp))
 
-            Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-                Text(
-                    text = dayOfTheWeek.take(3)
-                    /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
-                    color = fontColor,
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = dayAndMonth.substring(8, 10) + "/" + dayAndMonth.substring(5, 7)
-                    /* text = "${DateFormat.DATE_FIELD}"*/,
-                    color = fontColor,
-                    fontSize = 12.sp
-                )
-            }
-            Spacer(modifier = Modifier.width(8.dp))
         }
     }
     if (expanded) {
-        LazyRowWithCards(day = dayInt)
+        Column {
+            LazyRowWithCards(day = dayInt)
+            Spacer(modifier = Modifier.width(10.dp))
+            DetailsBox(day = dayInt)
+            Spacer(modifier = Modifier.width(10.dp))
+        }
     }
-
 }
 
 
@@ -175,14 +175,13 @@ fun WeekView() {
     val weekViewModel = hiltViewModel<WeekViewModel>()
 
     val weatherData by weekViewModel.weatherData.collectAsState()
-
     LazyColumn(
         modifier = Modifier
             .padding(8.dp)
     ) {
         items(weatherData.data.days.size) {
-            weatherData.data.days.forEach {
-                val indexOfHour12ish = getHourClosestToMidday(it)
+            weatherData.data.days.forEachIndexed { index, item ->
+                val indexOfHour12ish = getHourClosestToMidday(item)
 
                 // Need to calculate index of the hour I want to use
                 // I can find min and max air temperature in nextSixHours

@@ -50,7 +50,6 @@ import androidx.navigation.NavHostController
 import com.example.vejrapp.R
 import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
-import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
@@ -60,11 +59,8 @@ import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.ui.search.SearchBar
-import java.lang.Math.exp
 import java.math.RoundingMode
 import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -522,10 +518,11 @@ fun prettyTime(zonedDateTime: ZonedDateTime, stringResource: String): String {
 
 // Method to get the index for the current hour in the current day
 private fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
-    var currentHour = applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
+    var currentHour =
+        applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
 
     //Set currentHour to 0 so that the day can show from 00:00 for tomorrow page
-    if (dayInt> 0){
+    if (dayInt > 0) {
         currentHour = 0
     }
 
