@@ -15,10 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -168,7 +167,7 @@ fun DayCard(
         Column {
             GetDayHours(day = dayInt)
             Spacer(modifier = Modifier.width(10.dp))
-            DetailsBox(day = dayInt)
+            DetailsBox(day = dayInt, true)
             Spacer(modifier = Modifier.width(10.dp))
         }
     }

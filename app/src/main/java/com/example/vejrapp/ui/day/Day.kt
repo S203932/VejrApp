@@ -88,7 +88,7 @@ fun Day(
             item { TopWeather(dayIndex) }
             item { CautionBox(dayIndex) }
             item { HourCards(dayIndex) }
-            item { DetailsBox(dayIndex) }
+            item { DetailsBox(dayIndex, false) }
         }
     }
 }
@@ -362,11 +362,15 @@ fun HourCards(day: Int) {
 // the additional parameters of the day
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DetailsBox(day: Int) {
+fun DetailsBox(day: Int, isInWeekList: Boolean) {
     val dayViewModel = hiltViewModel<DayViewModel>()
     val weatherData by dayViewModel.weatherData.collectAsState()
     val currentDay = weatherData.data.days[day]
-    val indexOfHour = getCurrentIndex(weatherData, day)
+
+    var indexOfHour = getCurrentIndex(weatherData, day)
+    if (isInWeekList) {
+        indexOfHour = 0
+    }
     val dataCurrentHour = currentDay.hours[indexOfHour]
 
     val humidity = dataCurrentHour.data.instant?.details?.relativeHumidity
