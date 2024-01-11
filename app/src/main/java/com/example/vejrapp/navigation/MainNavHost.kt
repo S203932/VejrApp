@@ -30,6 +30,7 @@ import com.example.vejrapp.ui.day.Day
 import com.example.vejrapp.ui.settings.Settings
 import com.example.vejrapp.ui.theme.LinearGradient
 import com.example.vejrapp.ui.week.WeekPage
+import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -47,7 +48,7 @@ fun MainNavHost(
             LinearGradient()
             val screens = listOf(
                 Route.Today.name,
-                //Route.Tomorrow.name,
+                Route.Tomorrow.name,
                 Route.Week.name
 
             )
@@ -56,7 +57,7 @@ fun MainNavHost(
                 initialPageOffsetFraction = 0f
             ) {
                 // provide pageCount
-                2
+                3
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
@@ -72,25 +73,25 @@ fun MainNavHost(
                         Route.Today.name -> {
                             // Content specific to Today
                             Day(
-                                navController = navController
-                            )
-                        }
-                        /*
-                        Route.Tomorrow.name -> {
-                            // Content specific to Tomorrow
-                            DayPage(
                                 navController = navController,
-                                searchViewModel = searchViewModel,
-                                dayViewModel = dayViewModel
+                                LocalDateTime.now()
                             )
                         }
 
-                         */
+                        Route.Tomorrow.name -> {
+                            // Content specific to Tomorrow
+                            Day(
+                                navController = navController,
+                                LocalDateTime.now().plusDays(1)
+                            )
+                        }
+
 
                         Route.Week.name -> {
                             // Content specific to Week
                             WeekPage(
                                 navController = navController
+
                             )
                         }
                     }
