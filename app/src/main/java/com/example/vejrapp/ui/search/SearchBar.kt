@@ -67,7 +67,7 @@ fun SearchBar(
 ) {
     val searchViewModel = hiltViewModel<SearchViewModel>()
     val searchText by searchViewModel.searchText.collectAsState()
-    val cities = searchViewModel.cities.collectAsState().value
+    val cities = searchViewModel.displayedCities.collectAsState()
     val searchMode by searchViewModel.searchMode.collectAsState()
     val currentCity by searchViewModel.currentCity.collectAsState()
 
@@ -114,7 +114,7 @@ fun SearchBar(
                         .fillMaxWidth()
                         .motionEventSpy {}
                         .onFocusEvent {},
-                    placeholder = { Text(text = currentCity.name, color = fontColor) },
+                    placeholder = { Text(text = currentCity?.name ?: "", color = fontColor) },
                     leadingIcon = {
                         Icon(
                             Icons.Filled.Search, contentDescription = null,
@@ -194,7 +194,7 @@ fun SearchBar(
                     .fillMaxSize()
                     .padding(horizontal = 8.dp),
             ) {
-                items(cities) { city ->
+                items(cities.value) { city ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -204,32 +204,32 @@ fun SearchBar(
                     {
                         Column(modifier = Modifier
                             .selectable(
-                                city.uniqueId() == currentCity.uniqueId(),
+                                city?.uniqueId() == currentCity?.uniqueId(),
                                 onClick = {
                                     keyboardController?.hide()
                                     focusManager.clearFocus()
                                     searchViewModel.onSearchTextChange("")
                                     searchViewModel.updateSearchMode(false)
-                                    searchViewModel.updateCurrentCity(city)
+                                    searchViewModel.updateCurrentCity(city!!)
                                 }
                             )) {
                             Text(
-                                text = city.name,
+                                text = city?.name ?: "",
                                 fontSize = 18.sp,
                                 color = fontColor,
                             )
                             Text(
-                                text = city.country,
+                                text = city?.country ?: "",
                                 fontSize = 14.sp,
                                 color = fontColor,
                             )
                         }
 
                         IconButton(
-                            onClick = { searchViewModel.updateFavorite(city) }
+                            onClick = { searchViewModel.updateFavorite(city!!) }
                         ) {
                             Icon(
-                                imageVector = city.favoriteIcon(),
+                                imageVector = city!!.favoriteIcon(),
                                 contentDescription = stringResource(city.favoriteDescriptionId())
                             )
                         }

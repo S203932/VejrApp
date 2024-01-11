@@ -1,4 +1,4 @@
-package com.example.vejrapp.data.local.search.models
+package com.example.vejrapp.data.local.locations.models
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite

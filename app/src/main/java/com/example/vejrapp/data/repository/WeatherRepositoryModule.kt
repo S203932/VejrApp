@@ -1,6 +1,7 @@
 package com.example.vejrapp.data.repository
 
 import com.example.vejrapp.data.local.datastore.PreferencesDataStore
+import com.example.vejrapp.data.local.locations.Locations
 import com.example.vejrapp.data.remote.locationforecast.Locationforecast
 import dagger.Module
 import dagger.Provides
@@ -14,10 +15,10 @@ object WeatherRepositoryModule {
     @Singleton
     @Provides
     fun provideWeatherRepositoryModule(
+        locations: Locations,
         locationforecast: Locationforecast,
-        //  dataStore: DataStore<Preferences>,
         dataStore: PreferencesDataStore
     ): WeatherRepository {
-        return WeatherRepository(locationforecast, dataStore)
+        return WeatherRepository(locations, locationforecast, dataStore)
     }
 }

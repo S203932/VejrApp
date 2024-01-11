@@ -50,20 +50,20 @@ import androidx.navigation.NavHostController
 import com.example.vejrapp.R
 import com.example.vejrapp.data.cropBitmap
 import com.example.vejrapp.data.getBitmapFromImage
-import com.example.vejrapp.data.local.search.models.City
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
+import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
+import com.example.vejrapp.data.repository.WeatherUtils.calculateMaxTemperature
+import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.ui.search.SearchBar
-import java.lang.Math.exp
 import java.math.RoundingMode
-import java.time.LocalTime
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.TimeZone
+import kotlin.math.exp
 
 // The page displayed at the landing screen/main screen/ today's weather
 @Composable
@@ -84,6 +84,7 @@ fun TopWeather() {
     val dayViewModel = hiltViewModel<DayViewModel>()
 
     val weatherData by dayViewModel.weatherData.collectAsState()
+
     val indexOfHour = getCurrentIndex(weatherData)
     val dataCurrentHour = weatherData.data.days[0].hours[indexOfHour].data
     val weatherImage = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
@@ -309,8 +310,6 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
 // the lazy row for the hourly view
 @Composable
 fun LazyRowWithCards() {
-    val startHour = LocalTime.now().hour
-
     val dayViewModel = hiltViewModel<DayViewModel>()
     val weatherData by dayViewModel.weatherData.collectAsState()
     val day = get24Hours(weatherData)
@@ -407,13 +406,13 @@ fun DetailsBox() {
                 rotateIcon = true,
                 text = stringResource(R.string.day_rain),
                 value = rainAmount,
-                unit = " " + rainAmountUnit
+                unit = " $rainAmountUnit"
             )
             Detail(
                 painterId = R.drawable.baseline_compress_24,
                 text = stringResource(R.string.day_pressure),
                 value = pressure,
-                unit = " " + pressureUnit
+                unit = " $pressureUnit"
             )
             Detail(
                 painterId = R.drawable.baseline_thunderstorm_24,
@@ -487,52 +486,10 @@ fun prettyTime(zonedDateTime: ZonedDateTime, stringResource: String): String {
         .toString()
 }
 
-// Method to apply a time zone to a
-fun applyTimezone(zonedDateTime: ZonedDateTime, timeZone: TimeZone): ZonedDateTime {
-
-    return zonedDateTime.withZoneSameInstant(ZoneId.of(timeZone.id))
-}
-
-private fun applyCityTimeZone(zonedDateTime: ZonedDateTime, city: City): ZonedDateTime {
-    return zonedDateTime.withZoneSameInstant(ZoneId.of(city.timezone))
-}
-
-
-// Method to get current hour in 24 hourFormat
-private fun getCurrentHour(city: City): Int {
-    val currentTime = ZonedDateTime.now()
-
-    return applyCityTimeZone(currentTime, city).hour
-}
-
-// Method to calculate the max temperature of the current day
-private fun calculateMaxTemperature(weatherData: WeatherData): Float {
-    var maxTemp = -1000F
-    for (item in weatherData.data.days[0].hours) {
-        if (item.data.instant?.details?.airTemperature ?: -3000f > maxTemp) {
-            maxTemp = item.data.instant?.details?.airTemperature ?: -1000F
-        }
-    }
-    return maxTemp
-}
-
-
-private fun calculateMinTemperature(weatherData: WeatherData): Float {
-    var minTemp = -1000F
-    for (item in weatherData.data.days[0].hours) {
-        if (item.data.instant?.details?.airTemperature ?: -3000f > minTemp) {
-            minTemp = item.data.instant?.details?.airTemperature ?: -1000F
-        }
-    }
-    return minTemp
-}
-
-
 // Method to get the index for the current hour in the current day
 private fun getCurrentIndex(weatherData: WeatherData): Int {
-    val currentHour = getCurrentHour(weatherData.city)
-    val test = weatherData.data.days[0].hours[0].time.hour
-
+    val currentHour =
+        applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
 
     return weatherData.data.days[0].hours.indexOf(weatherData.data.days[0].hours.find {
         it.time.hour == currentHour

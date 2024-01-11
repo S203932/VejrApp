@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.example.vejrapp.data.local.search.models.City
+import com.example.vejrapp.data.local.locations.models.City
 import com.example.vejrapp.data.remote.locationforecast.locationforecastGson
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.google.gson.Gson
@@ -22,71 +22,46 @@ class PreferencesDataStore(context: Context) {
     private val gson = Gson()
 
     //Reading WeatherData from DataStore
-    suspend fun getPreferenceWeatherData(city: City): Result<METJSONForecastTimestamped?> {
-        return Result.runCatching {
-            val flow = userDataStorePreferences.data
-                .catch { error ->
-                    if (error is IOException) {
-                        emit(emptyPreferences())
-                    } else {
-                        throw error
-                    }
-                }
-                .map { preferences -> preferences[stringPreferencesKey(city.uniqueId())] }
-            val value = flow.firstOrNull()
-            locationforecastGson.fromJson<METJSONForecastTimestamped>(
-                value.toString(),
-                METJSONForecastTimestamped::class.java
-            )
-        }
-    }
-
-    // Saving Cities in DataStore
-    suspend fun getCitiesFromCache(): Result<List<City>> {
-        return Result.runCatching {
-            val flow = userDataStorePreferences.data
-                .catch { error ->
-                    if (error is IOException) {
-                        emit(emptyPreferences())
-                    } else {
-                        throw error
-                    }
-                }
-                .map { preferences -> preferences[stringPreferencesKey("CITIES_PREFERENCES_KEY")] }
-            val value = flow.firstOrNull()
-            val gson = Gson()
-            val typeToken = object : TypeToken<List<City>>() {}.type
-            gson.fromJson<List<City>>(
-                value.toString(),
-                typeToken
-            )
-        }
+    suspend fun getPreferenceWeatherData(city: City): METJSONForecastTimestamped? {
+        val value = getFromKey(stringPreferencesKey(city.uniqueId())).getOrNull()
+        return locationforecastGson.fromJson<METJSONForecastTimestamped>(
+            value.toString(),
+            METJSONForecastTimestamped::class.java
+        )
     }
 
     // Saving WeatherData in DataStore
     suspend fun updatePreferenceWeatherData(complete: METJSONForecastTimestamped, city: City) {
-        Result.runCatching {
-            userDataStorePreferences.edit { preferences ->
-                preferences[stringPreferencesKey(city.uniqueId())] =
-                    locationforecastGson.toJson(complete)
-            }
-        }
+        updateFromKey(stringPreferencesKey(city.uniqueId()), locationforecastGson.toJson(complete))
     }
 
     // Saving Cities in DataStore
-    suspend fun saveCities(newCities: List<City>) {
-        Result.runCatching {
-            val gson = Gson()
-            userDataStorePreferences.edit { preferences ->
-                preferences[stringPreferencesKey("CITIES_PREFERENCES_KEY")] =
-                    gson.toJson(newCities)
-            }
+    suspend fun getPreferenceCities(): List<City>? {
+        val value = getFromKey(CITIES_KEY).getOrNull()
+
+        val typeToken = object : TypeToken<List<City>>() {}.type
+
+        if (value != null) {
+            return gson.fromJson<List<City>>(
+                value.toString(),
+                typeToken
+            )
         }
+        return value
+    }
 
+    // Saving Cities in DataStore
+    suspend fun updatePreferenceCities(newCities: List<City>) {
+        updateFromKey(CITIES_KEY, gson.toJson(newCities))
+    }
 
-    suspend fun getPreferenceSelectedCity(): City {
-        val value = getFromKey(SELECTED_CITY_KEY)
-        return gson.fromJson(value.toString(), City::class.java)
+    suspend fun getPreferenceSelectedCity(): City? {
+        val value = getFromKey(SELECTED_CITY_KEY).getOrNull()
+
+        if (value != null) {
+            return gson.fromJson(value.toString(), City::class.java)
+        }
+        return value
     }
 
     suspend fun updatePreferenceSelectedCity(city: City) {
@@ -117,7 +92,6 @@ class PreferencesDataStore(context: Context) {
     }
 
     private companion object {
-
         val SELECTED_CITY_KEY = stringPreferencesKey(
             name = "SELECTED_CITY"
         )
@@ -126,47 +100,3 @@ class PreferencesDataStore(context: Context) {
         )
     }
 }
-
-}
-
-
-
-//class MyUserPreferencesRepository @Inject constructor(
-//    private val userDataStorePreferences: DataStore<Preferences>
-//) : UserPreferencesRepository {
-//
-//    override suspend fun setName(
-//        name: String
-//    ) {
-//        Result.runCatching {
-//            userDataStorePreferences.edit { preferences ->
-//                preferences[KEY_NAME] = name
-//            }
-//        }
-//    }
-//
-//    override suspend fun getName(): Result<String> {
-//        return Result.runCatching {
-//            val flow = userDataStorePreferences.data
-//                .catch { exception ->
-//                    /*
-//                     * dataStore.data throws an IOException when an error
-//                     * is encountered when reading data
-//                     */
-//                    if (exception is IOException) {
-//                        emit(emptyPreferences())
-//                    } else {
-//                        throw exception
-//                    }
-//                }
-//                .map { preferences ->
-//                    // Get our name value, defaulting to "" if not set
-//                    preferences[KEY_NAME]
-//                }
-//            val value = flow.firstOrNull() ?: "" // we only care about the 1st value
-//            value
-//        }
-//    }
-//
-
-//}

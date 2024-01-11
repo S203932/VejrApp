@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,12 +58,14 @@ fun MainNavHost(
                 // provide pageCount
                 2
             }
-            val scope = rememberCoroutineScope()
+
             Box(modifier = Modifier.fillMaxSize()) {
                 HorizontalPager(
                     state = pagerState,
                     key = { screens[it] },
-                    pageSize = PageSize.Fill
+                    pageSize = PageSize.Fill,
+//                    beyondBoundsPageCount = 1,
+                    verticalAlignment = Alignment.Top,
                 ) { index ->
                     val route = screens[index]
                     when (route) {
