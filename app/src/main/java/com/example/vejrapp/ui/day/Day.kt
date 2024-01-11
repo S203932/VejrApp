@@ -87,7 +87,7 @@ fun Day(
         LazyColumn {
             item { TopWeather(dayIndex) }
             item { CautionBox(dayIndex) }
-            item { LazyRowWithCards(dayIndex) }
+            item { HourCards(dayIndex) }
             item { DetailsBox(dayIndex) }
         }
     }
@@ -339,7 +339,7 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
 
 // the lazy row for the hourly view
 @Composable
-fun LazyRowWithCards(day: Int) {
+fun HourCards(day: Int) {
 
     val startHour = LocalTime.now().hour
 

@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -46,7 +48,8 @@ import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.day.LazyRowWithCards
+import com.example.vejrapp.ui.day.CardWithColumnAndRow
+import com.example.vejrapp.ui.day.DayViewModel
 import com.example.vejrapp.ui.search.SearchBar
 import java.util.Locale
 
@@ -164,7 +167,7 @@ fun DayCard(
         }
     }
     if (expanded) {
-        LazyRowWithCards(day = dayInt)
+        GetDayHours(day = dayInt)
     }
 
 }
@@ -258,3 +261,35 @@ private fun calculateMinTemperature(weatherData: WeatherData): Float {
     return minTemp
 }
 
+
+@Composable
+fun GetDayHours(day: Int) { //This is the same as HourCards except it uses getHours which gets all the hours for the specific day
+    val dayViewModel = hiltViewModel<DayViewModel>()
+    val weatherData by dayViewModel.weatherData.collectAsState()
+    val dayData = getHours(weatherData, day)
+    //val hourList = List(24) { index -> (index + startHour) % 24 }
+    LazyRow(
+        modifier = Modifier
+            // This makes the LazyRow take up the full available width
+            .padding(6.dp)
+            .wrapContentSize(Alignment.BottomCenter)
+    ) {
+        items(dayData.hours) { hour ->
+            CardWithColumnAndRow(hour)
+            Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
+        }
+    }
+}
+
+
+private fun getHours(weatherData: WeatherData, dayInt: Int): WeatherData.Day {
+    val day = WeatherData.Day()
+    // adding all hours from the first day as it there can never be more than 24 hours in a day
+    for (item in weatherData.data.days[dayInt].hours.subList(
+        0,
+        weatherData.data.days[dayInt].hours.size
+    )) {
+        day.hours.add(item)
+    }
+    return day
+}
