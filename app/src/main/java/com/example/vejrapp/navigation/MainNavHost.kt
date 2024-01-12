@@ -32,7 +32,6 @@ import com.example.vejrapp.ui.theme.LinearGradient
 import com.example.vejrapp.ui.week.WeekPage
 import java.time.LocalDateTime
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainNavHost(
@@ -65,7 +64,7 @@ fun MainNavHost(
                     state = pagerState,
                     key = { screens[it] },
                     pageSize = PageSize.Fill,
-                    beyondBoundsPageCount = 2, //Quickfix for lag
+                    //    beyondBoundsPageCount = 2, //Quickfix for lag
                     verticalAlignment = Alignment.Top,
                 ) { index ->
                     val route = screens[index]

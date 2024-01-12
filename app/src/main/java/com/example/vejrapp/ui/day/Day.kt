@@ -60,6 +60,7 @@ import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.ui.search.SearchBar
+import com.example.vejrapp.ui.theme.WeatherAnimation
 import java.math.RoundingMode
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
@@ -81,17 +82,21 @@ fun Day(
     ) {
         dayIndex = abs(localDateTime.compareTo(LocalDateTime.now()))
     }
+    Box(modifier = Modifier.fillMaxSize()) {
+        WeatherAnimation()
+        Column(verticalArrangement = Arrangement.SpaceBetween) {
+            SearchBar(onNextButtonClicked = { navController.navigate(Route.Settings.name) })
+            LazyColumn {
+                item { TopWeather(dayIndex) }
+                item { CautionBox(dayIndex) }
+                item { HourCards(dayIndex) }
+                item { DetailsBox(dayIndex, false) }
+            }
 
-
-    Column(verticalArrangement = Arrangement.SpaceBetween) {
-        SearchBar(onNextButtonClicked = { navController.navigate(Route.Settings.name) })
-        LazyColumn {
-            item { TopWeather(dayIndex) }
-            item { CautionBox(dayIndex) }
-            item { HourCards(dayIndex) }
-            item { DetailsBox(dayIndex, false) }
         }
     }
+
+
 }
 
 @Composable
@@ -107,7 +112,6 @@ fun TopWeather(day: Int) {
 
     // Crop the transparent/whitespace areas
     val croppedBitmap = cropBitmap(bitmap)
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -361,7 +365,7 @@ fun HourCards(day: Int) {
 @OptIn(ExperimentalLayoutApi::class)
 @Preview
 @Composable
-fun MiniDetailCard(){
+fun MiniDetailCard() {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
@@ -559,7 +563,7 @@ fun prettyTime(zonedDateTime: ZonedDateTime, stringResource: String): String {
 }
 
 // Method to get the index for the current hour in the current day
-private fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
+fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
     var currentHour =
         applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
 
