@@ -1,5 +1,6 @@
 package com.example.vejrapp.ui.settings
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.vejrapp.ui.settings.models.SettingsModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(
@@ -68,14 +70,17 @@ fun Settings(
             Setting(
                 modifier,
                 setting = temperatureUnit,
+                checked = settingsViewModel.temperatureUnit.value.checked,
                 onToggle = { settingsViewModel.toggleTemperatureUnit() })
             Setting(
                 modifier,
                 setting = windSpeedUnit,
+                checked = settingsViewModel.windSpeedUnit.value.checked,
                 onToggle = { settingsViewModel.toggleWindSpeedUnit() })
             Setting(
                 modifier,
                 setting = pressureUnit,
+                checked = settingsViewModel.pressureUnit.value.checked,
                 onToggle = { settingsViewModel.togglePressureUnit() })
         }
     }
@@ -83,7 +88,10 @@ fun Settings(
 
 @Composable
 fun Setting(
-    modifier: Modifier = Modifier, setting: State<SettingsModel>, onToggle: () -> Unit
+    modifier: Modifier = Modifier,
+    setting: State<SettingsModel>,
+    checked: Boolean,
+    onToggle: () -> Unit
 ) {
     Row(
         modifier = Modifier
