@@ -42,7 +42,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -359,38 +358,98 @@ fun HourCards(day: Int) {
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-@Preview
+//@Preview
 @Composable
-fun MiniDetailCard(){
+fun MiniDetailCard(day: Int, isInWeekList: Boolean) {
+    val dayViewModel = hiltViewModel<DayViewModel>()
+    val weatherData by dayViewModel.weatherData.collectAsState()
+    val currentDay = weatherData.data.days[day]
+
+    var indexOfHour = getCurrentIndex(weatherData, day)
+    if (isInWeekList) {
+        indexOfHour = 0
+    }
+    val dataCurrentHour = currentDay.hours[indexOfHour]
+
+    val humidity = dataCurrentHour.data.instant?.details?.relativeHumidity
+    val humidityUnit = weatherData.units.relativeHumidity
+    val windSpeed = dataCurrentHour.data.instant?.details?.windSpeed
+    val windSpedUnit = weatherData.units.windSpeed
+    val uvIndex = dataCurrentHour.data.instant?.details?.ultravioletIndexClearSky
+    val percentageRain = dataCurrentHour.data.nextOneHours?.details?.probabilityOfPrecipitation
+    val percentageRainUnit = weatherData.units.probabilityOfPrecipitation
+    val pressure = dataCurrentHour.data.instant?.details?.airPressureAtSeaLevel
+    val pressureUnit = weatherData.units.airPressureAtSeaLevel
+    val probabilityThunder = dataCurrentHour.data.instant?.details?.probabilityOfThunder
+    val probabilityThunderUnit = weatherData.units.probabilityOfThunder
+    val rainAmount = dataCurrentHour.data.instant?.details?.precipitationAmount
+    val rainAmountUnit = weatherData.units.precipitationAmount
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
             .padding(6.dp)
     ) {
-        Text(
-            text = stringResource(R.string.day_details),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(4.dp)
-                .align(Alignment.CenterHorizontally),
-            color = Color.Black
-        )
-        FlowRow(
-            maxItemsInEachRow = 4,
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-        ) {
-            Detail(
-                painterId = R.drawable.baseline_water_drop_24,
-                text = stringResource(R.string.day_humidity),
-                value = 1F,
-                unit = String()
-            )
-
+        /*val humidityValue: Float? = 1F
+        val windSpeed: Float? = 2F // Replace with actual windSpeed value
+        val uvIndex: Float? = 3F // Replace with actual uvIndex value
+        val percentageRain: Float? = 4F // Replace with actual percentageRain value
+        val rainAmount: Float? = 5F // Replace with actual rainAmount value
+        val pressure: Float? = 6F // Replace with actual pressure value
+        val probabilityThunder: Float? = 7F // Replace with actual probabilityThunder value
+*/
+        if (humidity != null) {
+            FlowRow(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Detail(
+                    painterId = R.drawable.baseline_water_drop_24,
+                    text = stringResource(R.string.day_humidity),
+                    value = humidity,
+                    unit = null
+                )
+                Detail(
+                    painterId = R.drawable.baseline_air_24,
+                    text = null,  // Set text to null
+                    value = windSpeed,
+                    unit = null  // Set unit to null
+                )
+                Detail(
+                    painterId = R.drawable.outline_wb_sunny_24,
+                    text = null,  // Set text to null
+                    value = uvIndex,
+                    unit = null  // Set unit to null
+                )
+                Detail(
+                    painterId = R.drawable.baseline_umbrella_24,
+                    rotateIcon = true,
+                    text = null,  // Set text to null
+                    value = percentageRain,
+                    unit = null  // Set unit to null
+                )
+                Detail(
+                    painterId = R.drawable.baseline_umbrella_24,
+                    rotateIcon = true,
+                    text = null,  // Set text to null
+                    value = rainAmount,
+                    unit = null  // Set unit to null
+                )
+                Detail(
+                    painterId = R.drawable.baseline_compress_24,
+                    text = null,  // Set text to null
+                    value = pressure,
+                    unit = null  // Set unit to null
+                )
+                Detail(
+                    painterId = R.drawable.baseline_thunderstorm_24,
+                    text = null,  // Set text to null
+                    value = probabilityThunder,
+                    unit = null  // Set unit to null
+                )
+            }
         }
     }
 }
@@ -516,11 +575,10 @@ fun DetailsBox(day: Int, isInWeekList: Boolean) {
 fun Detail(
     painterId: Int,
     rotateIcon: Boolean = false,
-    text: String,
+    text: String? = null,
     value: Float?,
-    unit: String? = ""
+    unit: String? = null
 ) {
-
     if (value == null) {
         return
     }
@@ -528,28 +586,22 @@ fun Detail(
     val fontColor = Color.Black
 
     Column(modifier = Modifier.padding(4.dp)) {
-
         Icon(
             painter = painterResource(painterId),
-            contentDescription = text,
+            contentDescription = text ?: "",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .rotate(if (rotateIcon) 180F else 0F),
             tint = fontColor
         )
         Text(
-            text = text,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            color = fontColor
-        )
-        Text(
-            text = "$value$unit",
+            text = "$value",
             modifier = Modifier.align(Alignment.CenterHorizontally),
             color = fontColor
         )
     }
 }
+
 
 // Method to format the hour information from the
 // repository

@@ -49,7 +49,7 @@ import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
 import com.example.vejrapp.ui.day.CardWithColumnAndRow
 import com.example.vejrapp.ui.day.DayViewModel
-import com.example.vejrapp.ui.day.DetailsBox
+import com.example.vejrapp.ui.day.MiniDetailCard
 import com.example.vejrapp.ui.search.SearchBar
 import java.util.Locale
 
@@ -95,14 +95,15 @@ fun DayCard(
             .height(60.dp)
             .animateContentSize(
                 animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioNoBouncy,
-                    stiffness = Spring.StiffnessMedium
+                    dampingRatio = Spring.DampingRatioHighBouncy,
+                    stiffness = Spring.StiffnessLow
                 )
             ),
         onClick = { expanded = !expanded }
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -167,7 +168,7 @@ fun DayCard(
         Column {
             GetDayHours(day = dayInt)
             Spacer(modifier = Modifier.width(10.dp))
-            DetailsBox(day = dayInt, true)
+            MiniDetailCard(day = dayInt, true)
             Spacer(modifier = Modifier.width(10.dp))
         }
     }
