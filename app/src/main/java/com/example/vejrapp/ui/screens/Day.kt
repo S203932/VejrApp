@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
@@ -105,6 +106,7 @@ fun TopWeather(day: Int, screenViewModel: screenViewModel) {
     val weatherImage = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
     val imageRes = weatherImage.mapToYRImageResource()
     val fontColor = Color.White
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -198,12 +200,13 @@ fun TopWeather(day: Int, screenViewModel: screenViewModel) {
                     color = fontColor
                 )
             }
-            Image(
-                painter = painterResource(id = imageRes),
+            AsyncImage(
+                model = imageRes,
                 contentDescription = "Weather icon",
                 modifier = Modifier
                     .size(175.dp)
             )
+
         }
     }
 }
@@ -263,8 +266,8 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = imageRes), // Use your own image resource
+            AsyncImage(
+                model = imageRes, // Use your own image resource
                 contentDescription = null,
                 modifier = Modifier
                     .size(80.dp)

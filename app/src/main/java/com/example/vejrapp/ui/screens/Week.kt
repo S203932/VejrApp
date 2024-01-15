@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
@@ -89,7 +90,6 @@ fun DayCard(
     var expanded by remember { mutableStateOf(false) }
     val fontColor = Color.Black
     Card(
-        /*colors = CardDefaults.cardColors(containerColor = Color.Transparent),*/
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
