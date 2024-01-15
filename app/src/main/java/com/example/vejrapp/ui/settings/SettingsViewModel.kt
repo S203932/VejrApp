@@ -4,18 +4,34 @@ package com.example.vejrapp.ui.settings
 import android.content.Context
 import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.vejrapp.R
+import com.example.vejrapp.data.local.datastore.PreferencesDataStore
 import com.example.vejrapp.ui.settings.models.SettingsModel
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
-    val gson = Gson()
+class SettingsViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val dataStore: PreferencesDataStore
+) : ViewModel() {
+    private val scope = CoroutineScope(Dispatchers.IO)
+
+    init {
+        scope.launch {
+            readTemperatureSettings()
+            readWindSettings()
+            readPressureSettings()
+        }
+    }
+
     private val _temperatureUnit = MutableStateFlow(
         SettingsModel(
             name = getString(context, R.string.settings_temperature_name),
@@ -25,6 +41,7 @@ class SettingsViewModel @Inject constructor(@ApplicationContext context: Context
             )
         )
     )
+
     val temperatureUnit = _temperatureUnit.asStateFlow()
 
     private val _windSpeedUnit = MutableStateFlow(
@@ -49,16 +66,83 @@ class SettingsViewModel @Inject constructor(@ApplicationContext context: Context
     )
     val pressureUnit = _pressureUnit.asStateFlow()
 
+
+    //Reading units settings from PreferencesDataStore
+    private fun readTemperatureSettings() {
+        viewModelScope.launch {
+            dataStore.getTemperaturePreference().collect { preferences ->
+                when (preferences) {
+                    true -> {
+                        _temperatureUnit.value.checked = true
+                    }
+
+                    false -> {
+                        _temperatureUnit.value.checked = false
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun readWindSettings() {
+        viewModelScope.launch {
+            dataStore.getWindPreference().collect { preferences ->
+                when (preferences) {
+                    true -> {
+                        _windSpeedUnit.value.checked = true
+                    }
+
+                    false -> {
+                        _windSpeedUnit.value.checked = false
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun readPressureSettings() {
+        viewModelScope.launch {
+            dataStore.getPressurePreference().collect { preferences ->
+                when (preferences) {
+                    true -> {
+                        _pressureUnit.value.checked = true
+                    }
+
+                    false -> {
+                        _pressureUnit.value.checked = false
+                    }
+                }
+
+            }
+        }
+    }
+
+    //Changing state of Settings for units (Switch) and saving it in to PreferencesDataStore
     fun toggleTemperatureUnit() {
-        _temperatureUnit.value =
-            _temperatureUnit.value.copy(checked = !_temperatureUnit.value.checked)
+        val tem = !_temperatureUnit.value.checked
+        scope.launch {
+            dataStore.updateTemperaturePreference(tem)
+        }
+        _temperatureUnit.value = _temperatureUnit.value.copy(checked = tem)
     }
 
     fun toggleWindSpeedUnit() {
-        _windSpeedUnit.value = _windSpeedUnit.value.copy(checked = !_windSpeedUnit.value.checked)
+        val wind = !_windSpeedUnit.value.checked
+        scope.launch {
+            dataStore.updateWindPreference(wind)
+        }
+        _windSpeedUnit.value = _windSpeedUnit.value.copy(checked = wind)
     }
 
     fun togglePressureUnit() {
-        _pressureUnit.value = _pressureUnit.value.copy(checked = !_pressureUnit.value.checked)
+        val pressure = !_pressureUnit.value.checked
+        scope.launch {
+            dataStore.updatePressurePreference(pressure)
+        }
+        _pressureUnit.value = _pressureUnit.value.copy(checked = pressure)
     }
 }
+
+
