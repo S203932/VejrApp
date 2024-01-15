@@ -45,21 +45,3 @@ fun WeatherApp(navController: NavHostController = rememberNavController()) {
     MainNavHost(navController = navController)
 
 }
-
-
-/*
-@Composable
-fun PictureBackground() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.bluefigma), // Use your own image resource
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize()
-        )
-    }
-}
-
- */

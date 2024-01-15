@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
+import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
@@ -75,15 +76,9 @@ fun DayCard(
     dayInt: Int,
     screenViewModel: screenViewModel
 ) {
-    // Removed the images from the screen and the old way of implementing them
-    //val weatherImage = weatherIcon.toString()
-    //val imageRes = weatherImage.mapToYRImageResource()
+    val weatherImage = weatherIcon.toString()
+    val imageRes = weatherImage.mapToYRImageResource()
     var expanded by remember { mutableStateOf(false) }
-    //val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
-
-    // Crop the transparent/whitespace areas
-    //val croppedBitmap = cropBitmap(bitmap)
-
     val fontColor = Color.Black
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
@@ -132,19 +127,14 @@ fun DayCard(
                 Text(text = minTemp, color = fontColor, fontSize = 16.sp)
             }
             Spacer(modifier = Modifier.width(7.dp))
-            // Image has been removed until faster version is ready to implement.
-            /*
             Image(
-                bitmap = croppedBitmap.asImageBitmap(),
-                //painter = weatherIcon, //Weather Symbol for the day
+                painter = painterResource(id = imageRes),
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(7.dp)
                     .size(50.dp)
             )
-
-             */
             Spacer(modifier = Modifier.width(7.dp))
             Image(
                 painter = rainIcon, //Rain Icon

@@ -3,7 +3,9 @@ package com.example.vejrapp.data
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import com.example.vejrapp.R
 
 // Used to resize the icons of the weather conditions
 fun cropBitmap(originalBitmap: Bitmap): Bitmap {
@@ -78,9 +80,6 @@ fun getBitmapFromImage(context: Context, drawable: Int): Bitmap {
     return bit
 }
 
-// Temporarly removed as Images are to be preconfigured as XML
-/*
-// Mapping the given icon to an image
 @DrawableRes
 fun String.mapToYRImageResource(): Int =
     when (this) {
@@ -421,4 +420,3 @@ fun String.mapToYRImageResource(): Int =
         }
     }
 
- */
