@@ -41,25 +41,22 @@ import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.search.SearchBar
 import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
 fun WeekPage(
     navController: NavHostController = rememberNavController(),
-    screenViewModel: screenViewModel
+    screenViewModel: ScreenViewModel
 ) {
+    val weatherData by screenViewModel.weatherData.collectAsState()
+
+    weatherData ?: return
 
     Column {
-        SearchBar(
-            onNextButtonClicked = {
-                navController.navigate(Route.Settings.name)
-            }
-        )
-        WeekView(screenViewModel)
+        WeekView(weatherData!!)
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,7 +71,7 @@ fun DayCard(
     rainIcon: Painter,
     weatherIcon: WeatherSymbol,
     dayInt: Int,
-    screenViewModel: screenViewModel
+    weatherData: WeatherData
 ) {
     val weatherImage = weatherIcon.toString()
     val imageRes = weatherImage.mapToYRImageResource()
@@ -156,9 +153,9 @@ fun DayCard(
     }
     if (expanded) {
         Column {
-            GetDayHours(day = dayInt, screenViewModel = screenViewModel)
+            GetDayHours(weatherData, dayInt)
             Spacer(modifier = Modifier.width(10.dp))
-            DetailsBox(day = dayInt, true, screenViewModel)
+            DetailsBox(weatherData, dayInt, true)
             Spacer(modifier = Modifier.width(10.dp))
         }
     }
@@ -167,11 +164,8 @@ fun DayCard(
 
 @Composable
 fun WeekView(
-    screenViewModel: screenViewModel
+    weatherData: WeatherData
 ) {
-
-
-    val weatherData by screenViewModel.weatherData.collectAsState()
     LazyColumn(
         modifier = Modifier
             .padding(8.dp)
@@ -204,7 +198,7 @@ fun WeekView(
                 weatherIcon = it.hours[indexOfHour12ish].data.nextSixHours?.summary?.symbolCode
                     ?: WeatherSymbol.heavysnowshowers_polartwilight,
                 dayInt = getDayIndex(weatherData, it),
-                screenViewModel = screenViewModel
+                weatherData
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -225,34 +219,11 @@ private fun getHourClosestToMidday(day: WeatherData.Day): Int {
 }
 
 
-private fun calculateMaxTemperature(weatherData: WeatherData): Float {
-    var maxTemp = -1000F
-    for (item in weatherData.data.days[0].hours) {
-        if (item.data.instant?.details?.airTemperature ?: -3000f > maxTemp) {
-            maxTemp = item.data.instant?.details?.airTemperature ?: -1000F
-        }
-    }
-    return maxTemp
-}
-
-
-private fun calculateMinTemperature(weatherData: WeatherData): Float {
-    var minTemp = -1000F
-    for (item in weatherData.data.days[0].hours) {
-        if (item.data.instant?.details?.airTemperature ?: -3000f > minTemp) {
-            minTemp = item.data.instant?.details?.airTemperature ?: -1000F
-        }
-    }
-    return minTemp
-}
-
-
 @Composable
 fun GetDayHours(
+    weatherData: WeatherData,
     day: Int,
-    screenViewModel: screenViewModel
 ) { //This is the same as HourCards except it uses getHours which gets all the hours for the specific day
-    val weatherData by screenViewModel.weatherData.collectAsState()
     val dayData = getHours(weatherData, day)
     //val hourList = List(24) { index -> (index + startHour) % 24 }
     LazyRow(

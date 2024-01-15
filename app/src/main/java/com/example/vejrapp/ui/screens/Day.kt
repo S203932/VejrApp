@@ -2,6 +2,7 @@ package com.example.vejrapp.ui.screens
 
 import android.graphics.Typeface
 import android.widget.TextClock
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,12 +24,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -50,8 +54,6 @@ import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMaxTemperature
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.search.SearchBar
 import com.example.vejrapp.ui.theme.WeatherAnimation
 import java.math.RoundingMode
 import java.time.LocalDateTime
@@ -66,10 +68,10 @@ import kotlin.math.exp
 @Composable
 fun Day(
     navController: NavHostController,
-    screenViewModel: screenViewModel,
+    screenViewModel: ScreenViewModel,
     localDateTime: LocalDateTime,
 ) {
-    val weatherData by dayViewModel.weatherData.collectAsState()
+    val weatherData by screenViewModel.weatherData.collectAsState()
 
     var dayIndex = 0
     if (localDateTime.truncatedTo(ChronoUnit.DAYS) != LocalDateTime.now()
@@ -79,13 +81,13 @@ fun Day(
     }
 
     if (weatherData != null) {
-    Column(verticalArrangement = Arrangement.SpaceBetween) {
+        Column(verticalArrangement = Arrangement.SpaceBetween) {
             WeatherAnimation(screenViewModel)
             LazyColumn {
                 item { TopWeather(weatherData!!, dayIndex) }
                 item { CautionBox(weatherData!!, dayIndex) }
                 item { HourCards(weatherData!!, dayIndex) }
-                item { DetailsBox(weatherData!!, false, dayIndex) }
+                item { DetailsBox(weatherData!!, dayIndex, false) }
             }
         }
     }
@@ -327,7 +329,7 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
 
 // the lazy row for the hourly view
 @Composable
-fun LazyRowWithCards(weatherData: WeatherData, day: Int) {
+fun HourCards(weatherData: WeatherData, day: Int) {
 
     val dayData = get24Hours(weatherData, day)
     LazyRow(
@@ -386,14 +388,12 @@ fun MiniDetailCard() {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DetailsBox(weatherData: WeatherData, day: Int, isInWeekList: Boolean) {
-    val weatherData by screenViewModel.weatherData.collectAsState()
     val currentDay = weatherData.data.days[day]
 
     // Get the desired index for the hour
-    var indexOfHour = if (isInWeekList){
+    val indexOfHour = if (isInWeekList) {
         0
-    }
-    else{
+    } else {
         getCurrentIndex(weatherData, day)
     }
 
@@ -549,7 +549,8 @@ fun prettyTime(zonedDateTime: ZonedDateTime, stringResource: String): String {
 
 // Method to get the index for the current hour in the current day
 private fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
-    var currentHour = applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
+    var currentHour =
+        applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
 
     //Set currentHour to 0 so that the day can show from 00:00 for tomorrow page
     if (dayInt > 0) {

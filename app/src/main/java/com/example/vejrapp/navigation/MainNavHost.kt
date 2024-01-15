@@ -27,13 +27,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.vejrapp.ui.day.Day
-import com.example.vejrapp.ui.day.DayViewModel
+import com.example.vejrapp.ui.screens.Day
+import com.example.vejrapp.ui.screens.ScreenViewModel
+import com.example.vejrapp.ui.screens.WeekPage
 import com.example.vejrapp.ui.search.SearchBar
 import com.example.vejrapp.ui.search.SearchViewModel
-import com.example.vejrapp.ui.screens.Day
-import com.example.vejrapp.ui.screens.WeekPage
-import com.example.vejrapp.ui.screens.screenViewModel
 import com.example.vejrapp.ui.settings.Settings
 import com.example.vejrapp.ui.settings.SettingsViewModel
 import com.example.vejrapp.ui.theme.LinearGradient

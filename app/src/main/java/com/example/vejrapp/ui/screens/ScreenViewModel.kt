@@ -11,7 +11,7 @@ import javax.inject.Inject
 // the currentWeather object generated from the information
 // in the api call
 @HiltViewModel
-class screenViewModel @Inject constructor(private val weatherRepository: WeatherRepository) :
+class ScreenViewModel @Inject constructor(weatherRepository: WeatherRepository) :
     ViewModel() {
     val weatherData = weatherRepository.weatherData.asStateFlow()
 }

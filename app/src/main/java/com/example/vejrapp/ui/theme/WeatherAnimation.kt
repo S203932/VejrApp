@@ -5,12 +5,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.vejrapp.ui.screens.getCurrentIndex
-import com.example.vejrapp.ui.screens.screenViewModel
+import com.example.vejrapp.ui.screens.ScreenViewModel
 import com.github.matteobattilana.weather.PrecipType
 import com.github.matteobattilana.weather.WeatherView
 
 @Composable
-fun WeatherAnimation(screenViewModel: screenViewModel) {
+fun WeatherAnimation(screenViewModel: ScreenViewModel) {
     val weatherData by screenViewModel.weatherData.collectAsState()
     val indexOfHour = getCurrentIndex(weatherData, 0)
     val dataCurrentHour = weatherData.data.days[0].hours[indexOfHour].data
