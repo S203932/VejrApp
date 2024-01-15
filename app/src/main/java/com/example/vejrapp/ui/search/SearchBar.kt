@@ -56,16 +56,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.vejrapp.R
+import com.example.vejrapp.navigation.Route
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
-    onNextButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    searchViewModel: SearchViewModel
 ) {
-    val searchViewModel = hiltViewModel<SearchViewModel>()
     val searchText by searchViewModel.searchText.collectAsState()
     val cities = searchViewModel.displayedCities.collectAsState()
     val searchMode by searchViewModel.searchMode.collectAsState()
@@ -81,7 +81,7 @@ fun SearchBar(
 //    var navIconVisible by remember { mutableStateOf(false) }
 
 
-    Column(modifier = modifier.padding(8.dp)) {
+    Column(modifier = Modifier.padding(8.dp)) {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         val visible by searchViewModel.searchMode.collectAsState()
 
@@ -177,7 +177,7 @@ fun SearchBar(
             },
 
             actions = {
-                IconButton(onClick = onNextButtonClicked) {
+                IconButton(onClick = { navController.navigate(Route.Settings.name) }) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Open Settings"
@@ -194,7 +194,7 @@ fun SearchBar(
                     .fillMaxSize()
                     .padding(horizontal = 8.dp),
             ) {
-                items(cities.value) { city ->
+                items(cities.value!!) { city ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()

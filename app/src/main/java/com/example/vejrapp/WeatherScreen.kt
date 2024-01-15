@@ -55,7 +55,6 @@ fun WeatherAppBar(
 @Composable
 fun WeatherApp(navController: NavHostController = rememberNavController()) {
     MainNavHost(navController = navController)
-
 }
 
 @Composable

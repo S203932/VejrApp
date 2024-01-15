@@ -4,8 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -23,11 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.vejrapp.ui.day.Day
+import com.example.vejrapp.ui.day.DayViewModel
+import com.example.vejrapp.ui.search.SearchBar
+import com.example.vejrapp.ui.search.SearchViewModel
 import com.example.vejrapp.ui.settings.Settings
+import com.example.vejrapp.ui.settings.SettingsViewModel
 import com.example.vejrapp.ui.theme.LinearGradient
 import com.example.vejrapp.ui.week.WeekPage
 import java.time.LocalDateTime
@@ -36,13 +41,15 @@ import java.time.LocalDateTime
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainNavHost(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController
 ) {
+    val settingsViewModel = hiltViewModel<SettingsViewModel>()
+    val dayViewModel = hiltViewModel<DayViewModel>()
+    val searchViewModel = hiltViewModel<SearchViewModel>()
+
     NavHost(
         navController = navController,
         startDestination = Route.AllDaysAllWeek.name,
-//modifier = Modifier.padding(innerPadding)
     ) {
         composable(Route.AllDaysAllWeek.name) {
             LinearGradient()
@@ -57,45 +64,50 @@ fun MainNavHost(
                 initialPageOffsetFraction = 0f
             ) {
                 // provide pageCount
-                3
+                screens.size
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
-                HorizontalPager(
-                    state = pagerState,
-                    key = { screens[it] },
-                    pageSize = PageSize.Fill,
-//                    beyondBoundsPageCount = 1,
-                    verticalAlignment = Alignment.Top,
-                ) { index ->
-                    val route = screens[index]
-                    when (route) {
-                        Route.Today.name -> {
-                            // Content specific to Today
-                            Day(
-                                navController = navController,
-                                LocalDateTime.now()
-                            )
-                        }
+                Column {
+                    SearchBar(navController = navController, searchViewModel = searchViewModel)
+                    HorizontalPager(
+                        state = pagerState,
+                        key = { screens[it] },
+                        pageSize = PageSize.Fill,
+                        beyondBoundsPageCount = screens.size - 1,
+                        verticalAlignment = Alignment.Top,
+                    ) { index ->
+                        when (screens[index]) {
+                            Route.Today.name -> {
+                                // Content specific to Today
+                                Day(
+                                    navController = navController,
+                                    dayViewModel = dayViewModel,
+                                    LocalDateTime.now()
+                                )
+                            }
 
-                        Route.Tomorrow.name -> {
-                            // Content specific to Tomorrow
-                            Day(
-                                navController = navController,
-                                LocalDateTime.now().plusDays(1)
-                            )
-                        }
+                            Route.Tomorrow.name -> {
+                                // Content specific to Tomorrow
+                                Day(
+                                    navController = navController,
+                                    dayViewModel = dayViewModel,
+                                    LocalDateTime.now().plusDays(1)
+                                )
+                            }
 
+                            Route.Week.name -> {
+                                // Content specific to Week
+                                WeekPage(
+                                    navController = navController,
+                                    dayViewModel = dayViewModel
 
-                        Route.Week.name -> {
-                            // Content specific to Week
-                            WeekPage(
-                                navController = navController
-
-                            )
+                                )
+                            }
                         }
                     }
                 }
+
                 Box(
                     modifier = Modifier
                         .offset(y = -(16).dp)
@@ -106,9 +118,9 @@ fun MainNavHost(
                 ) {
                     Row(
                         modifier = Modifier
-                            .wrapContentHeight()
-                            .align(Alignment.BottomCenter),
+                            .wrapContentHeight(),
                         horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.Bottom
                     ) {
                         repeat(pagerState.pageCount) { iteration ->
                             val color =
@@ -127,13 +139,9 @@ fun MainNavHost(
         }
         composable(route = Route.Settings.name) {
             Settings(
-                modifier = Modifier.fillMaxHeight(),
+                settingsViewModel = settingsViewModel,
                 navController = navController,
             )
         }
     }
-}
-
-private fun cancelAndNavigateToStart(navController: NavHostController) {
-    navController.popBackStack(Route.Today.name, inclusive = false)
 }

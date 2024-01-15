@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,13 +18,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.vejrapp.ui.settings.models.SettingsModel
 
@@ -33,24 +32,18 @@ import com.example.vejrapp.ui.settings.models.SettingsModel
 @Composable
 fun Settings(
     navController: NavController,
-    modifier: Modifier = Modifier
+    settingsViewModel: SettingsViewModel,
 ) {
-    val settingsViewModel = hiltViewModel<SettingsViewModel>()
+    val temperatureUnit by settingsViewModel.temperatureUnit.collectAsState()
+    val windSpeedUnit by settingsViewModel.windSpeedUnit.collectAsState()
+    val pressureUnit by settingsViewModel.pressureUnit.collectAsState()
 
-    val temperatureUnit = settingsViewModel.temperatureUnit.collectAsState()
-    val windSpeedUnit = settingsViewModel.windSpeedUnit.collectAsState()
-    val pressureUnit = settingsViewModel.pressureUnit.collectAsState()
+    println(temperatureUnit.toString())
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-    ) { values ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(values)
-
-        ) {
+            .fillMaxSize(),
+        topBar = {
             IconButton(
                 onClick = {
                     navController.popBackStack()
@@ -65,16 +58,22 @@ fun Settings(
                     contentDescription = null
                 )
             }
+        }, bottomBar = { About() }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.SpaceBetween
+
+        ) {
             Setting(
-                modifier,
                 setting = temperatureUnit,
                 onToggle = { settingsViewModel.toggleTemperatureUnit() })
             Setting(
-                modifier,
                 setting = windSpeedUnit,
                 onToggle = { settingsViewModel.toggleWindSpeedUnit() })
             Setting(
-                modifier,
                 setting = pressureUnit,
                 onToggle = { settingsViewModel.togglePressureUnit() })
         }
@@ -83,31 +82,39 @@ fun Settings(
 
 @Composable
 fun Setting(
-    modifier: Modifier = Modifier, setting: State<SettingsModel>, onToggle: () -> Unit
+    setting: SettingsModel,
+    onToggle: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = setting.value.name,
-            fontSize = 35.sp,
-            modifier = Modifier
-                .fillMaxWidth(0.65f)
-                .fillMaxHeight(0.2f)
-                .size(50.dp)
-        )
+        Column {
+            Text(
+                text = setting.name,
+                fontSize = 35.sp
+            )
+            Text(
+                text = setting.getSelected(),
+                fontSize = 20.sp
+            )
+        }
+        Switch(checked = setting.checked, onCheckedChange = { onToggle() })
+    }
+}
 
-        Text(
-            text = setting.value.getSelected().toString(),
-            fontSize = 20.sp,
-            modifier = Modifier
-                .fillMaxWidth(0.35f)
-                .fillMaxHeight(0.2f),
-        )
+@Composable
+fun About() {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
 
-        Switch(checked = setting.value.checked, onCheckedChange = { onToggle() })
+    ) {
+        Text(text = "About", fontSize = 24.sp)
+        Text(text = "VejrApp is created by")
+        Text(text = "Daniel, Kristian, Markus, Natali og Patrick")
     }
 }

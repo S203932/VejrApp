@@ -2,7 +2,6 @@ package com.example.vejrapp.ui.day
 
 import android.graphics.Typeface
 import android.widget.TextClock
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,17 +22,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.res.painterResource
@@ -45,24 +40,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.vejrapp.R
-import com.example.vejrapp.data.cropBitmap
-import com.example.vejrapp.data.getBitmapFromImage
-import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
 import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMaxTemperature
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.search.SearchBar
 import java.math.RoundingMode
 import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -74,8 +61,11 @@ import kotlin.math.exp
 @Composable
 fun Day(
     navController: NavHostController,
+    dayViewModel: DayViewModel,
     localDateTime: LocalDateTime
 ) {
+    val weatherData by dayViewModel.weatherData.collectAsState()
+
     var dayIndex = 0
     if (localDateTime.truncatedTo(ChronoUnit.DAYS) != LocalDateTime.now()
             .truncatedTo(ChronoUnit.DAYS)
@@ -85,31 +75,29 @@ fun Day(
 
 
     Column(verticalArrangement = Arrangement.SpaceBetween) {
-        SearchBar(onNextButtonClicked = { navController.navigate(Route.Settings.name) })
-        LazyColumn {
-            item { TopWeather(dayIndex) }
-            item { CautionBox(dayIndex) }
-            item { LazyRowWithCards(dayIndex) }
-            item { DetailsBox(dayIndex) }
+//        SearchBar(onNextButtonClicked = { navController.navigate(Route.Settings.name) })
+        if (weatherData != null) {
+            LazyColumn {
+                item { TopWeather(weatherData!!, dayIndex) }
+                item { CautionBox(weatherData!!, dayIndex) }
+                item { LazyRowWithCards(weatherData!!, dayIndex) }
+                item { DetailsBox(weatherData!!, dayIndex) }
+            }
         }
     }
 }
 
 @Composable
-fun TopWeather(day: Int) {
-    val dayViewModel = hiltViewModel<DayViewModel>()
-    val weatherData by dayViewModel.weatherData.collectAsState()
-
-
-    val indexOfHour = getCurrentIndex(weatherData, day)
-    val dataCurrentHour = weatherData.data.days[day].hours[indexOfHour].data
-    val weatherImage = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
-    val imageRes = weatherImage.mapToYRImageResource()
+fun TopWeather(weatherData: WeatherData, day: Int) {
+    val indexOfHour = getCurrentIndex(weatherData!!, day)
+    val dataCurrentHour = weatherData!!.data.days[day].hours[indexOfHour].data
+//    val weatherImage = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
+//    val imageRes = weatherImage.mapToYRImageResource()
     val fontColor = Color.White
-    val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
+//    val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
 
     // Crop the transparent/whitespace areas
-    val croppedBitmap = cropBitmap(bitmap)
+//    val croppedBitmap = cropBitmap(bitmap)
 
     Column(
         modifier = Modifier
@@ -138,11 +126,11 @@ fun TopWeather(day: Int) {
                             textSize.let { this.textSize = 16F }
 
                             setTextColor(context.getColor(R.color.white))
-                            timeZone = weatherData.city.timezone
+                            timeZone = weatherData!!.city.timezone
                             typeface = clockTypeface
                         }
                     }, update = { view ->
-                        view.timeZone = weatherData.city.timezone
+                        view.timeZone = weatherData!!.city.timezone
                     }
                 )
             } else {
@@ -151,7 +139,7 @@ fun TopWeather(day: Int) {
                 val stringResId =
                     if (is24HourFormat) R.string.day_text_clock_24 else R.string.day_text_clock_12
                 Text(
-                    text = weatherData.data.days[day].hours[0].time.format(
+                    text = weatherData!!.data.days[day].hours[0].time.format(
                         DateTimeFormatter.ofPattern(
                             stringResource(id = stringResId) //Shows tomorrows date from 12 am according to Locale (12 or 24 hr format)
                         )
@@ -184,8 +172,8 @@ fun TopWeather(day: Int) {
                 //Min-Max temperature
                 Text(
                     text = stringResource(R.string.day_temp_range).format(
-                        calculateMinTemperature(weatherData, day),
-                        calculateMaxTemperature(weatherData, day)
+                        calculateMinTemperature(weatherData!!, day),
+                        calculateMaxTemperature(weatherData!!, day)
                     ),
                     fontSize = 20.sp,
                     color = fontColor,
@@ -205,12 +193,12 @@ fun TopWeather(day: Int) {
                 )
             }
             // Weather icon
-            Image(
-                bitmap = croppedBitmap.asImageBitmap(),
-                contentDescription = "Weather icon",
-                modifier = Modifier
-                    .size(175.dp)
-            )
+//            Image(
+//                bitmap = croppedBitmap.asImageBitmap(),
+//                contentDescription = "Weather icon",
+//                modifier = Modifier
+//                    .size(175.dp)
+//            )
         }
     }
 }
@@ -219,7 +207,7 @@ fun TopWeather(day: Int) {
 // caution alerts to the user (showing dummy data
 //  the moment)
 @Composable
-fun CautionBox(day: Int) {
+fun CautionBox(weatherData: WeatherData, day: Int) {
     val fontColor = Color.White
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -252,12 +240,13 @@ fun CautionBox(day: Int) {
 // each hour section within the hour view
 @Composable
 fun CardWithColumnAndRow(hour: ForecastTimeStep) {
-    val weatherImage = hour.data.nextOneHours?.summary?.symbolCode.toString()
+
+//    val weatherImage = hour.data.nextOneHours?.summary?.symbolCode.toString()
     val temperature = hour.data.instant?.details?.airTemperature
     val percentageRain = hour.data.nextOneHours?.details?.probabilityOfPrecipitation
     val rainMin = hour.data.nextOneHours?.details?.precipitationAmountMin?.toInt()
     val rainMax = hour.data.nextOneHours?.details?.precipitationAmountMax?.toInt()
-    val imageRes = weatherImage.mapToYRImageResource()
+//    val imageRes = weatherImage.mapToYRImageResource()
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
@@ -271,13 +260,13 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //Image (you can replace the URL with your image source)
-            Image(
-                painter = painterResource(id = imageRes), // Use your own image resource
-                contentDescription = null,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(shape = MaterialTheme.shapes.medium)
-            )
+//            Image(
+//                painter = painterResource(id = imageRes), // Use your own image resource
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .size(80.dp)
+//                    .clip(shape = MaterialTheme.shapes.medium)
+//            )
 
             // Second Text
             Text(
@@ -296,14 +285,14 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
                     Arrangement.Center
                 ) {
                     //Image (you can replace the URL with your image source)
-                    Image(
-                        painter = painterResource(R.drawable.baseline_umbrella_24), // Use your own image resource
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(20.dp)
-                            .clip(shape = MaterialTheme.shapes.medium)
-                            .rotate(180F)
-                    )
+//                    Image(
+//                        painter = painterResource(R.drawable.baseline_umbrella_24), // Use your own image resource
+//                        contentDescription = null,
+//                        modifier = Modifier
+//                            .size(20.dp)
+//                            .clip(shape = MaterialTheme.shapes.medium)
+//                            .rotate(180F)
+//                    )
 
                     // Text
                     Text(
@@ -343,11 +332,9 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
 
 // the lazy row for the hourly view
 @Composable
-fun LazyRowWithCards(day: Int) {
-    val dayViewModel = hiltViewModel<DayViewModel>()
-    val weatherData by dayViewModel.weatherData.collectAsState()
+fun LazyRowWithCards(weatherData: WeatherData, day: Int) {
+
     val dayData = get24Hours(weatherData, day)
-    //val hourList = List(24) { index -> (index + startHour) % 24 }
     LazyRow(
         modifier = Modifier
             // This makes the LazyRow take up the full available width
@@ -366,12 +353,9 @@ fun LazyRowWithCards(day: Int) {
 // the additional parameters of the day
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DetailsBox(day: Int) {
-    val dayViewModel = hiltViewModel<DayViewModel>()
-    val weatherData by dayViewModel.weatherData.collectAsState()
-    val currentDay = weatherData.data.days[day]
-    val indexOfHour = getCurrentIndex(weatherData, day)
-    val dataCurrentHour = currentDay.hours[indexOfHour]
+fun DetailsBox(weatherData: WeatherData, day: Int) {
+    // Get data for the current hour of the current day
+    val dataCurrentHour = weatherData.data.days[day].hours[getCurrentIndex(weatherData, day)]
 
     val humidity = dataCurrentHour.data.instant?.details?.relativeHumidity
     val humidityUnit = weatherData.units.relativeHumidity
@@ -421,7 +405,7 @@ fun DetailsBox(day: Int) {
                 painterId = R.drawable.baseline_air_24,
                 text = stringResource(R.string.day_wind_speed),
                 value = windSpeed,
-                unit = " " + windSpedUnit
+                unit = " $windSpedUnit"
             )
             Detail(
                 painterId = R.drawable.outline_wb_sunny_24,
@@ -522,10 +506,11 @@ fun prettyTime(zonedDateTime: ZonedDateTime, stringResource: String): String {
 
 // Method to get the index for the current hour in the current day
 private fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
-    var currentHour = applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
+    var currentHour =
+        applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
 
     //Set currentHour to 0 so that the day can show from 00:00 for tomorrow page
-    if (dayInt> 0){
+    if (dayInt > 0) {
         currentHour = 0
     }
 

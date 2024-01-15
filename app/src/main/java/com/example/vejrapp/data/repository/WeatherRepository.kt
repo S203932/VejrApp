@@ -1,11 +1,11 @@
 package com.example.vejrapp.data.repository
 
+import android.content.Context
 import android.util.Log
 import com.example.vejrapp.data.local.datastore.PreferencesDataStore
-import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.local.locations.Locations
 import com.example.vejrapp.data.local.locations.models.City
-import com.example.vejrapp.data.remote.locationforecast.Locationforecast
+import com.example.vejrapp.data.remote.locationforecast.LocationforecastImplementation
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.repository.models.WeatherData
 import kotlinx.coroutines.CoroutineScope
@@ -14,25 +14,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 import java.util.TimeZone
-import javax.inject.Inject
 
-class WeatherRepository @Inject constructor(
-    private val locations: Locations,
-    private val locationforecast: Locationforecast,
-    private val dataStore: PreferencesDataStore
-) {
+class WeatherRepository(context: Context) {
+    private val locations = Locations(context)
+    private val locationforecast = LocationforecastImplementation()
+    private val dataStore = PreferencesDataStore(context)
+
+
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    val weatherData =
-        MutableStateFlow<WeatherData>(DefaultData.LOCATIONFORECAST.WEATHER_DATA)
-    val cities = MutableStateFlow<List<City>>(locations.cities)
+    val weatherData = MutableStateFlow<WeatherData?>(null)
+    val cities = MutableStateFlow<List<City>?>(null)
     val primaryCity = MutableStateFlow<City?>(null)
 
     init {
         // Get the selected city and then get the weather data for that city
         scope.launch {
             getSelectedCity()
-            getComplete()
+            getWeatherData()
         }
         // Get all cities in another coroutine to save time
         scope.launch {
@@ -45,25 +44,37 @@ class WeatherRepository @Inject constructor(
         // Get from cache if available, else use dataset
         val cachedSelectedCity = dataStore.getPreferenceSelectedCity()
 
-        if (cachedSelectedCity != null) {
-            primaryCity.value = cachedSelectedCity
+        // Clear cache from non-favorite primary city
+        if (cachedSelectedCity != null && !cachedSelectedCity.favorite) {
+            dataStore.updatePreferenceSelectedCity(null)
             Log.d(
                 CITIES_DATA_TAG,
-                "Using cached selected city ${primaryCity.value?.name} - ${primaryCity.value?.country} with uniqueId ${primaryCity.value?.uniqueId()}"
+                "Removing cached selected city ${primaryCity.value?.name} - ${primaryCity.value?.country} with uniqueId ${primaryCity.value?.uniqueId()} as it is no longer favorite"
             )
+        }
 
-        } else {
+        // Use default city
+        else if (cachedSelectedCity == null) {
             primaryCity.value = locations.primaryCity
             Log.d(
                 CITIES_DATA_TAG,
                 "Using default selected city ${primaryCity.value?.name} - ${primaryCity.value?.country} with uniqueId ${primaryCity.value?.uniqueId()}"
             )
         }
+
+        // Get city from cache
+        else {
+            primaryCity.value = cachedSelectedCity
+            Log.d(
+                CITIES_DATA_TAG,
+                "Using cached selected city ${primaryCity.value?.name} - ${primaryCity.value?.country} with uniqueId ${primaryCity.value?.uniqueId()}"
+            )
+        }
     }
 
 
-    fun updateSelectedCity(newCity: City) {
-        primaryCity.value = newCity
+    fun updatePrimaryCity(newCity: City) {
+        primaryCity.value = newCity.copy()
 
         scope.launch {
             dataStore.updatePreferenceSelectedCity(newCity)
@@ -91,38 +102,51 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    fun getComplete() {
-        scope.launch {
-            var complete: METJSONForecastTimestamped? =
-                dataStore.getPreferenceWeatherData(primaryCity.value!!)
+    private fun dataIsExpired(time: ZonedDateTime): Boolean {
+        return WeatherUtils.applyTimezone(
+            time,
+            TimeZone.getDefault()
+        ).isBefore(ZonedDateTime.now())
+    }
 
-            var updateFromApi = true
+    suspend fun getWeatherData() {
 
-            // Check if cache has data
-            if (complete != null) {
-                // Check if cache data is expired by comparing time zone corrected timestamp to current time
-                updateFromApi = WeatherUtils.applyTimezone(
-                    complete.expires,
-                    TimeZone.getDefault()
-                ).isBefore(ZonedDateTime.now())
+        // Check if stored WeatherData is valid for use
+        if (weatherData.value != null) {
+            if (weatherData.value?.city == primaryCity.value && !dataIsExpired(weatherData.value!!.expires)) {
+                return
             }
+        }
 
-            // Update data from API
-            if (updateFromApi) {
-                complete = updateComplete()
-            } else {
-                Log.d(
-                    WEATHER_DATA_TAG,
-                    "Using cached weather data for ${primaryCity.value?.name} with uniqueId ${primaryCity.value?.uniqueId()} from ${complete!!.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}"
-                )
-            }
+        // Check if cache has data
+        var complete: METJSONForecastTimestamped? =
+            dataStore.getPreferenceWeatherData(primaryCity.value!!)
 
-            // Apply data to composable functions
-            if (complete != null) {
-                weatherData.value = WeatherData(complete, primaryCity.value!!)
-            } else {
-                Log.d(WEATHER_DATA_TAG, "Unable to establish connection to API server")
-            }
+
+//        if (complete != null && dataIsExpired(complete.expires)) {
+//            // Check if cache data is expired by comparing time zone corrected timestamp to current time
+//
+//        }
+
+
+        // Update data from API
+        if (complete == null) {
+            complete = updateComplete()
+        }
+
+        // Apply data to composable functions
+        if (complete != null) {
+            weatherData.value = WeatherData(complete, primaryCity.value!!)
+            Log.d(
+                WEATHER_DATA_TAG,
+                "Using cached weather data for ${primaryCity.value?.name} with uniqueId ${primaryCity.value?.uniqueId()} from ${complete.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}"
+            )
+        } else {
+            weatherData.value = null
+            Log.d(
+                WEATHER_DATA_TAG,
+                "Unable to establish connection to API server and no cached data available"
+            )
         }
     }
 

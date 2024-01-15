@@ -1,22 +1,28 @@
 package com.example.vejrapp.data.repository.models
 
 import com.example.vejrapp.data.local.locations.models.City
+import com.example.vejrapp.data.remote.locationforecast.models.Forecast
+import com.example.vejrapp.data.remote.locationforecast.models.ForecastMeta
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
+import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
+import com.example.vejrapp.data.remote.locationforecast.models.NextHours
 import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import java.time.ZoneId
 import java.util.TimeZone
 
 // More usable version of METJSONForecast
-class WeatherData(metjsonForecastTimestamped: METJSONForecastTimestamped, val city: City) {
+data class WeatherData(val metjsonForecastTimestamped: METJSONForecastTimestamped, val city: City) {
 
     /// Get weather data, expire date and data timestamp
-    private val complete = metjsonForecastTimestamped.metJsonForecast
+    private val complete = applyUnitSettings(metjsonForecastTimestamped.metJsonForecast)
+
+    //    private val complete = convertUnits(metjsonForecastTimestamped.metJsonForecast)
     val expires = metjsonForecastTimestamped.expires
     val units = complete.properties.meta.units
     val updatedAt = complete.properties.meta.updatedAt
 
-    private var weatherData = complete.properties.timeseries
+    private val weatherData = complete.properties.timeseries
     val data = Data()
 
     // What has been done
@@ -34,6 +40,79 @@ class WeatherData(metjsonForecastTimestamped: METJSONForecastTimestamped, val ci
     data class Data(var days: MutableList<Day> = mutableListOf<Day>()) {
     }
 
+
+    private fun applyUnitSettings(metjsonForecast: METJSONForecast): METJSONForecast {
+
+        val newTimeseries = mutableListOf<ForecastTimeStep>()
+        val newUnits = metjsonForecast.properties.meta.units.copy()
+
+
+        fun convertNextHours(nextHours: NextHours?): NextHours? {
+            return if (nextHours != null) {
+                NextHours(
+                    details = nextHours.details.copy(
+                        // Temperature
+                        airTemperature = convertTemperature(nextHours.details.airTemperature),
+                        airTemperatureMax = convertTemperature(nextHours.details.airTemperatureMax),
+                        airTemperatureMin = convertTemperature(nextHours.details.airTemperatureMin),
+                        airTemperaturePercentileNinety = convertTemperature(nextHours.details.airTemperaturePercentileNinety),
+                        airTemperaturePercentileTen = convertTemperature(nextHours.details.airTemperaturePercentileTen),
+                        // Wind speed
+                        windSpeed = convertWindSpeed(nextHours.details.windSpeed),
+                        windSpeedOfGust = convertWindSpeed(nextHours.details.windSpeedOfGust),
+                        windSpeedPercentileNinety = convertWindSpeed(nextHours.details.windSpeedPercentileNinety),
+                        windSpeedPercentileTen = convertWindSpeed(nextHours.details.windSpeedPercentileTen),
+                        // Pressure
+                        airPressureAtSeaLevel = convertPressure(nextHours.details.airPressureAtSeaLevel),
+                    ),
+                    summary = nextHours.summary
+                )
+            } else {
+                null
+            }
+        }
+
+        // Apply any needed conversions on timeSeries
+        metjsonForecast.properties.timeseries.forEach {
+            // Add new converted timeSeries
+            newTimeseries.add(
+                it.copy(
+                    data = it.data.copy(
+                        instant = convertNextHours(it.data.instant),
+                        nextTwelveHours = convertNextHours(it.data.nextTwelveHours),
+                        nextOneHours = convertNextHours(it.data.nextOneHours),
+                        nextSixHours = convertNextHours(it.data.nextSixHours),
+                    ), time = it.time
+                )
+            )
+        }
+
+        // Create and return
+        return METJSONForecast(
+            geometry = metjsonForecast.geometry,
+            type = metjsonForecast.type,
+            properties = Forecast(
+                meta = ForecastMeta(
+                    units = newUnits,
+                    updatedAt = metjsonForecast.properties.meta.updatedAt
+                ),
+                timeseries = newTimeseries.toList()
+            )
+        )
+    }
+
+    private fun convertTemperature(temperature: Float?): Float? {
+
+        return temperature
+    }
+
+    private fun convertWindSpeed(windSpeed: Float?): Float? {
+        return windSpeed
+    }
+
+    private fun convertPressure(pressure: Float?): Float? {
+        return pressure
+    }
 
     // Now I need to sort all the data from weatherData/TimeSeries into Data class
     private fun sortData() {

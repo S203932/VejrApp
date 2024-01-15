@@ -1,5 +1,6 @@
 package com.example.vejrapp.ui.week
 
+//import com.example.vejrapp.ui.search.SearchBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,9 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,24 +32,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
-import com.example.vejrapp.data.cropBitmap
-import com.example.vejrapp.data.getBitmapFromImage
-import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.search.SearchBar
+import com.example.vejrapp.ui.day.DayViewModel
 import java.util.Locale
 
 @Composable
-fun WeekPage(navController: NavHostController = rememberNavController()) {
+fun WeekPage(
+    navController: NavHostController = rememberNavController(),
+    dayViewModel: DayViewModel,
+) {
+    val weatherData by dayViewModel.weatherData.collectAsState()
+
 
     Column {
-        SearchBar(
-            onNextButtonClicked = {
-                navController.navigate(Route.Settings.name)
-            }
-        )
+
         WeekView()
     }
 }
@@ -67,13 +63,13 @@ fun DayCard(
     weatherIcon: WeatherSymbol
 ) {
 
-    val weatherImage = weatherIcon.toString()
-    val imageRes = weatherImage.mapToYRImageResource()
+//    val weatherImage = weatherIcon.toString()
+//    val imageRes = weatherImage.mapToYRImageResource()
 
-    val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
+//    val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
 
     // Crop the transparent/whitespace areas
-    val croppedBitmap = cropBitmap(bitmap)
+//    val croppedBitmap = cropBitmap(bitmap)
 
     val fontColor = Color.Black
     Card(
@@ -104,15 +100,15 @@ fun DayCard(
                 Text(text = minTemp, color = fontColor, fontSize = 16.sp)
             }
             Spacer(modifier = Modifier.width(7.dp))
-            Image(
-                bitmap = croppedBitmap.asImageBitmap(),
-                //painter = weatherIcon, //Weather Symbol for the day
-                contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(7.dp)
-                    .size(50.dp)
-            )
+//            Image(
+//                bitmap = croppedBitmap.asImageBitmap(),
+//                //painter = weatherIcon, //Weather Symbol for the day
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .align(Alignment.CenterVertically)
+//                    .padding(7.dp)
+//                    .size(50.dp)
+//            )
             Spacer(modifier = Modifier.width(7.dp))
             Image(
                 painter = rainIcon, //Rain Icon
@@ -152,16 +148,21 @@ fun DayCard(
 
 @Composable
 fun WeekView() {
-    val weekViewModel = hiltViewModel<WeekViewModel>()
+    val weekViewModel = hiltViewModel<DayViewModel>()
 
     val weatherData by weekViewModel.weatherData.collectAsState()
+
+
+    if (weatherData == null) {
+        return
+    }
 
     LazyColumn(
         modifier = Modifier
             .padding(8.dp)
     ) {
-        items(weatherData.data.days.size) {
-            weatherData.data.days.forEach {
+        items(weatherData!!.data.days.size) {
+            weatherData!!.data.days.forEach {
                 val indexOfHour12ish = getHourClosestToMidday(it)
 
                 // Need to calculate index of the hour I want to use

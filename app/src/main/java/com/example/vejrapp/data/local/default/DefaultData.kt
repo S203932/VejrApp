@@ -12,7 +12,6 @@ import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTi
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
 import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.ui.settings.models.SettingsModel
 import java.time.ZonedDateTime
 
 // The default data used for the repository data, when the api call wasn't
@@ -83,27 +82,27 @@ class DefaultData {
         type = METJSONForecastEnum.Feature
     )
 
-    object SETTINGS {
-        val TEMPERATURE = SettingsModel(
-            name = "Temperature",
-            choices = mapOf(
-                Pair(false, "Celsius"),
-                Pair(true, "Fahrenheit")
-            )
-        )
-        val WIND_SPEED = SettingsModel(
-            name = "Wind speed",
-            choices = mapOf(
-                Pair(false, "m/s"),
-                Pair(true, "km/h")
-            )
-        )
-        val PRESSURE = SettingsModel(
-            name = "Pressure",
-            choices = mapOf(
-                Pair(false, "Bar"),
-                Pair(true, "Pa")
-            )
-        )
-    }
+//    object SETTINGS {
+//        val TEMPERATURE = SettingsModel(
+//            name = "Temperature",
+//            choices = mapOf(
+//                Pair(false, "Celsius"),
+//                Pair(true, "Fahrenheit")
+//            ), checked = false
+//        )
+//        val WIND_SPEED = SettingsModel(
+//            name = "Wind speed",
+//            choices = mapOf(
+//                Pair(false, "m/s"),
+//                Pair(true, "km/h")
+//            ), checked = false
+//        )
+//        val PRESSURE = SettingsModel(
+//            name = "Pressure",
+//            choices = mapOf(
+//                Pair(false, "Bar"),
+//                Pair(true, "Pa")
+//            ), checked = false
+//        )
+//    }
 }
