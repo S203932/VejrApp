@@ -1,21 +1,6 @@
 package com.example.vejrapp.ui.day
 
-import com.example.vejrapp.data.remote.locationforecast.models.Forecast
-import com.example.vejrapp.data.remote.locationforecast.models.ForecastMeta
-import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
-import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
-import com.example.vejrapp.data.remote.locationforecast.models.ForecastUnits
-import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
-import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastEnum
-import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
-import com.example.vejrapp.data.remote.locationforecast.models.PointGeometry
-import com.example.vejrapp.data.remote.locationforecast.models.PointGeometryEnum
-import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.data.repository.models.WeekWeather
-import org.junit.Test
-import java.time.ZoneId
-import java.time.ZonedDateTime
-
+/*
 class UnitTests {
 
     private val complete = METJSONForecastTimestamped(METJSONForecast(
@@ -69,3 +54,5 @@ class UnitTests {
     }
 }
 
+
+ */

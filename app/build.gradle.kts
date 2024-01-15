@@ -6,6 +6,19 @@ plugins {
 }
 
 android {
+    //Only Patrick's is set up to release
+    // To set up all to release keystore needs to be in git.
+    /*
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\Bruger\\Desktop\\keystore.jks")
+            storePassword = "Group24"
+            keyPassword = "Group24"
+            keyAlias = "keystore"
+        }
+    }
+
+     */
     namespace = "com.example.vejrapp"
     compileSdk = 34
 
@@ -23,13 +36,16 @@ android {
         }
     }
 
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            //signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -59,9 +75,9 @@ dependencies {
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
 
@@ -73,7 +89,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
@@ -99,6 +115,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    implementation("com.github.MatteoBattilana:WeatherView:3.0.0")
 
 }
 
