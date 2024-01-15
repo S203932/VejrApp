@@ -96,7 +96,7 @@ fun DayCard(
             //.height(60.dp)
             .animateContentSize(
                 animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioHighBouncy,
+                    dampingRatio = Spring.DampingRatioLowBouncy,
                     stiffness = Spring.StiffnessLow
                 )
             ),
@@ -140,7 +140,7 @@ fun DayCard(
                 }
                 //Spacer(modifier = Modifier.width(7.dp))
                 Image(
-                    painterResource(id = R.drawable.umbrella),
+                    painterResource(id = imageRes),
                     //painter = weatherIcon, //Weather Symbol for the day
                     contentDescription = null,
                     modifier = Modifier
