@@ -1,5 +1,6 @@
 package com.example.vejrapp.ui.settings
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,8 +38,6 @@ fun Settings(
     val temperatureUnit by settingsViewModel.temperatureUnit.collectAsState()
     val windSpeedUnit by settingsViewModel.windSpeedUnit.collectAsState()
     val pressureUnit by settingsViewModel.pressureUnit.collectAsState()
-
-    println(temperatureUnit.toString())
 
     Scaffold(
         modifier = Modifier

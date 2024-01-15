@@ -31,10 +31,12 @@ import com.example.vejrapp.ui.day.Day
 import com.example.vejrapp.ui.day.DayViewModel
 import com.example.vejrapp.ui.search.SearchBar
 import com.example.vejrapp.ui.search.SearchViewModel
+import com.example.vejrapp.ui.screens.Day
+import com.example.vejrapp.ui.screens.WeekPage
+import com.example.vejrapp.ui.screens.screenViewModel
 import com.example.vejrapp.ui.settings.Settings
 import com.example.vejrapp.ui.settings.SettingsViewModel
 import com.example.vejrapp.ui.theme.LinearGradient
-import com.example.vejrapp.ui.week.WeekPage
 import java.time.LocalDateTime
 
 
@@ -44,7 +46,7 @@ fun MainNavHost(
     navController: NavHostController
 ) {
     val settingsViewModel = hiltViewModel<SettingsViewModel>()
-    val dayViewModel = hiltViewModel<DayViewModel>()
+    val screenViewModel = hiltViewModel<ScreenViewModel>()
     val searchViewModel = hiltViewModel<SearchViewModel>()
 
     NavHost(
@@ -74,7 +76,8 @@ fun MainNavHost(
                         state = pagerState,
                         key = { screens[it] },
                         pageSize = PageSize.Fill,
-                        beyondBoundsPageCount = screens.size - 1,
+                        //Quickfix for lag
+                        // beyondBoundsPageCount = screens.size - 1,
                         verticalAlignment = Alignment.Top,
                     ) { index ->
                         when (screens[index]) {
@@ -82,7 +85,7 @@ fun MainNavHost(
                                 // Content specific to Today
                                 Day(
                                     navController = navController,
-                                    dayViewModel = dayViewModel,
+                                    screenViewModel = screenViewModel,
                                     LocalDateTime.now()
                                 )
                             }
@@ -91,7 +94,7 @@ fun MainNavHost(
                                 // Content specific to Tomorrow
                                 Day(
                                     navController = navController,
-                                    dayViewModel = dayViewModel,
+                                    screenViewModel = screenViewModel,
                                     LocalDateTime.now().plusDays(1)
                                 )
                             }
@@ -100,7 +103,7 @@ fun MainNavHost(
                                 // Content specific to Week
                                 WeekPage(
                                     navController = navController,
-                                    dayViewModel = dayViewModel
+                                    screenViewModel = screenViewModel
 
                                 )
                             }

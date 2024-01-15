@@ -4,12 +4,17 @@ package com.example.vejrapp.ui.settings
 import android.content.Context
 import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.vejrapp.R
+import com.example.vejrapp.data.local.datastore.PreferencesDataStore
 import com.example.vejrapp.ui.settings.models.SettingsModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

@@ -3,6 +3,7 @@ package com.example.vejrapp.data.local.datastore
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -11,6 +12,7 @@ import com.example.vejrapp.data.local.locations.models.City
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.repository.WeatherUtils.gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -36,6 +38,72 @@ class PreferencesDataStore(context: Context) {
     // Saving WeatherData in DataStore
     suspend fun updatePreferenceWeatherData(complete: METJSONForecastTimestamped, city: City) {
         updateFromKey(stringPreferencesKey(city.uniqueId()), gson.toJson(complete))
+    }
+
+    //Saving units settings in to DataStore
+    suspend fun updateTemperaturePreference(settings: Boolean) {
+        userDataStorePreferences.edit { preferences ->
+            preferences[TEMPERATURE_KYE] = settings
+        }
+    }
+
+    suspend fun updateWindPreference(settings: Boolean) {
+        userDataStorePreferences.edit { preferences ->
+            preferences[WIND_KYE] = settings
+        }
+    }
+
+    suspend fun updatePressurePreference(settings: Boolean) {
+        userDataStorePreferences.edit { preferences ->
+            preferences[PRESSURE_KYE] = settings
+        }
+    }
+
+
+    //Reading units settings from DataStore
+    suspend fun getTemperaturePreference(): Flow<Boolean> {
+        return userDataStorePreferences.data
+            .catch { error ->
+                if (error is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw error
+                }
+            }
+            .map { preferences ->
+                val value = preferences[TEMPERATURE_KYE] ?: false
+                value
+            }
+    }
+
+    suspend fun getWindPreference(): Flow<Boolean> {
+        return userDataStorePreferences.data
+            .catch { error ->
+                if (error is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw error
+                }
+            }
+            .map { preferences ->
+                val value = preferences[WIND_KYE] ?: false
+                value
+            }
+    }
+
+    suspend fun getPressurePreference(): Flow<Boolean> {
+        return userDataStorePreferences.data
+            .catch { error ->
+                if (error is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw error
+                }
+            }
+            .map { preferences ->
+                val value = preferences[PRESSURE_KYE] ?: false
+                value
+            }
     }
 
     // Saving Cities in DataStore
@@ -99,11 +167,21 @@ class PreferencesDataStore(context: Context) {
         }
     }
 
+    private suspend fun updateFromBooleanKey(key: Preferences.Key<Boolean>, value: Boolean) {
+        Result.runCatching {
+            userDataStorePreferences.edit { preferences ->
+                preferences[key] = value
+            }
+        }
+    }
 
     private companion object {
         val SELECTED_CITY_KEY = stringPreferencesKey(
             name = "SELECTED_CITY"
         )
+        val TEMPERATURE_KYE = booleanPreferencesKey("TEMPERATURE_SETTINGS")
+        val WIND_KYE = booleanPreferencesKey("WIND_SETTINGS")
+        val PRESSURE_KYE = booleanPreferencesKey("PRESSURE_SETTINGS")
         val CITIES_KEY = stringPreferencesKey(
             name = "CITIES"
         )
