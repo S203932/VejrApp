@@ -23,14 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.vejrapp.ui.day.Day
+import com.example.vejrapp.ui.screens.Day
+import com.example.vejrapp.ui.screens.WeekPage
+import com.example.vejrapp.ui.screens.screenViewModel
 import com.example.vejrapp.ui.settings.Settings
 import com.example.vejrapp.ui.theme.LinearGradient
-import com.example.vejrapp.ui.week.WeekPage
 import java.time.LocalDateTime
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -68,12 +71,14 @@ fun MainNavHost(
                     verticalAlignment = Alignment.Top,
                 ) { index ->
                     val route = screens[index]
+                    val screenViewModel = hiltViewModel<screenViewModel>()
                     when (route) {
                         Route.Today.name -> {
                             // Content specific to Today
                             Day(
                                 navController = navController,
-                                LocalDateTime.now()
+                                LocalDateTime.now(),
+                                screenViewModel
                             )
                         }
 
@@ -81,7 +86,8 @@ fun MainNavHost(
                             // Content specific to Tomorrow
                             Day(
                                 navController = navController,
-                                LocalDateTime.now().plusDays(1)
+                                LocalDateTime.now().plusDays(1),
+                                screenViewModel
                             )
                         }
 
@@ -89,8 +95,8 @@ fun MainNavHost(
                         Route.Week.name -> {
                             // Content specific to Week
                             WeekPage(
-                                navController = navController
-
+                                navController = navController,
+                                screenViewModel
                             )
                         }
                     }

@@ -12,6 +12,14 @@
 #   public *;
 #}
 
+-keep class com.google.gson.reflect.TypeToken
+-keep class * extends com.google.gson.reflect.TypeToken
+-keep public class * implements java.lang.reflect.Type
+-keep class com.example.vejrapp.data.*
+-keep class com.example.vejrapp.navigation.*
+-keep class com.example.*
+-dontobfuscate
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

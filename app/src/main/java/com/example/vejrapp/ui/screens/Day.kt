@@ -1,4 +1,4 @@
-package com.example.vejrapp.ui.day
+package com.example.vejrapp.ui.screens
 
 import android.graphics.Typeface
 import android.widget.TextClock
@@ -46,7 +46,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.vejrapp.R
 import com.example.vejrapp.data.cropBitmap
@@ -74,7 +73,8 @@ import kotlin.math.exp
 @Composable
 fun Day(
     navController: NavHostController,
-    localDateTime: LocalDateTime
+    localDateTime: LocalDateTime,
+    screenViewModel: screenViewModel
 ) {
     var dayIndex = 0
     if (localDateTime.truncatedTo(ChronoUnit.DAYS) != LocalDateTime.now()
@@ -83,14 +83,14 @@ fun Day(
         dayIndex = abs(localDateTime.compareTo(LocalDateTime.now()))
     }
     Box(modifier = Modifier.fillMaxSize()) {
-        WeatherAnimation()
+        WeatherAnimation(screenViewModel)
         Column(verticalArrangement = Arrangement.SpaceBetween) {
             SearchBar(onNextButtonClicked = { navController.navigate(Route.Settings.name) })
             LazyColumn {
-                item { TopWeather(dayIndex) }
-                item { CautionBox(dayIndex) }
-                item { HourCards(dayIndex) }
-                item { DetailsBox(dayIndex, false) }
+                item { TopWeather(dayIndex, screenViewModel) }
+                item { CautionBox(dayIndex, screenViewModel) }
+                item { HourCards(dayIndex, screenViewModel) }
+                item { DetailsBox(dayIndex, false, screenViewModel) }
             }
 
         }
@@ -100,9 +100,8 @@ fun Day(
 }
 
 @Composable
-fun TopWeather(day: Int) {
-    val dayViewModel = hiltViewModel<DayViewModel>()
-    val weatherData by dayViewModel.weatherData.collectAsState()
+fun TopWeather(day: Int, screenViewModel: screenViewModel) {
+    val weatherData by screenViewModel.weatherData.collectAsState()
     val indexOfHour = getCurrentIndex(weatherData, day)
     val dataCurrentHour = weatherData.data.days[day].hours[indexOfHour].data
     val weatherImage = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
@@ -220,7 +219,7 @@ fun TopWeather(day: Int) {
 // caution alerts to the user (showing dummy data
 //  the moment)
 @Composable
-fun CautionBox(day: Int) {
+fun CautionBox(day: Int, screenViewModel: screenViewModel) {
     val fontColor = Color.White
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -344,9 +343,8 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
 
 // the lazy row for the hourly view
 @Composable
-fun HourCards(day: Int) {
-    val dayViewModel = hiltViewModel<DayViewModel>()
-    val weatherData by dayViewModel.weatherData.collectAsState()
+fun HourCards(day: Int, screenViewModel: screenViewModel) {
+    val weatherData by screenViewModel.weatherData.collectAsState()
     val dayData = get24Hours(weatherData, day)
     //val hourList = List(24) { index -> (index + startHour) % 24 }
     LazyRow(
@@ -404,9 +402,8 @@ fun MiniDetailCard() {
 // the additional parameters of the day
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DetailsBox(day: Int, isInWeekList: Boolean) {
-    val dayViewModel = hiltViewModel<DayViewModel>()
-    val weatherData by dayViewModel.weatherData.collectAsState()
+fun DetailsBox(day: Int, isInWeekList: Boolean, screenViewModel: screenViewModel) {
+    val weatherData by screenViewModel.weatherData.collectAsState()
     val currentDay = weatherData.data.days[day]
 
     var indexOfHour = getCurrentIndex(weatherData, day)

@@ -6,6 +6,19 @@ plugins {
 }
 
 android {
+    //Only Patrick's is set up to release
+    // To set up all to release keystore needs to be in git.
+    /*
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\Bruger\\Desktop\\keystore.jks")
+            storePassword = "Group24"
+            keyPassword = "Group24"
+            keyAlias = "keystore"
+        }
+    }
+
+     */
     namespace = "com.example.vejrapp"
     compileSdk = 34
 
@@ -23,13 +36,16 @@ android {
         }
     }
 
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            //signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

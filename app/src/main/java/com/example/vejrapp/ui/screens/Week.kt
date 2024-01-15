@@ -1,4 +1,4 @@
-package com.example.vejrapp.ui.week
+package com.example.vejrapp.ui.screens
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -47,14 +47,15 @@ import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.day.CardWithColumnAndRow
-import com.example.vejrapp.ui.day.DayViewModel
-import com.example.vejrapp.ui.day.DetailsBox
 import com.example.vejrapp.ui.search.SearchBar
+import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun WeekPage(navController: NavHostController = rememberNavController()) {
+fun WeekPage(
+    navController: NavHostController = rememberNavController(),
+    screenViewModel: screenViewModel
+) {
 
     Column {
         SearchBar(
@@ -62,7 +63,7 @@ fun WeekPage(navController: NavHostController = rememberNavController()) {
                 navController.navigate(Route.Settings.name)
             }
         )
-        WeekView()
+        WeekView(screenViewModel)
     }
 }
 
@@ -77,7 +78,8 @@ fun DayCard(
     precipitation: String,
     rainIcon: Painter,
     weatherIcon: WeatherSymbol,
-    dayInt: Int
+    dayInt: Int,
+    screenViewModel: screenViewModel
 ) {
     val weatherImage = weatherIcon.toString()
     val imageRes = weatherImage.mapToYRImageResource()
@@ -165,9 +167,9 @@ fun DayCard(
     }
     if (expanded) {
         Column {
-            GetDayHours(day = dayInt)
+            GetDayHours(day = dayInt, screenViewModel = screenViewModel)
             Spacer(modifier = Modifier.width(10.dp))
-            DetailsBox(day = dayInt, true)
+            DetailsBox(day = dayInt, true, screenViewModel)
             Spacer(modifier = Modifier.width(10.dp))
         }
     }
@@ -175,10 +177,12 @@ fun DayCard(
 
 
 @Composable
-fun WeekView() {
-    val weekViewModel = hiltViewModel<WeekViewModel>()
+fun WeekView(
+    screenViewModel: screenViewModel
+) {
 
-    val weatherData by weekViewModel.weatherData.collectAsState()
+
+    val weatherData by screenViewModel.weatherData.collectAsState()
     LazyColumn(
         modifier = Modifier
             .padding(8.dp)
@@ -202,7 +206,7 @@ fun WeekView() {
                     minTemp = item.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMin
                         .toString() + "°",
                     dayOfTheWeek = item.hours[0].time.dayOfWeek.getDisplayName(
-                        java.time.format.TextStyle.FULL,
+                        TextStyle.FULL,
                         Locale.getDefault()
                     ),
                     dayAndMonth = item.hours[0].time.toString(),
@@ -211,7 +215,8 @@ fun WeekView() {
                     rainIcon = painterResource(id = R.drawable.umbrella),
                     weatherIcon = item.hours[indexOfHour12ish].data.nextSixHours?.summary?.symbolCode
                         ?: WeatherSymbol.heavysnowshowers_polartwilight,
-                    dayInt = index
+                    dayInt = index,
+                    screenViewModel = screenViewModel
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -255,9 +260,12 @@ private fun calculateMinTemperature(weatherData: WeatherData): Float {
 
 
 @Composable
-fun GetDayHours(day: Int) { //This is the same as HourCards except it uses getHours which gets all the hours for the specific day
-    val dayViewModel = hiltViewModel<DayViewModel>()
-    val weatherData by dayViewModel.weatherData.collectAsState()
+fun GetDayHours(
+    day: Int,
+    screenViewModel: screenViewModel
+) { //This is the same as HourCards except it uses getHours which gets all the hours for the specific day
+    val screenViewModel = hiltViewModel<screenViewModel>()
+    val weatherData by screenViewModel.weatherData.collectAsState()
     val dayData = getHours(weatherData, day)
     //val hourList = List(24) { index -> (index + startHour) % 24 }
     LazyRow(
