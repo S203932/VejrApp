@@ -356,7 +356,7 @@ fun HourCards(day: Int) {
         }
     }
 }
-
+/*
 @OptIn(ExperimentalLayoutApi::class)
 //@Preview
 @Composable
@@ -384,7 +384,9 @@ fun MiniDetailCard(day: Int, isInWeekList: Boolean) {
     val probabilityThunderUnit = weatherData.units.probabilityOfThunder
     val rainAmount = dataCurrentHour.data.instant?.details?.precipitationAmount
     val rainAmountUnit = weatherData.units.precipitationAmount
+
     Card(
+
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
@@ -396,63 +398,63 @@ fun MiniDetailCard(day: Int, isInWeekList: Boolean) {
         val percentageRain: Float? = 4F // Replace with actual percentageRain value
         val rainAmount: Float? = 5F // Replace with actual rainAmount value
         val pressure: Float? = 6F // Replace with actual pressure value
-        val probabilityThunder: Float? = 7F // Replace with actual probabilityThunder value
-*/
-        if (humidity != null) {
-            FlowRow(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Detail(
-                    painterId = R.drawable.baseline_water_drop_24,
-                    text = stringResource(R.string.day_humidity),
-                    value = humidity,
-                    unit = null
-                )
-                Detail(
-                    painterId = R.drawable.baseline_air_24,
-                    text = null,  // Set text to null
-                    value = windSpeed,
-                    unit = null  // Set unit to null
-                )
-                Detail(
-                    painterId = R.drawable.outline_wb_sunny_24,
-                    text = null,  // Set text to null
-                    value = uvIndex,
-                    unit = null  // Set unit to null
-                )
-                Detail(
-                    painterId = R.drawable.baseline_umbrella_24,
-                    rotateIcon = true,
-                    text = null,  // Set text to null
-                    value = percentageRain,
-                    unit = null  // Set unit to null
-                )
-                Detail(
-                    painterId = R.drawable.baseline_umbrella_24,
-                    rotateIcon = true,
-                    text = null,  // Set text to null
-                    value = rainAmount,
-                    unit = null  // Set unit to null
-                )
-                Detail(
-                    painterId = R.drawable.baseline_compress_24,
-                    text = null,  // Set text to null
-                    value = pressure,
-                    unit = null  // Set unit to null
-                )
-                Detail(
-                    painterId = R.drawable.baseline_thunderstorm_24,
-                    text = null,  // Set text to null
-                    value = probabilityThunder,
-                    unit = null  // Set unit to null
-                )
-            }
+        val probabilityThunder: Float? = null // Replace with actual probabilityThunder value*/
+
+        //if (humidityValue != null) {
+        FlowRow(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
+            Detail(
+                painterId = R.drawable.baseline_water_drop_24,
+                text = "",  // Set text to null
+                value = humidity,
+                unit = humidityUnit
+            )
+            Detail(
+                painterId = R.drawable.baseline_air_24,
+                text = "",  // Set text to null
+                value = windSpeed,
+                unit = ""  // Set unit to null
+            )
+            Detail(
+                painterId = R.drawable.outline_wb_sunny_24,
+                text = "",  // Set text to null
+                value = uvIndex,
+                unit = ""  // Set unit to null
+            )
+            Detail(
+                painterId = R.drawable.baseline_umbrella_24,
+                rotateIcon = true,
+                text = "",  // Set text to null
+                value = percentageRain,
+                unit = ""  // Set unit to null
+            )
+            Detail(
+                painterId = R.drawable.baseline_umbrella_24,
+                rotateIcon = true,
+                text = "",  // Set text to null
+                value = rainAmount,
+                unit = ""  // Set unit to null
+            )
+            Detail(
+                painterId = R.drawable.baseline_compress_24,
+                text = "",  // Set text to null
+                value = pressure,
+                unit = ""  // Set unit to null
+            )
+            Detail(
+                painterId = R.drawable.baseline_thunderstorm_24,
+                text = "",  // Set text to null
+                value = probabilityThunder,
+                unit = ""  // Set unit to null
+            )
         }
     }
-}
+}*/
+//}
 
 
 // The bottom section of the main screen displaying
@@ -575,9 +577,9 @@ fun DetailsBox(day: Int, isInWeekList: Boolean) {
 fun Detail(
     painterId: Int,
     rotateIcon: Boolean = false,
-    text: String? = null,
-    value: Float?,
-    unit: String? = null
+    text: String? = "",
+    value: Float? = 0F,
+    unit: String? = "",
 ) {
     if (value == null) {
         return
@@ -595,7 +597,13 @@ fun Detail(
             tint = fontColor
         )
         Text(
-            text = "$value",
+            text = text ?: "",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            color = fontColor
+        )
+        Text(
+            text = "$value$unit",
             modifier = Modifier.align(Alignment.CenterHorizontally),
             color = fontColor
         )
@@ -611,7 +619,7 @@ fun prettyTime(zonedDateTime: ZonedDateTime, stringResource: String): String {
 }
 
 // Method to get the index for the current hour in the current day
-private fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
+fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
     var currentHour =
         applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
 
@@ -627,7 +635,7 @@ private fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
 
 
 // Method to return 24 next hours in a day object
-private fun get24Hours(weatherData: WeatherData, dayInt: Int): WeatherData.Day {
+fun get24Hours(weatherData: WeatherData, dayInt: Int): WeatherData.Day {
     val day = WeatherData.Day()
     // adding all hours from the first day as it there can never be more than 24 hours in a day
     for (item in weatherData.data.days[dayInt].hours.subList(
