@@ -31,19 +31,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
-import com.example.vejrapp.data.cropBitmap
-import com.example.vejrapp.data.getBitmapFromImage
-import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
@@ -81,13 +75,14 @@ fun DayCard(
     dayInt: Int,
     screenViewModel: screenViewModel
 ) {
-    val weatherImage = weatherIcon.toString()
-    val imageRes = weatherImage.mapToYRImageResource()
+    // Removed the images from the screen and the old way of implementing them
+    //val weatherImage = weatherIcon.toString()
+    //val imageRes = weatherImage.mapToYRImageResource()
     var expanded by remember { mutableStateOf(false) }
-    val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
+    //val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
 
     // Crop the transparent/whitespace areas
-    val croppedBitmap = cropBitmap(bitmap)
+    //val croppedBitmap = cropBitmap(bitmap)
 
     val fontColor = Color.Black
     Card(
@@ -137,6 +132,8 @@ fun DayCard(
                 Text(text = minTemp, color = fontColor, fontSize = 16.sp)
             }
             Spacer(modifier = Modifier.width(7.dp))
+            // Image has been removed until faster version is ready to implement.
+            /*
             Image(
                 bitmap = croppedBitmap.asImageBitmap(),
                 //painter = weatherIcon, //Weather Symbol for the day
@@ -146,6 +143,8 @@ fun DayCard(
                     .padding(7.dp)
                     .size(50.dp)
             )
+
+             */
             Spacer(modifier = Modifier.width(7.dp))
             Image(
                 painter = rainIcon, //Rain Icon
@@ -187,41 +186,40 @@ fun WeekView(
         modifier = Modifier
             .padding(8.dp)
     ) {
-        items(weatherData.data.days.size) {
-            weatherData.data.days.forEachIndexed { index, item ->
-                val indexOfHour12ish = getHourClosestToMidday(item)
+        items(weatherData.data.days) {
+            val indexOfHour12ish = getHourClosestToMidday(it)
 
-                // Need to calculate index of the hour I want to use
-                // I can find min and max air temperature in nextSixHours
-                // Rain/percipitation can also be found in nextSixHours
-                // Condition can also be found in next six hours
-                // Instant is gonna be average of the data closest to 12 a clock midday
+            // Need to calculate index of the hour I want to use
+            // I can find min and max air temperature in nextSixHours
+            // Rain/percipitation can also be found in nextSixHours
+            // Condition can also be found in next six hours
+            // Instant is gonna be average of the data closest to 12 a clock midday
 
-                // All the data will be taken from the hour closest to midday
-                DayCard(
-                    avgTemp = item.hours[indexOfHour12ish].data.instant?.details?.airTemperature
-                        .toString() + "°",
-                    maxTemp = item.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMax
-                        .toString() + "°",
-                    minTemp = item.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMin
-                        .toString() + "°",
-                    dayOfTheWeek = item.hours[0].time.dayOfWeek.getDisplayName(
-                        TextStyle.FULL,
-                        Locale.getDefault()
-                    ),
-                    dayAndMonth = item.hours[0].time.toString(),
-                    precipitation = item.hours[indexOfHour12ish].data.nextSixHours?.details?.probabilityOfPrecipitation
-                        .toString() + "%",
-                    rainIcon = painterResource(id = R.drawable.umbrella),
-                    weatherIcon = item.hours[indexOfHour12ish].data.nextSixHours?.summary?.symbolCode
-                        ?: WeatherSymbol.heavysnowshowers_polartwilight,
-                    dayInt = index,
-                    screenViewModel = screenViewModel
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+            // All the data will be taken from the hour closest to midday
+            DayCard(
+                avgTemp = it.hours[indexOfHour12ish].data.instant?.details?.airTemperature
+                    .toString() + "°",
+                maxTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMax
+                    .toString() + "°",
+                minTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMin
+                    .toString() + "°",
+                dayOfTheWeek = it.hours[0].time.dayOfWeek.getDisplayName(
+                    TextStyle.FULL,
+                    Locale.getDefault()
+                ),
+                dayAndMonth = it.hours[0].time.toString(),
+                precipitation = it.hours[indexOfHour12ish].data.nextSixHours?.details?.probabilityOfPrecipitation
+                    .toString() + "%",
+                rainIcon = painterResource(id = R.drawable.umbrella),
+                weatherIcon = it.hours[indexOfHour12ish].data.nextSixHours?.summary?.symbolCode
+                    ?: WeatherSymbol.heavysnowshowers_polartwilight,
+                dayInt = getDayIndex(weatherData, it),
+                screenViewModel = screenViewModel
+            )
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
+
 }
 
 private fun getHourClosestToMidday(day: WeatherData.Day): Int {
@@ -264,7 +262,6 @@ fun GetDayHours(
     day: Int,
     screenViewModel: screenViewModel
 ) { //This is the same as HourCards except it uses getHours which gets all the hours for the specific day
-    val screenViewModel = hiltViewModel<screenViewModel>()
     val weatherData by screenViewModel.weatherData.collectAsState()
     val dayData = getHours(weatherData, day)
     //val hourList = List(24) { index -> (index + startHour) % 24 }
@@ -292,5 +289,15 @@ private fun getHours(weatherData: WeatherData, dayInt: Int): WeatherData.Day {
         day.hours.add(item)
     }
     return day
+}
+
+
+private fun getDayIndex(weatherData: WeatherData, day: WeatherData.Day): Int {
+    for ((index, it) in weatherData.data.days.withIndex()) {
+        if (it.hours[0].time == day.hours[0].time) {
+            return index
+        }
+    }
+    return -1
 }
 

@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.res.painterResource
@@ -48,9 +47,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.example.vejrapp.R
-import com.example.vejrapp.data.cropBitmap
-import com.example.vejrapp.data.getBitmapFromImage
-import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
 import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
@@ -105,12 +101,12 @@ fun TopWeather(day: Int, screenViewModel: screenViewModel) {
     val indexOfHour = getCurrentIndex(weatherData, day)
     val dataCurrentHour = weatherData.data.days[day].hours[indexOfHour].data
     val weatherImage = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
-    val imageRes = weatherImage.mapToYRImageResource()
+    //val imageRes = weatherImage.mapToYRImageResource()
     val fontColor = Color.White
-    val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
+    //val bitmap = getBitmapFromImage(LocalContext.current, imageRes)
 
     // Crop the transparent/whitespace areas
-    val croppedBitmap = cropBitmap(bitmap)
+    //val croppedBitmap = cropBitmap(bitmap)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -205,12 +201,16 @@ fun TopWeather(day: Int, screenViewModel: screenViewModel) {
                 )
             }
             // Weather icon
+            // Image has been removed until better implementation is ready
+            /*
             Image(
                 bitmap = croppedBitmap.asImageBitmap(),
                 contentDescription = "Weather icon",
                 modifier = Modifier
                     .size(175.dp)
             )
+
+             */
         }
     }
 }
@@ -257,7 +257,7 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
     val percentageRain = hour.data.nextOneHours?.details?.probabilityOfPrecipitation
     val rainMin = hour.data.nextOneHours?.details?.precipitationAmountMin?.toInt()
     val rainMax = hour.data.nextOneHours?.details?.precipitationAmountMax?.toInt()
-    val imageRes = weatherImage.mapToYRImageResource()
+    //val imageRes = weatherImage.mapToYRImageResource()
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
@@ -271,6 +271,8 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //Image (you can replace the URL with your image source)
+            // Image has been removed until better way to implement images are ready
+            /*
             Image(
                 painter = painterResource(id = imageRes), // Use your own image resource
                 contentDescription = null,
@@ -278,6 +280,8 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
                     .size(80.dp)
                     .clip(shape = MaterialTheme.shapes.medium)
             )
+
+             */
 
             // Second Text
             Text(

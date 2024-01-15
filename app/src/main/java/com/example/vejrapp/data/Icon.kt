@@ -1,10 +1,10 @@
 package com.example.vejrapp.data
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-import com.example.vejrapp.R
+
 // Used to resize the icons of the weather conditions
 fun cropBitmap(originalBitmap: Bitmap): Bitmap {
     val width = originalBitmap.width
@@ -40,6 +40,7 @@ fun cropBitmap(originalBitmap: Bitmap): Bitmap {
 
     return croppedBitmap
 }
+
 private fun isColumnTransparent(bitmap: Bitmap, column: Int): Boolean {
     for (row in 0 until bitmap.height) {
         if (bitmap.getPixel(column, row) != 0) {
@@ -76,6 +77,9 @@ fun getBitmapFromImage(context: Context, drawable: Int): Bitmap {
     // return bitmap.
     return bit
 }
+
+// Temporarly removed as Images are to be preconfigured as XML
+/*
 // Mapping the given icon to an image
 @DrawableRes
 fun String.mapToYRImageResource(): Int =
@@ -416,3 +420,5 @@ fun String.mapToYRImageResource(): Int =
             R.drawable.cloudy
         }
     }
+
+ */
