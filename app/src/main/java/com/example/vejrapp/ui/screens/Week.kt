@@ -49,9 +49,6 @@ import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.day.DayViewModel
-import com.example.vejrapp.ui.day.Detail
-import com.example.vejrapp.ui.day.getCurrentIndex
 import com.example.vejrapp.ui.search.SearchBar
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -143,7 +140,7 @@ fun DayCard(
                 }
                 //Spacer(modifier = Modifier.width(7.dp))
                 Image(
-                    bitmap = croppedBitmap.asImageBitmap(),
+                    painterResource(id = R.drawable.umbrella),
                     //painter = weatherIcon, //Weather Symbol for the day
                     contentDescription = null,
                     modifier = Modifier
@@ -173,9 +170,9 @@ fun DayCard(
             }
 
             if (expanded) {
-                GetDayHours(day = dayInt)
+                GetDayHours(day = dayInt, screenViewModel = screenViewModel)
                 Spacer(modifier = Modifier.width(10.dp))
-                MiniDetailCard(day = dayInt, true)
+                MiniDetailCard(day = dayInt, true, screenViewModel)
                 Spacer(modifier = Modifier.width(10.dp))
 
             }
@@ -303,9 +300,8 @@ private fun getHours(weatherData: WeatherData, dayInt: Int): WeatherData.Day {
 @OptIn(ExperimentalLayoutApi::class)
 //@Preview
 @Composable
-fun MiniDetailCard(day: Int, isInWeekList: Boolean) {
-    val dayViewModel = hiltViewModel<DayViewModel>()
-    val weatherData by dayViewModel.weatherData.collectAsState()
+fun MiniDetailCard(day: Int, isInWeekList: Boolean, screenViewModel: screenViewModel) {
+    val weatherData by screenViewModel.weatherData.collectAsState()
     val currentDay = weatherData.data.days[day]
 
     var indexOfHour = getCurrentIndex(weatherData, day)
@@ -494,6 +490,7 @@ fun CardWithColumnAndRowWeek(hour: ForecastTimeStep) {
     }
     Spacer(modifier = Modifier.width(4.dp))
 }
+
 private fun getDayIndex(weatherData: WeatherData, day: WeatherData.Day): Int {
     for ((index, it) in weatherData.data.days.withIndex()) {
         if (it.hours[0].time == day.hours[0].time) {
