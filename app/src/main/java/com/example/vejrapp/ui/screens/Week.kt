@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
@@ -127,8 +128,8 @@ fun DayCard(
                 Text(text = minTemp, color = fontColor, fontSize = 16.sp)
             }
             Spacer(modifier = Modifier.width(7.dp))
-            Image(
-                painter = painterResource(id = imageRes),
+            AsyncImage(
+                model = imageRes,
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
