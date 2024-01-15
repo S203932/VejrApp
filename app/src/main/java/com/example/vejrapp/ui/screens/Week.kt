@@ -139,9 +139,8 @@ fun DayCard(
                     Text(text = minTemp, color = fontColor, fontSize = 16.sp)
                 }
                 //Spacer(modifier = Modifier.width(7.dp))
-                Image(
-                    painterResource(id = imageRes),
-                    //painter = weatherIcon, //Weather Symbol for the day
+                AsyncImage(
+                    model = imageRes,
                     contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
