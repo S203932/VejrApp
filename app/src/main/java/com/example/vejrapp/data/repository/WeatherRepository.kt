@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat.getString
 import com.example.vejrapp.R
 import com.example.vejrapp.data.local.datastore.PreferencesDataStore
+import com.example.vejrapp.data.local.default.DefaultData
 import com.example.vejrapp.data.local.locations.Locations
 import com.example.vejrapp.data.local.locations.models.City
 import com.example.vejrapp.data.remote.locationforecast.LocationforecastImplementation
@@ -32,7 +33,7 @@ class WeatherRepository(context: Context) {
 
     val weatherData = MutableStateFlow<WeatherData?>(null)
     val cities = MutableStateFlow<List<City>?>(null)
-    val primaryCity = MutableStateFlow<City?>(null)
+    val primaryCity = MutableStateFlow<City?>(DefaultData.LOCATIONS.CITY)
     val settings = MutableStateFlow(
         SettingsModel(
             temperatureSetting = SettingModel(
