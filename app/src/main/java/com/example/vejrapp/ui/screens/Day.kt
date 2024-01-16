@@ -1,6 +1,7 @@
 package com.example.vejrapp.ui.screens
 
 import android.graphics.Typeface
+import android.util.Log
 import android.widget.TextClock
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +18,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -50,6 +48,7 @@ import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
+import com.example.vejrapp.data.repository.WeatherUtils
 import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMaxTemperature
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
@@ -82,11 +81,11 @@ fun Day(
 
     if (weatherData != null) {
         Column(verticalArrangement = Arrangement.SpaceBetween) {
-            WeatherAnimation(screenViewModel)
+            WeatherAnimation(weatherData!!)
             LazyColumn {
                 item { TopWeather(weatherData!!, dayIndex) }
                 item { CautionBox(weatherData!!, dayIndex) }
-                item { HourCards(weatherData!!, dayIndex) }
+                item { HourlyWeather(weatherData!!, dayIndex, true) }
                 item { DetailsBox(weatherData!!, dayIndex, false) }
             }
         }
@@ -95,7 +94,10 @@ fun Day(
 
 @Composable
 fun TopWeather(weatherData: WeatherData, day: Int) {
-    val dataCurrentHour = weatherData.data.days[day].hours[getCurrentIndex(weatherData, day)].data
+    val indexOfHour = getCurrentIndex(weatherData, day)
+    val dayDataCurrentHour = weatherData.data.days[day]
+    val dataCurrentHour = dayDataCurrentHour.hours[indexOfHour].data
+
     val weatherImage = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
     val imageRes = weatherImage.mapToYRImageResource()
     val fontColor = Color.White
@@ -327,23 +329,6 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
     Spacer(modifier = Modifier.width(4.dp))
 }
 
-// the lazy row for the hourly view
-@Composable
-fun HourCards(weatherData: WeatherData, day: Int) {
-
-    val dayData = get24Hours(weatherData, day)
-    LazyRow(
-        modifier = Modifier
-            // This makes the LazyRow take up the full available width
-            .padding(6.dp)
-            .wrapContentSize(Alignment.BottomCenter)
-    ) {
-        items(dayData.hours) { hour ->
-            CardWithColumnAndRow(hour)
-            Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
-        }
-    }
-}
 
 @OptIn(ExperimentalLayoutApi::class)
 @Preview
@@ -488,10 +473,15 @@ fun DetailsBox(weatherData: WeatherData, day: Int, isInWeekList: Boolean) {
             horizontalAlignment = Alignment.Start
         ) {
             Text(
+                // Ensure that the data is formatted correctly and uses the local timezone
                 text = stringResource(R.string.day_data_updated).format(
                     prettyTime(
                         applyTimezone(weatherData.updatedAt, TimeZone.getDefault()),
-                        stringResource(R.string.day_pretty_time)
+                        if (android.text.format.DateFormat.is24HourFormat(LocalContext.current)) {
+                            stringResource(R.string.day_pretty_time_24)
+                        } else {
+                            stringResource(R.string.day_pretty_time_12)
+                        }
                     )
                 ),
                 color = fontColor,
@@ -548,36 +538,27 @@ fun prettyTime(zonedDateTime: ZonedDateTime, stringResource: String): String {
 }
 
 // Method to get the index for the current hour in the current day
-private fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
-    var currentHour =
+fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
+    val currentHour = if (dayInt > 0) {
+        //Set currentHour to 0 so that the day can show from 00:00 for tomorrow page
+        0
+    } else {
+        // Set currentHour to the relevant current time at the given time zone
         applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
-
-    //Set currentHour to 0 so that the day can show from 00:00 for tomorrow page
-    if (dayInt > 0) {
-        currentHour = 0
     }
+    val hours = weatherData.data.days[dayInt].hours
 
-    return weatherData.data.days[dayInt].hours.indexOf(weatherData.data.days[dayInt].hours.find {
-        it.time.hour == currentHour
-    })
-}
+    val currentIndex = hours.indexOf(hours.find { it.time.hour == currentHour })
 
-
-// Method to return 24 next hours in a day object
-private fun get24Hours(weatherData: WeatherData, dayInt: Int): WeatherData.Day {
-    val day = WeatherData.Day()
-    // adding all hours from the first day as it there can never be more than 24 hours in a day
-    for (item in weatherData.data.days[dayInt].hours.subList(
-        getCurrentIndex(weatherData, dayInt),
-        weatherData.data.days[dayInt].hours.size
-    )) {
-        day.hours.add(item)
+    return if (currentIndex == -1) {
+        Log.d(
+            WeatherUtils.TAGS.WEATHER_DATA_TAG,
+            "Invalid index $currentHour. Using 0 instead for ${weatherData.city.getVerboseName()}"
+        )
+        0
+    } else {
+        currentIndex
     }
-    // adding the remaining hours from the tomorrow to reach 24 hours
-    for (item in weatherData.data.days[dayInt + 1].hours.subList(0, 24 - day.hours.size)) {
-        day.hours.add(item)
-    }
-    return day
 }
 
 

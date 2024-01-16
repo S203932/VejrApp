@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
+import com.example.vejrapp.data.repository.WeatherUtils
 import com.example.vejrapp.data.repository.models.WeatherData
 import java.time.format.TextStyle
 import java.util.Locale
@@ -153,7 +154,7 @@ fun DayCard(
     }
     if (expanded) {
         Column {
-            GetDayHours(weatherData, dayInt)
+            HourlyWeather(weatherData, dayInt)
             Spacer(modifier = Modifier.width(10.dp))
             DetailsBox(weatherData, dayInt, true)
             Spacer(modifier = Modifier.width(10.dp))
@@ -220,12 +221,14 @@ private fun getHourClosestToMidday(day: WeatherData.Day): Int {
 
 
 @Composable
-fun GetDayHours(
+fun HourlyWeather(
     weatherData: WeatherData,
-    day: Int,
-) { //This is the same as HourCards except it uses getHours which gets all the hours for the specific day
-    val dayData = getHours(weatherData, day)
-    //val hourList = List(24) { index -> (index + startHour) % 24 }
+    dayInt: Int,
+    overflowHours: Boolean = false,
+) {
+
+    val dayData = WeatherUtils.getDayHours(weatherData, dayInt, overflowHours)
+
     LazyRow(
         modifier = Modifier
             // This makes the LazyRow take up the full available width
@@ -238,20 +241,6 @@ fun GetDayHours(
         }
     }
 }
-
-
-private fun getHours(weatherData: WeatherData, dayInt: Int): WeatherData.Day {
-    val day = WeatherData.Day()
-    // adding all hours from the first day as it there can never be more than 24 hours in a day
-    for (item in weatherData.data.days[dayInt].hours.subList(
-        0,
-        weatherData.data.days[dayInt].hours.size
-    )) {
-        day.hours.add(item)
-    }
-    return day
-}
-
 
 private fun getDayIndex(weatherData: WeatherData, day: WeatherData.Day): Int {
     for ((index, it) in weatherData.data.days.withIndex()) {

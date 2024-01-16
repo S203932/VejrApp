@@ -1,6 +1,7 @@
 package com.example.vejrapp.data.repository
 
 import com.example.vejrapp.data.repository.models.WeatherData
+import com.example.vejrapp.ui.screens.getCurrentIndex
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
@@ -90,5 +91,40 @@ object WeatherUtils {
             }
         }
         return minTemp
+    }
+
+    fun getDayHours(
+        weatherData: WeatherData,
+        dayInt: Int,
+        overflowHours: Boolean = false
+    ): WeatherData.Day {
+        val day = WeatherData.Day()
+        // adding all hours from the first day as it there can never be more than 24 hours in a day
+        for (item in weatherData.data.days[dayInt].hours.subList(
+            if (dayInt == 0) {
+                getCurrentIndex(weatherData, dayInt)
+            } else {
+                0
+            },
+            weatherData.data.days[dayInt].hours.size
+        )) {
+            day.hours.add(item)
+        }
+
+        // Display 24 hours from now
+        if (overflowHours) {
+            // adding the remaining hours from the tomorrow to reach 24 hours
+            for (item in weatherData.data.days[dayInt + 1].hours.subList(0, 24 - day.hours.size)) {
+                day.hours.add(item)
+            }
+        }
+
+        return day
+    }
+
+
+    object TAGS {
+        const val WEATHER_DATA_TAG = "WEATHER_DATA"
+        const val CITIES_DATA_TAG = "CITIES_DATA"
     }
 }

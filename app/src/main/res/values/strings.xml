@@ -34,7 +34,8 @@
     <string name="day_thunder">Thunder</string>
     <string name="day_data_updated">Updated %s</string>
     <string name="day_new_data">New data %s</string>
-    <string name="day_pretty_time">kk:mm</string>
+    <string name="day_pretty_time_24">kk:mm</string>
+    <string name="day_pretty_time_12">hh:mm</string>
 
     <!-- Settings strings -->
 

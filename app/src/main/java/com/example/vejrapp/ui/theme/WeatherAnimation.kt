@@ -1,21 +1,16 @@
 package com.example.vejrapp.ui.theme
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.vejrapp.ui.screens.getCurrentIndex
-import com.example.vejrapp.ui.screens.ScreenViewModel
+import com.example.vejrapp.data.repository.models.WeatherData
 import com.github.matteobattilana.weather.PrecipType
 import com.github.matteobattilana.weather.WeatherView
 
 @Composable
-fun WeatherAnimation(screenViewModel: ScreenViewModel) {
-    val weatherData by screenViewModel.weatherData.collectAsState()
-    val indexOfHour = getCurrentIndex(weatherData, 0)
-    val dataCurrentHour = weatherData.data.days[0].hours[indexOfHour].data
-    var weatherState = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
-    var weatherType: PrecipType
+fun WeatherAnimation(weatherData: WeatherData) {
+    val dataCurrentHour = weatherData.data.days[0].hours[0].data
+    val weatherState = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
+    val weatherType: PrecipType
     //    var sleet: Boolean
 
     if (weatherState.contains("rain")) {

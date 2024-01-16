@@ -7,6 +7,8 @@ import com.example.vejrapp.data.local.locations.Locations
 import com.example.vejrapp.data.local.locations.models.City
 import com.example.vejrapp.data.remote.locationforecast.LocationforecastImplementation
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
+import com.example.vejrapp.data.repository.WeatherUtils.TAGS.CITIES_DATA_TAG
+import com.example.vejrapp.data.repository.WeatherUtils.TAGS.WEATHER_DATA_TAG
 import com.example.vejrapp.data.repository.models.WeatherData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,11 +28,12 @@ class WeatherRepository(context: Context) {
     val weatherData = MutableStateFlow<WeatherData?>(null)
     val cities = MutableStateFlow<List<City>?>(null)
     val primaryCity = MutableStateFlow<City?>(null)
+//    val primaryCity = MutableStateFlow<City?>(DefaultData.LOCATIONS.CITY)
 
     init {
         // Get the selected city and then get the weather data for that city
         scope.launch {
-            getSelectedCity()
+//            getSelectedCity()
             getWeatherData()
         }
         // Get all cities in another coroutine to save time
@@ -49,7 +52,7 @@ class WeatherRepository(context: Context) {
             dataStore.updatePreferenceSelectedCity(null)
             Log.d(
                 CITIES_DATA_TAG,
-                "Removing cached selected city ${primaryCity.value?.name} - ${primaryCity.value?.country} with uniqueId ${primaryCity.value?.uniqueId()} as it is no longer favorite"
+                "Removing cached selected city ${primaryCity.value!!.getVerboseName()} as it is no longer favorite"
             )
         }
 
@@ -58,7 +61,7 @@ class WeatherRepository(context: Context) {
             primaryCity.value = locations.primaryCity
             Log.d(
                 CITIES_DATA_TAG,
-                "Using default selected city ${primaryCity.value?.name} - ${primaryCity.value?.country} with uniqueId ${primaryCity.value?.uniqueId()}"
+                "Using default selected city ${primaryCity.value!!.getVerboseName()} ${primaryCity.value?.uniqueId()}"
             )
         }
 
@@ -111,6 +114,11 @@ class WeatherRepository(context: Context) {
 
     suspend fun getWeatherData() {
 
+        // Check if primary city needs to be retrieved
+        if (primaryCity.value == null) {
+            getSelectedCity()
+        }
+
         // Check if stored WeatherData is valid for use
         if (weatherData.value != null) {
             if (weatherData.value?.city == primaryCity.value && !dataIsExpired(weatherData.value!!.expires)) {
@@ -122,25 +130,35 @@ class WeatherRepository(context: Context) {
         var complete: METJSONForecastTimestamped? =
             dataStore.getPreferenceWeatherData(primaryCity.value!!)
 
+        var shouldUpdate = false
 
-//        if (complete != null && dataIsExpired(complete.expires)) {
-//            // Check if cache data is expired by comparing time zone corrected timestamp to current time
-//
-//        }
-
-
-        // Update data from API
-        if (complete == null) {
-            complete = updateComplete()
+        // Check if data is cached but expired and should be updated
+        if (complete != null) {
+            if (dataIsExpired(complete.expires)) {
+                shouldUpdate = true
+            } else {
+                Log.d(
+                    WEATHER_DATA_TAG,
+                    "Using cached weather data for ${primaryCity.value!!.getVerboseName()} from ${complete.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}"
+                )
+            }
         }
 
-        // Apply data to composable functions
+        // Check if data should be updated
+        if (complete == null || shouldUpdate) {
+            // Check if data can be updated
+            val tempComplete = updateComplete()
+
+            if (tempComplete != null) {
+                // Data has bee updated
+                complete = tempComplete
+            }
+        }
+
+
+        // Change weatherData according to the results
         if (complete != null) {
             weatherData.value = WeatherData(complete, primaryCity.value!!)
-            Log.d(
-                WEATHER_DATA_TAG,
-                "Using cached weather data for ${primaryCity.value?.name} with uniqueId ${primaryCity.value?.uniqueId()} from ${complete.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}"
-            )
         } else {
             weatherData.value = null
             Log.d(
@@ -160,7 +178,7 @@ class WeatherRepository(context: Context) {
         if (complete != null) {
             Log.d(
                 WEATHER_DATA_TAG,
-                "Data retrieved for ${primaryCity.value?.name} with uniqueId ${primaryCity.value?.uniqueId()} from API from ${complete.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}."
+                "Data retrieved for ${primaryCity.value!!.getVerboseName()} from API from ${complete.metJsonForecast.properties.meta.updatedAt}. Expires ${complete.expires}."
             )
 
             // Save data in datastore
@@ -171,8 +189,5 @@ class WeatherRepository(context: Context) {
         return null
     }
 
-    private companion object {
-        const val WEATHER_DATA_TAG = "WEATHER_DATA"
-        const val CITIES_DATA_TAG = "CITIES_DATA"
-    }
+
 }

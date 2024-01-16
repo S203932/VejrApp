@@ -23,6 +23,11 @@ data class City(
     val timezone: String,
     var favorite: Boolean = false,
 ) {
+
+    fun getVerboseName(): String {
+        return "$name - $country with unique ID ${uniqueId()}"
+    }
+
     // function to be used when searching
     // checks if the string passed to the function matches part of the city name or country
     fun doesMatchSearchQuery(query: String): Boolean {

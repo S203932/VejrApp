@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -108,7 +109,6 @@ fun MainNavHost(
                         }
                     }
                 }
-
                 Box(
                     modifier = Modifier
                         .offset(y = -(16).dp)
@@ -117,24 +117,7 @@ fun MainNavHost(
                         .padding(8.dp)
                         .align(Alignment.BottomCenter)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .wrapContentHeight(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.Bottom
-                    ) {
-                        repeat(pagerState.pageCount) { iteration ->
-                            val color =
-                                if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                            Box(
-                                modifier = Modifier
-                                    .padding(2.dp)
-                                    .clip(CircleShape)
-                                    .size(8.dp)
-                                    .background(color)
-                            )
-                        }
-                    }
+                    NavigationDots(pagerState = pagerState)
                 }
             }
         }
@@ -142,6 +125,30 @@ fun MainNavHost(
             Settings(
                 settingsViewModel = settingsViewModel,
                 navController = navController,
+            )
+        }
+    }
+}
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun NavigationDots(pagerState: PagerState) {
+    Row(
+        modifier = Modifier
+            .wrapContentHeight(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        repeat(pagerState.pageCount) { iteration ->
+            val color =
+                if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+            Box(
+                modifier = Modifier
+                    .padding(2.dp)
+                    .clip(CircleShape)
+                    .size(8.dp)
+                    .background(color)
             )
         }
     }
