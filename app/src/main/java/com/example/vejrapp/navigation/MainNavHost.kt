@@ -83,7 +83,6 @@ fun MainNavHost(
                             Route.Today.name -> {
                                 // Content specific to Today
                                 Day(
-                                    navController = navController,
                                     screenViewModel = screenViewModel,
                                     LocalDateTime.now()
                                 )
@@ -92,7 +91,6 @@ fun MainNavHost(
                             Route.Tomorrow.name -> {
                                 // Content specific to Tomorrow
                                 Day(
-                                    navController = navController,
                                     screenViewModel = screenViewModel,
                                     LocalDateTime.now().plusDays(1)
                                 )
@@ -100,11 +98,7 @@ fun MainNavHost(
 
                             Route.Week.name -> {
                                 // Content specific to Week
-                                WeekPage(
-                                    navController = navController,
-                                    screenViewModel = screenViewModel
-
-                                )
+                                WeekPage(screenViewModel = screenViewModel)
                             }
                         }
                     }

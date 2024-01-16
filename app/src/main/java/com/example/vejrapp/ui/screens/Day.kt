@@ -18,10 +18,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -42,12 +39,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
@@ -58,8 +52,6 @@ import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMaxTemperature
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.search.SearchBar
 import com.example.vejrapp.ui.theme.WeatherAnimation
 import java.math.RoundingMode
 import java.time.LocalDateTime
@@ -73,7 +65,6 @@ import kotlin.math.exp
 // The page displayed at the landing screen/main screen/ today's weather
 @Composable
 fun Day(
-    navController: NavHostController,
     screenViewModel: ScreenViewModel,
     localDateTime: LocalDateTime,
 ) {
@@ -91,9 +82,9 @@ fun Day(
             WeatherAnimation(weatherData!!)
             LazyColumn {
                 item { TopWeather(weatherData!!, dayIndex) }
-                item { CautionBox(weatherData!!, dayIndex) }
+                item { Cautions(weatherData!!, dayIndex) }
                 item { HourlyWeather(weatherData!!, dayIndex, true) }
-                item { DetailsBox(weatherData!!, dayIndex, false) }
+                item { Details(weatherData!!, dayIndex, true) }
             }
         }
     }
@@ -214,7 +205,7 @@ fun TopWeather(weatherData: WeatherData, day: Int) {
 // caution alerts to the user (showing dummy data
 //  the moment)
 @Composable
-fun CautionBox(weatherData: WeatherData, day: Int) {
+fun Cautions(weatherData: WeatherData, day: Int) {
     val fontColor = Color.White
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -246,7 +237,7 @@ fun CautionBox(weatherData: WeatherData, day: Int) {
 // this is the composable generating
 // each hour section within the hour view
 @Composable
-fun CardWithColumnAndRow(hour: ForecastTimeStep) {
+fun WeatherHourCard(hour: ForecastTimeStep) {
     val weatherImage = hour.data.nextOneHours?.summary?.symbolCode.toString()
     val temperature = hour.data.instant?.details?.airTemperature
     val percentageRain = hour.data.nextOneHours?.details?.probabilityOfPrecipitation
@@ -335,16 +326,15 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
 }
 
 
-
 // The bottom section of the main screen displaying
 // the additional parameters of the day
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DetailsBox(weatherData: WeatherData, day: Int, isInWeekList: Boolean) {
+fun Details(weatherData: WeatherData, day: Int, notInWeekList: Boolean) {
     val currentDay = weatherData.data.days[day]
 
     // Get the desired index for the hour
-    val indexOfHour = if (isInWeekList) {
+    val indexOfHour = if (!notInWeekList) {
         0
     } else {
         getCurrentIndex(weatherData, day)
@@ -375,14 +365,16 @@ fun DetailsBox(weatherData: WeatherData, day: Int, isInWeekList: Boolean) {
             .fillMaxWidth()
             .padding(6.dp)
     ) {
-        Text(
-            text = stringResource(R.string.day_details),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(4.dp)
-                .align(Alignment.CenterHorizontally),
-            color = fontColor
-        )
+        if (notInWeekList) {
+            Text(
+                text = stringResource(R.string.day_details),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.CenterHorizontally),
+                color = fontColor
+            )
+        }
         FlowRow(
             maxItemsInEachRow = 4,
             horizontalArrangement = Arrangement.SpaceAround,
@@ -395,66 +387,78 @@ fun DetailsBox(weatherData: WeatherData, day: Int, isInWeekList: Boolean) {
                 painterId = R.drawable.baseline_water_drop_24,
                 text = stringResource(R.string.day_humidity),
                 value = humidity,
-                unit = humidityUnit
+                unit = humidityUnit,
+                notInWeekList = notInWeekList
             )
             Detail(
                 painterId = R.drawable.baseline_air_24,
                 text = stringResource(R.string.day_wind_speed),
                 value = windSpeed,
-                unit = " $windSpedUnit"
+                unit = " $windSpedUnit",
+                notInWeekList = notInWeekList
             )
             Detail(
                 painterId = R.drawable.outline_wb_sunny_24,
                 text = stringResource(R.string.day_uv_index),
-                value = uvIndex
+                value = uvIndex,
+                notInWeekList = notInWeekList
             )
-            Detail(
-                painterId = R.drawable.baseline_umbrella_24,
-                rotateIcon = true,
-                text = stringResource(R.string.day_rain),
-                value = percentageRain,
-                unit = percentageRainUnit
-            )
+            // Rain is already shown in day overview
+            if (notInWeekList) {
+                Detail(
+                    painterId = R.drawable.baseline_umbrella_24,
+                    rotateIcon = true,
+                    text = stringResource(R.string.day_rain),
+                    value = percentageRain,
+                    unit = percentageRainUnit,
+                    notInWeekList = notInWeekList
+                )
+            }
             Detail(
                 painterId = R.drawable.baseline_umbrella_24,
                 rotateIcon = true,
                 text = stringResource(R.string.day_rain),
                 value = rainAmount,
-                unit = " $rainAmountUnit"
+                unit = " $rainAmountUnit",
+                notInWeekList = notInWeekList
             )
             Detail(
                 painterId = R.drawable.baseline_compress_24,
                 text = stringResource(R.string.day_pressure),
                 value = pressure,
-                unit = " $pressureUnit"
+                unit = " $pressureUnit",
+                notInWeekList = notInWeekList
             )
             Detail(
                 painterId = R.drawable.baseline_thunderstorm_24,
                 text = stringResource(R.string.day_thunder),
                 value = probabilityThunder,
-                unit = probabilityThunderUnit
+                unit = probabilityThunderUnit,
+                notInWeekList = notInWeekList
             )
 
         }
-        Column(
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                // Ensure that the data is formatted correctly and uses the local timezone
-                text = stringResource(R.string.day_data_updated).format(
-                    prettyTime(
-                        applyTimezone(weatherData.updatedAt, TimeZone.getDefault()),
-                        if (android.text.format.DateFormat.is24HourFormat(LocalContext.current)) {
-                            stringResource(R.string.day_pretty_time_24)
-                        } else {
-                            stringResource(R.string.day_pretty_time_12)
-                        }
-                    )
-                ),
-                color = fontColor,
-                modifier = Modifier.padding(10.dp)
-            )
+        if (notInWeekList) {
+            Column(
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    // Ensure that the data is formatted correctly and uses the local timezone
+                    text = stringResource(R.string.day_data_updated).format(
+                        prettyTime(
+                            applyTimezone(weatherData.updatedAt, TimeZone.getDefault()),
+                            if (android.text.format.DateFormat.is24HourFormat(LocalContext.current)) {
+                                stringResource(R.string.day_pretty_time_24)
+                            } else {
+                                stringResource(R.string.day_pretty_time_12)
+                            }
+                        )
+                    ),
+                    color = fontColor,
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
         }
     }
 }
@@ -465,7 +469,8 @@ fun Detail(
     rotateIcon: Boolean = false,
     text: String,
     value: Float?,
-    unit: String? = ""
+    unit: String? = "",
+    notInWeekList: Boolean = true
 ) {
 
     if (value == null) {
@@ -475,7 +480,6 @@ fun Detail(
     val fontColor = Color.Black
 
     Column(modifier = Modifier.padding(4.dp)) {
-
         Icon(
             painter = painterResource(painterId),
             contentDescription = text,
@@ -484,12 +488,14 @@ fun Detail(
                 .rotate(if (rotateIcon) 180F else 0F),
             tint = fontColor
         )
-        Text(
-            text = text,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            color = fontColor
-        )
+        if (notInWeekList) {
+            Text(
+                text = text,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = fontColor
+            )
+        }
         Text(
             text = "$value$unit",
             modifier = Modifier.align(Alignment.CenterHorizontally),

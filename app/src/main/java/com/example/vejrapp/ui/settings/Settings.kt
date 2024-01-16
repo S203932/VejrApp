@@ -1,6 +1,5 @@
 package com.example.vejrapp.ui.settings
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -41,7 +41,8 @@ fun Settings(
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .safeDrawingPadding(),
         topBar = {
             IconButton(
                 onClick = {
@@ -57,7 +58,8 @@ fun Settings(
                     contentDescription = null
                 )
             }
-        }, bottomBar = { About() }
+        },
+        bottomBar = { About() }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -114,6 +116,6 @@ fun About() {
     ) {
         Text(text = "About", fontSize = 24.sp)
         Text(text = "VejrApp is created by")
-        Text(text = "Daniel, Kristian, Markus, Natali og Patrick")
+        Text(text = "David, Kristian, Markus, Natali og Patrick")
     }
 }
