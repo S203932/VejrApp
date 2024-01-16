@@ -22,15 +22,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.vejrapp.R
 import com.example.vejrapp.ui.screens.Day
 import com.example.vejrapp.ui.screens.WeekPage
 import com.example.vejrapp.ui.screens.screenViewModel
 import com.example.vejrapp.ui.settings.Settings
+import com.example.vejrapp.ui.theme.CountDownScreen
+import com.example.vejrapp.ui.theme.GifSplash
 import com.example.vejrapp.ui.theme.LinearGradient
 import java.time.LocalDateTime
 
@@ -41,100 +45,116 @@ fun MainNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Route.AllDaysAllWeek.name,
-//modifier = Modifier.padding(innerPadding)
-    ) {
-        composable(Route.AllDaysAllWeek.name) {
-            LinearGradient()
-            val screens = listOf(
-                Route.Today.name,
-                Route.Tomorrow.name,
-                Route.Week.name
-
+    CountDownScreen(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        beforeFinished = {
+            GifSplash(
+                modifier = Modifier
+                    .fillMaxSize(0.4f)
+                    .align(Alignment.Center),
+                gifImage = R.drawable.splash,
+                contentDescription = stringResource(id = R.string.app_name),
+                text = ""
             )
-            val pagerState = rememberPagerState(
-                initialPage = 0,
-                initialPageOffsetFraction = 0f
-            ) {
-                // provide pageCount
-                3
-            }
-
-            Box(modifier = Modifier.fillMaxSize()) {
-                HorizontalPager(
-                    state = pagerState,
-                    key = { screens[it] },
-                    pageSize = PageSize.Fill,
-                    //    beyondBoundsPageCount = 2, //Quickfix for lag
-                    verticalAlignment = Alignment.Top,
-                ) { index ->
-                    val route = screens[index]
-                    val screenViewModel = hiltViewModel<screenViewModel>()
-                    when (route) {
-                        Route.Today.name -> {
-                            // Content specific to Today
-                            Day(
-                                navController = navController,
-                                LocalDateTime.now(),
-                                screenViewModel
-                            )
-                        }
-
-                        Route.Tomorrow.name -> {
-                            // Content specific to Tomorrow
-                            Day(
-                                navController = navController,
-                                LocalDateTime.now().plusDays(1),
-                                screenViewModel
-                            )
-                        }
-
-
-                        Route.Week.name -> {
-                            // Content specific to Week
-                            WeekPage(
-                                navController = navController,
-                                screenViewModel
-                            )
-                        }
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .offset(y = -(16).dp)
-                        .clip(RoundedCornerShape(100))
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(8.dp)
-                        .align(Alignment.BottomCenter)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .align(Alignment.BottomCenter),
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        repeat(pagerState.pageCount) { iteration ->
-                            val color =
-                                if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                            Box(
-                                modifier = Modifier
-                                    .padding(2.dp)
-                                    .clip(CircleShape)
-                                    .size(8.dp)
-                                    .background(color)
-                            )
-                        }
-                    }
-                }
-            }
         }
-        composable(route = Route.Settings.name) {
-            Settings(
-                modifier = Modifier.fillMaxHeight(),
-                navController = navController,
-            )
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = Route.AllDaysAllWeek.name,
+//modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(Route.AllDaysAllWeek.name) {
+                LinearGradient()
+                val screens = listOf(
+                    Route.Today.name,
+                    Route.Tomorrow.name,
+                    Route.Week.name
+
+                )
+                val pagerState = rememberPagerState(
+                    initialPage = 0,
+                    initialPageOffsetFraction = 0f
+                ) {
+                    // provide pageCount
+                    3
+                }
+
+                Box(modifier = Modifier.fillMaxSize()) {
+                    HorizontalPager(
+                        state = pagerState,
+                        key = { screens[it] },
+                        pageSize = PageSize.Fill,
+                        //    beyondBoundsPageCount = 2, //Quickfix for lag
+                        verticalAlignment = Alignment.Top,
+                    ) { index ->
+                        val route = screens[index]
+                        val screenViewModel = hiltViewModel<screenViewModel>()
+                        when (route) {
+                            Route.Today.name -> {
+                                // Content specific to Today
+                                Day(
+                                    navController = navController,
+                                    LocalDateTime.now(),
+                                    screenViewModel
+                                )
+                            }
+
+                            Route.Tomorrow.name -> {
+                                // Content specific to Tomorrow
+                                Day(
+                                    navController = navController,
+                                    LocalDateTime.now().plusDays(1),
+                                    screenViewModel
+                                )
+                            }
+
+
+                            Route.Week.name -> {
+                                // Content specific to Week
+                                WeekPage(
+                                    navController = navController,
+                                    screenViewModel
+                                )
+                            }
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .offset(y = -(16).dp)
+                            .clip(RoundedCornerShape(100))
+                            .background(MaterialTheme.colorScheme.background)
+                            .padding(8.dp)
+                            .align(Alignment.BottomCenter)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .wrapContentHeight()
+                                .align(Alignment.BottomCenter),
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
+                            repeat(pagerState.pageCount) { iteration ->
+                                val color =
+                                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                                Box(
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                        .clip(CircleShape)
+                                        .size(8.dp)
+                                        .background(color)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            composable(route = Route.Settings.name) {
+                Settings(
+                    modifier = Modifier.fillMaxHeight(),
+                    navController = navController,
+                )
+            }
         }
     }
 }
