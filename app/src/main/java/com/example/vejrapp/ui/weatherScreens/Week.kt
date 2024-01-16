@@ -6,14 +6,11 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,7 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,34 +30,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
-import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.WeatherUtils
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.screens.Detail
-import com.example.vejrapp.ui.screens.getCurrentIndex
-import com.example.vejrapp.ui.screens.screenViewModel
-import com.example.vejrapp.ui.search.SearchBar
-import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun WeekPage(screenViewModel: ScreenViewModel) {
-    val weatherData by screenViewModel.weatherData.collectAsState()
+fun WeekPage(weatherScreenViewModel: WeatherScreenViewModel) {
+    val weatherData by weatherScreenViewModel.weatherData.collectAsState()
 
     WeekView(weatherData!!)
 }
@@ -214,8 +199,8 @@ fun WeekView(weatherData: WeatherData) {
 fun getHourClosestToMidday(day: WeatherData.Day): Int {
     var index = 0
     for (hour in day.hours) {
-        var indexTime = day.hours[index].time.hour
-        var hourTime = hour.time.hour
+        val indexTime = day.hours[index].time.hour
+        val hourTime = hour.time.hour
 
         if (12 - indexTime >= hourTime - 12) {
             index = day.hours.indexOf(hour)

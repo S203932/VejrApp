@@ -1,4 +1,4 @@
-package com.example.vejrapp.ui.screens
+package com.example.vejrapp.ui.weatherScreens
 
 
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,7 @@ import javax.inject.Inject
 // the currentWeather object generated from the information
 // in the api call
 @HiltViewModel
-class ScreenViewModel @Inject constructor(weatherRepository: WeatherRepository) :
+class WeatherScreenViewModel @Inject constructor(weatherRepository: WeatherRepository) :
     ViewModel() {
     val weatherData = weatherRepository.weatherData.asStateFlow()
 }

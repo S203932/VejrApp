@@ -119,6 +119,9 @@ dependencies {
     implementation("com.github.MatteoBattilana:WeatherView:3.0.0")
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("io.coil-kt:coil-gif:2.5.0")
+    implementation("io.coil-kt:coil:2.5.0")
+
+
 }
 
 //Allow references to generated code

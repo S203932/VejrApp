@@ -1,7 +1,7 @@
 package com.example.vejrapp.data.repository
 
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.ui.screens.getCurrentIndex
+import com.example.vejrapp.ui.weatherScreens.getCurrentIndex
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext

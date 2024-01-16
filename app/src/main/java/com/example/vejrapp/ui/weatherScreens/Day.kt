@@ -1,6 +1,7 @@
-package com.example.vejrapp.ui.screens
+package com.example.vejrapp.ui.weatherScreens
 
 import android.graphics.Typeface
+import android.text.format.DateFormat
 import android.util.Log
 import android.widget.TextClock
 import androidx.compose.foundation.Image
@@ -18,10 +19,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -42,12 +40,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
@@ -62,10 +57,7 @@ import com.example.vejrapp.data.repository.WeatherUtils.celsiusToFahrenheit
 import com.example.vejrapp.data.repository.WeatherUtils.fahrenheitToCelsius
 import com.example.vejrapp.data.repository.WeatherUtils.roundFloat
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.navigation.Route
-import com.example.vejrapp.ui.search.SearchBar
 import com.example.vejrapp.ui.theme.WeatherAnimation
-import java.math.RoundingMode
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -77,10 +69,10 @@ import kotlin.math.exp
 // The page displayed at the landing screen/main screen/ today's weather
 @Composable
 fun Day(
-    screenViewModel: ScreenViewModel,
+    weatherScreenViewModel: WeatherScreenViewModel,
     localDateTime: LocalDateTime,
 ) {
-    val weatherData by screenViewModel.weatherData.collectAsState()
+    val weatherData by weatherScreenViewModel.weatherData.collectAsState()
 
     var dayIndex = 0
     if (localDateTime.truncatedTo(ChronoUnit.DAYS) != LocalDateTime.now()
@@ -216,139 +208,139 @@ fun TopWeather(weatherData: WeatherData, day: Int) {
 // The caution box in the weather screen to display
 // caution alerts to the user (showing dummy data
 //  the moment)
-@Composable
-fun CautionBox(weatherData:WeatherData ,day: Int, isInWeekList: Boolean) {
-    val currentDay = weatherData.data.days[day]
+//@Composable
+//fun CautionBox(weatherData: WeatherData, day: Int, isInWeekList: Boolean) {
+//    val currentDay = weatherData.data.days[day]
+//
+//    var indexOfHour = getCurrentIndex(weatherData, day)
+//    if (isInWeekList) {
+//        indexOfHour = 0
+//    }
+//    val dataCurrentHour = currentDay.hours[indexOfHour]
+//    val airtemp = dataCurrentHour.data.instant?.details?.airTemperature
+//    //val dataCurrentHour = weatherData.data.days[day].hours[indexOfHour].data
+//    val humidity = dataCurrentHour.data.instant?.details?.relativeHumidity
+//    val humidityUnit = weatherData.units.relativeHumidity
+//    val windSpeed = dataCurrentHour.data.instant?.details?.windSpeed
+//    val windSpedUnit = weatherData.units.windSpeed
+//    val uvIndex = dataCurrentHour.data.instant?.details?.ultravioletIndexClearSky
+//    val percentageRain = dataCurrentHour.data.nextOneHours?.details?.probabilityOfPrecipitation
+//    val percentageRainUnit = weatherData.units.probabilityOfPrecipitation
+//    val pressure = dataCurrentHour.data.instant?.details?.airPressureAtSeaLevel
+//    val pressureUnit = weatherData.units.airPressureAtSeaLevel
+//    val probabilityThunder = dataCurrentHour.data.instant?.details?.probabilityOfThunder
+//    val probabilityThunderUnit = weatherData.units.probabilityOfThunder
+//    val rainAmount = dataCurrentHour.data.instant?.details?.precipitationAmount
+//    val rainAmountUnit = weatherData.units.precipitationAmount
+//    val fontColor = Color.White
+//
+//    val shouldShowCaution = airtemp != null && (airtemp > 20 || airtemp < -5) ||
+//            rainAmount != null && rainAmount > 20 ||
+//            windSpeed != null && windSpeed > 20 ||
+//            uvIndex != null && uvIndex > 10 ||
+//            probabilityThunder != null && probabilityThunder > 10
+//
+//    if (shouldShowCaution) {
+//        Card(
+//            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(6.dp)
+//                .padding(bottom = 8.dp)
+//        ) {
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxSize(),
+//                verticalArrangement = Arrangement.Center,
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Text(
+//                    text = stringResource(R.string.day_caution),
+//                    fontWeight = FontWeight.Bold,
+//                    modifier = Modifier.align(Alignment.CenterHorizontally),
+//                    color = fontColor
+//                )
+//                if (airtemp != null && airtemp > 20)
+//                    Text(
+//                        text = stringResource(R.string.day_caution_hightemp_coming_days),
+//                        color = fontColor
+//                    )
+//                if (airtemp != null && airtemp < -5)
+//                    Text(
+//                        text = stringResource(R.string.day_caution_lowtemp_coming_days),
+//                        color = fontColor
+//                    )
+//                if (rainAmount != null && rainAmount > 20)
+//                    Text(
+//                        text = stringResource(R.string.day_caution_rainy_coming_days),
+//                        color = fontColor
+//                    )
+//                if (windSpeed != null && windSpeed > 20)
+//                    Text(
+//                        text = stringResource(R.string.day_caution_wind_coming_days),
+//                        color = fontColor
+//                    )
+//                if (uvIndex != null && uvIndex > 10)
+//                    Text(
+//                        text = stringResource(R.string.day_caution_sun_coming_days),
+//                        color = fontColor
+//                    )
+//                if (probabilityThunder != null && probabilityThunder > 10)
+//                    Text(
+//                        text = stringResource(R.string.day_caution_thunder_coming_days),
+//                        color = fontColor
+//                    )
+//            }
+//        }
+//    }
+//}
 
-    var indexOfHour = getCurrentIndex(weatherData, day)
-    if (isInWeekList) {
-        indexOfHour = 0
-    }
-    val dataCurrentHour = currentDay.hours[indexOfHour]
-    val airtemp = dataCurrentHour.data.instant?.details?.airTemperature
-    //val dataCurrentHour = weatherData.data.days[day].hours[indexOfHour].data
-    val humidity = dataCurrentHour.data.instant?.details?.relativeHumidity
-    val humidityUnit = weatherData.units.relativeHumidity
-    val windSpeed = dataCurrentHour.data.instant?.details?.windSpeed
-    val windSpedUnit = weatherData.units.windSpeed
-    val uvIndex = dataCurrentHour.data.instant?.details?.ultravioletIndexClearSky
-    val percentageRain = dataCurrentHour.data.nextOneHours?.details?.probabilityOfPrecipitation
-    val percentageRainUnit = weatherData.units.probabilityOfPrecipitation
-    val pressure = dataCurrentHour.data.instant?.details?.airPressureAtSeaLevel
-    val pressureUnit = weatherData.units.airPressureAtSeaLevel
-    val probabilityThunder = dataCurrentHour.data.instant?.details?.probabilityOfThunder
-    val probabilityThunderUnit = weatherData.units.probabilityOfThunder
-    val rainAmount = dataCurrentHour.data.instant?.details?.precipitationAmount
-    val rainAmountUnit = weatherData.units.precipitationAmount
-    val fontColor = Color.White
-
-    val shouldShowCaution = airtemp != null && (airtemp > 20 || airtemp < -5) ||
-            rainAmount != null && rainAmount > 20 ||
-            windSpeed != null && windSpeed > 20 ||
-            uvIndex != null && uvIndex > 10 ||
-            probabilityThunder != null && probabilityThunder > 10
-
-    if (shouldShowCaution) {
-        Card(
-            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-                .padding(bottom = 8.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.day_caution),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-                if (airtemp != null && airtemp > 20)
-                    Text(
-                        text = stringResource(R.string.day_caution_hightemp_coming_days),
-                        color = fontColor
-                    )
-                if (airtemp != null && airtemp < -5)
-                    Text(
-                        text = stringResource(R.string.day_caution_lowtemp_coming_days),
-                        color = fontColor
-                    )
-                if (rainAmount != null && rainAmount > 20)
-                    Text(
-                        text = stringResource(R.string.day_caution_rainy_coming_days),
-                        color = fontColor
-                    )
-                if (windSpeed != null && windSpeed > 20)
-                    Text(
-                        text = stringResource(R.string.day_caution_wind_coming_days),
-                        color = fontColor
-                    )
-                if (uvIndex != null && uvIndex > 10)
-                    Text(
-                        text = stringResource(R.string.day_caution_sun_coming_days),
-                        color = fontColor
-                    )
-                if (probabilityThunder != null && probabilityThunder > 10)
-                    Text(
-                        text = stringResource(R.string.day_caution_thunder_coming_days),
-                        color = fontColor
-                    )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun CautionBoxSwipeable(day: Int, screenViewModel: screenViewModel) {
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        initialPageOffsetFraction = 0f
-    ) {
-        // provide pageCount
-        3
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(6.dp)
-    ) {
-        // HorizontalPager for CautionBox
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-        ) { page ->
-            CautionBox(day = day, screenViewModel = screenViewModel)
-        }
-
-        // Row of circle shapes
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 8.dp)
-        ) {
-            repeat(pagerState.pageCount) { iteration ->
-                val color =
-                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                Box(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .clip(CircleShape)
-                        .size(8.dp)
-                        .background(color)
-                )
-            }
-        }
-    }
-}
+//@OptIn(ExperimentalFoundationApi::class)
+//@Composable
+//fun CautionBoxSwipeable(weatherData: WeatherData, day: Int) {
+//    val pagerState = rememberPagerState(
+//        initialPage = 0,
+//        initialPageOffsetFraction = 0f
+//    ) {
+//        // provide pageCount
+//        3
+//    }
+//
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(6.dp)
+//    ) {
+//        // HorizontalPager for CautionBox
+//        HorizontalPager(
+//            state = pagerState,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(6.dp)
+//        ) { page ->
+//            CautionBox(day = day, screenViewModel = screenViewModel)
+//        }
+//
+//        // Row of circle shapes
+//        Row(
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .padding(bottom = 8.dp)
+//        ) {
+//            repeat(pagerState.pageCount) { iteration ->
+//                val color =
+//                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+//                Box(
+//                    modifier = Modifier
+//                        .padding(2.dp)
+//                        .clip(CircleShape)
+//                        .size(8.dp)
+//                        .background(color)
+//                )
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun Cautions(weatherData: WeatherData, day: Int) {
@@ -561,7 +553,6 @@ fun Details(weatherData: WeatherData, day: Int, notInWeekList: Boolean) {
                     text = stringResource(R.string.day_rain),
                     value = percentageRain,
                     unit = percentageRainUnit,
-                    notInWeekList = notInWeekList
                 )
             }
             Detail(
@@ -598,7 +589,7 @@ fun Details(weatherData: WeatherData, day: Int, notInWeekList: Boolean) {
                     text = stringResource(R.string.day_data_updated).format(
                         prettyTime(
                             applyTimezone(weatherData.updatedAt, TimeZone.getDefault()),
-                            if (android.text.format.DateFormat.is24HourFormat(LocalContext.current)) {
+                            if (DateFormat.is24HourFormat(LocalContext.current)) {
                                 stringResource(R.string.day_pretty_time_24)
                             } else {
                                 stringResource(R.string.day_pretty_time_12)
