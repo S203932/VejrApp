@@ -47,7 +47,8 @@ fun MainNavHost(
 //modifier = Modifier.padding(innerPadding)
     ) {
         composable(Route.AllDaysAllWeek.name) {
-            LinearGradient()
+            val screenViewModel = hiltViewModel<screenViewModel>()
+            LinearGradient(screenViewModel = screenViewModel)
             val screens = listOf(
                 Route.Today.name,
                 Route.Tomorrow.name,
@@ -71,7 +72,7 @@ fun MainNavHost(
                     verticalAlignment = Alignment.Top,
                 ) { index ->
                     val route = screens[index]
-                    val screenViewModel = hiltViewModel<screenViewModel>()
+
                     when (route) {
                         Route.Today.name -> {
                             // Content specific to Today
