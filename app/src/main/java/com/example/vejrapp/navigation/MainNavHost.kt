@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -23,19 +24,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.vejrapp.R
 import com.example.vejrapp.ui.screens.Day
-import com.example.vejrapp.ui.screens.ScreenViewModel
 import com.example.vejrapp.ui.screens.WeekPage
-import com.example.vejrapp.ui.search.SearchBar
-import com.example.vejrapp.ui.search.SearchViewModel
+import com.example.vejrapp.ui.screens.screenViewModel
 import com.example.vejrapp.ui.settings.Settings
-import com.example.vejrapp.ui.settings.SettingsViewModel
 import com.example.vejrapp.ui.theme.LinearGradient
+import com.example.vejrapp.ui.weatherScreens.WeekPage
 import java.time.LocalDateTime
 
 
@@ -48,16 +49,43 @@ fun MainNavHost(
     val screenViewModel = hiltViewModel<ScreenViewModel>()
     val searchViewModel = hiltViewModel<SearchViewModel>()
 
-    NavHost(
-        navController = navController,
-        startDestination = Route.AllDaysAllWeek.name,
+//    NavHost(
+//        navController = navController,
+//        startDestination = Route.AllDaysAllWeek.name,
+//    ) {
+//        composable(Route.AllDaysAllWeek.name) {
+//            LinearGradient()
+//            val screens = listOf(
+//                Route.Today.name,
+//                Route.Tomorrow.name,
+//                Route.Week.name
+    CountDownScreen(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        beforeFinished = {
+            GifSplash(
+                modifier = Modifier
+                    .fillMaxSize(0.4f)
+                    .align(Alignment.Center),
+                gifImage = R.drawable.splashslow,
+                contentDescription = stringResource(id = R.string.app_name),
+                text = ""
+            )
+        }
     ) {
-        composable(Route.AllDaysAllWeek.name) {
-            LinearGradient()
-            val screens = listOf(
-                Route.Today.name,
-                Route.Tomorrow.name,
-                Route.Week.name
+        NavHost(
+            navController = navController,
+            startDestination = Route.AllDaysAllWeek.name,
+//modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(Route.AllDaysAllWeek.name) {
+                val screenViewModel = hiltViewModel<screenViewModel>()
+                LinearGradient(screenViewModel = screenViewModel)
+                val screens = listOf(
+                    Route.Today.name,
+                    Route.Tomorrow.name,
+                    Route.Week.name
 
             )
             val pagerState = rememberPagerState(
