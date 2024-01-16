@@ -1,4 +1,4 @@
-package com.example.vejrapp.ui.screens
+package com.example.vejrapp.ui.weatherScreens
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -179,7 +179,6 @@ fun DayCard(
     }
 }
 
-
 @Composable
 fun WeekView(
     screenViewModel: screenViewModel
@@ -230,15 +229,16 @@ fun WeekView(
 private fun getHourClosestToMidday(day: WeatherData.Day): Int {
     var index = 0
     for (hour in day.hours) {
-        if (12 - day.hours[index].time.hour > 12 - hour.time.hour) {
-            index = day.hours.indexOf(day.hours.find {
-                it.time.hour == it.time.hour
-            })
+        var indexTime = day.hours[index].time.hour
+        var hourTime = hour.time.hour
+
+        if (12 - indexTime >= hourTime - 12) {
+            index = day.hours.indexOf(hour)
         }
+
     }
     return index
 }
-
 
 private fun calculateMaxTemperature(weatherData: WeatherData): Float {
     var maxTemp = -1000F
@@ -250,7 +250,6 @@ private fun calculateMaxTemperature(weatherData: WeatherData): Float {
     return maxTemp
 }
 
-
 private fun calculateMinTemperature(weatherData: WeatherData): Float {
     var minTemp = -1000F
     for (item in weatherData.data.days[0].hours) {
@@ -260,7 +259,6 @@ private fun calculateMinTemperature(weatherData: WeatherData): Float {
     }
     return minTemp
 }
-
 
 @Composable
 fun GetDayHours(
@@ -282,7 +280,6 @@ fun GetDayHours(
         }
     }
 }
-
 
 private fun getHours(weatherData: WeatherData, dayInt: Int): WeatherData.Day {
     val day = WeatherData.Day()
