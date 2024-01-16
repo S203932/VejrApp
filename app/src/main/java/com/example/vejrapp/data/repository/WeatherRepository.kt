@@ -2,14 +2,19 @@ package com.example.vejrapp.data.repository
 
 import android.content.Context
 import android.util.Log
+import androidx.core.content.ContextCompat.getString
+import com.example.vejrapp.R
 import com.example.vejrapp.data.local.datastore.PreferencesDataStore
 import com.example.vejrapp.data.local.locations.Locations
 import com.example.vejrapp.data.local.locations.models.City
 import com.example.vejrapp.data.remote.locationforecast.LocationforecastImplementation
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.repository.WeatherUtils.TAGS.CITIES_DATA_TAG
+import com.example.vejrapp.data.repository.WeatherUtils.TAGS.SETTINGS_DATA_TAG
 import com.example.vejrapp.data.repository.WeatherUtils.TAGS.WEATHER_DATA_TAG
 import com.example.vejrapp.data.repository.models.WeatherData
+import com.example.vejrapp.ui.settings.models.SettingModel
+import com.example.vejrapp.ui.settings.models.SettingsModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,16 +33,48 @@ class WeatherRepository(context: Context) {
     val weatherData = MutableStateFlow<WeatherData?>(null)
     val cities = MutableStateFlow<List<City>?>(null)
     val primaryCity = MutableStateFlow<City?>(null)
-//    val primaryCity = MutableStateFlow<City?>(DefaultData.LOCATIONS.CITY)
+    val settings = MutableStateFlow(
+        SettingsModel(
+            temperatureSetting = SettingModel(
+                name = getString(context, R.string.settings_temperature_name),
+                choiceUnit = getString(
+                    context,
+                    R.string.settings_temperature_choice_fahrenheit_unit
+                ),
+                choices = mapOf(
+                    Pair(false, getString(context, R.string.settings_temperature_choice_celsius)),
+                    Pair(true, getString(context, R.string.settings_temperature_choice_fahrenheit))
+                ),
+
+                ), windSpeedSetting = SettingModel(
+                name = getString(context, R.string.settings_wind_speed_name),
+                choiceUnit = getString(context, R.string.settings_wind_speed_choice_kmh_unit),
+                choices = mapOf(
+                    Pair(false, getString(context, R.string.settings_wind_speed_choice_ms)),
+                    Pair(true, getString(context, R.string.settings_wind_speed_choice_kmh))
+                )
+            ), pressureSetting = SettingModel(
+                name = getString(context, R.string.settings_pressure_name),
+                choiceUnit = getString(
+                    context,
+                    R.string.settings_pressure_choice_atm
+                ),
+                choices = mapOf(
+                    Pair(false, getString(context, R.string.settings_pressure_choice_pa)),
+                    Pair(true, getString(context, R.string.settings_pressure_choice_atm))
+                )
+            )
+        )
+    )
 
     init {
         // Get the selected city and then get the weather data for that city
+        // Get all available cities
+        // Get settings
         scope.launch {
-//            getSelectedCity()
+            getSettings()
+            getSelectedCity()
             getWeatherData()
-        }
-        // Get all cities in another coroutine to save time
-        scope.launch {
             getCities()
         }
     }
@@ -45,11 +82,11 @@ class WeatherRepository(context: Context) {
 
     private suspend fun getSelectedCity() {
         // Get from cache if available, else use dataset
-        val cachedSelectedCity = dataStore.getPreferenceSelectedCity()
+        val cachedSelectedCity = dataStore.getPreferencePrimaryCity()
 
         // Clear cache from non-favorite primary city
         if (cachedSelectedCity != null && !cachedSelectedCity.favorite) {
-            dataStore.updatePreferenceSelectedCity(null)
+            dataStore.updatePreferencePrimaryCity(null)
             Log.d(
                 CITIES_DATA_TAG,
                 "Removing cached selected city ${primaryCity.value!!.getVerboseName()} as it is no longer favorite"
@@ -80,7 +117,7 @@ class WeatherRepository(context: Context) {
         primaryCity.value = newCity.copy()
 
         scope.launch {
-            dataStore.updatePreferenceSelectedCity(newCity)
+            dataStore.updatePreferencePrimaryCity(newCity)
         }
     }
 
@@ -113,19 +150,6 @@ class WeatherRepository(context: Context) {
     }
 
     suspend fun getWeatherData() {
-
-        // Check if primary city needs to be retrieved
-        if (primaryCity.value == null) {
-            getSelectedCity()
-        }
-
-        // Check if stored WeatherData is valid for use
-        if (weatherData.value != null) {
-            if (weatherData.value?.city == primaryCity.value && !dataIsExpired(weatherData.value!!.expires)) {
-                return
-            }
-        }
-
         // Check if cache has data
         var complete: METJSONForecastTimestamped? =
             dataStore.getPreferenceWeatherData(primaryCity.value!!)
@@ -158,7 +182,7 @@ class WeatherRepository(context: Context) {
 
         // Change weatherData according to the results
         if (complete != null) {
-            weatherData.value = WeatherData(complete, primaryCity.value!!)
+            weatherData.value = WeatherData(complete, primaryCity.value!!, settings.value)
         } else {
             weatherData.value = null
             Log.d(
@@ -189,5 +213,20 @@ class WeatherRepository(context: Context) {
         return null
     }
 
+    private suspend fun getSettings() {
+        val cachedSettings = dataStore.getPreferenceSettings()
 
+        if (cachedSettings != null) {
+            settings.value = cachedSettings
+            Log.d(SETTINGS_DATA_TAG, "Using cached settings.")
+
+        } else {
+            Log.d(SETTINGS_DATA_TAG, "No cache available for settings. Using default settings.")
+        }
+    }
+
+    suspend fun updateSettings() {
+        dataStore.updatePreferenceSettings(settings.value)
+        getWeatherData()
+    }
 }

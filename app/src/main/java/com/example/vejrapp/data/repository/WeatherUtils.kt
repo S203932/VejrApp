@@ -11,6 +11,7 @@ import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
+import java.math.RoundingMode
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -122,9 +123,23 @@ object WeatherUtils {
         return day
     }
 
+    // Round a float to a given amount of decimal places
+    fun roundFloat(number: Float, decimalPlaces: Int = 1): Float {
+        return number.toBigDecimal().setScale(decimalPlaces, RoundingMode.HALF_UP).toFloat()
+    }
+
+    fun celsiusToFahrenheit(celsius: Float): Float {
+        return (celsius * 1.8F) + 32
+    }
+
+    fun fahrenheitToCelsius(fahrenheit: Float): Float {
+        return (fahrenheit - 32) / 1.8F
+    }
+
 
     object TAGS {
         const val WEATHER_DATA_TAG = "WEATHER_DATA"
         const val CITIES_DATA_TAG = "CITIES_DATA"
+        const val SETTINGS_DATA_TAG = "SETTINGS_DATA"
     }
 }

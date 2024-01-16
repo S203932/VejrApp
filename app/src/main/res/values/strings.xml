@@ -43,14 +43,17 @@
     <string name="settings_temperature_name">Temperature</string>
     <string name="settings_temperature_choice_celsius">Celsius</string>
     <string name="settings_temperature_choice_fahrenheit">Fahrenheit</string>
+    <string name="settings_temperature_choice_fahrenheit_unit">F</string>
 
     <!-- Wind speed -->
     <string name="settings_wind_speed_name">Wind speed</string>
-    <string name="settings_wind_speed_choice_ms">m/s</string>
-    <string name="settings_wind_speed_choice_kmh">km/h</string>
+    <string name="settings_wind_speed_choice_ms">Meters per second</string>
+    <string name="settings_wind_speed_choice_kmh">Kilometers per hour</string>
+    <string name="settings_wind_speed_choice_kmh_unit">km/h</string>
 
     <!-- Pressure -->
     <string name="settings_pressure_name">Pressure</string>
-    <string name="settings_pressure_choice_bar">Bar</string>
     <string name="settings_pressure_choice_pa">Pascal</string>
+    <string name="settings_pressure_choice_atm">Standard atmosphere</string>
+    <string name="settings_pressure_choice_atm_unit">atm</string>
 </resources>

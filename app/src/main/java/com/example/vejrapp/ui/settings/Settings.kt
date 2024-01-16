@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.vejrapp.ui.settings.models.SettingsModel
+import com.example.vejrapp.ui.settings.models.SettingModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,9 +35,7 @@ fun Settings(
     navController: NavController,
     settingsViewModel: SettingsViewModel,
 ) {
-    val temperatureUnit by settingsViewModel.temperatureUnit.collectAsState()
-    val windSpeedUnit by settingsViewModel.windSpeedUnit.collectAsState()
-    val pressureUnit by settingsViewModel.pressureUnit.collectAsState()
+    val settings by settingsViewModel.settings.collectAsState()
 
     Scaffold(
         modifier = Modifier
@@ -69,13 +67,13 @@ fun Settings(
 
         ) {
             Setting(
-                setting = temperatureUnit,
+                setting = settings.temperatureSetting,
                 onToggle = { settingsViewModel.toggleTemperatureUnit() })
             Setting(
-                setting = windSpeedUnit,
+                setting = settings.windSpeedSetting,
                 onToggle = { settingsViewModel.toggleWindSpeedUnit() })
             Setting(
-                setting = pressureUnit,
+                setting = settings.pressureSetting,
                 onToggle = { settingsViewModel.togglePressureUnit() })
         }
     }
@@ -83,7 +81,7 @@ fun Settings(
 
 @Composable
 fun Setting(
-    setting: SettingsModel,
+    setting: SettingModel,
     onToggle: () -> Unit
 ) {
     Row(

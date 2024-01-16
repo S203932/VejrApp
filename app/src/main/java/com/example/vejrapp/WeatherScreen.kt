@@ -6,38 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.vejrapp.navigation.MainNavHost
 
-
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun WeatherAppBar(
-    currentScreen: Route,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-
-) {
-    TopAppBar(
-        title = { Text(stringResource(currentScreen.title)) },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = null
-                    )
-                }
-            }
-        }
-    )
-}
-
- */
-
 @SuppressLint("CoroutineCreationDuringComposition")
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable

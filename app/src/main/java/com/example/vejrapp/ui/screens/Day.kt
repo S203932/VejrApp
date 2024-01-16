@@ -47,13 +47,16 @@ import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
+import com.example.vejrapp.data.remote.locationforecast.models.ForecastUnits
 import com.example.vejrapp.data.repository.WeatherUtils
 import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMaxTemperature
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
+import com.example.vejrapp.data.repository.WeatherUtils.celsiusToFahrenheit
+import com.example.vejrapp.data.repository.WeatherUtils.fahrenheitToCelsius
+import com.example.vejrapp.data.repository.WeatherUtils.roundFloat
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.ui.theme.WeatherAnimation
-import java.math.RoundingMode
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -182,7 +185,7 @@ fun TopWeather(weatherData: WeatherData, day: Int) {
                 // Feels like temperature
                 Text(
                     text = stringResource(R.string.day_feels_like).format(
-                        calculateFeelsLike(dataCurrentHour)
+                        calculateFeelsLike(dataCurrentHour, weatherData.units)
                     ),
                     fontSize = 22.sp,
                     modifier = Modifier
@@ -376,7 +379,11 @@ fun Details(weatherData: WeatherData, day: Int, notInWeekList: Boolean) {
             )
         }
         FlowRow(
-            maxItemsInEachRow = 4,
+            maxItemsInEachRow = if (notInWeekList) {
+                4
+            } else {
+                Int.MAX_VALUE
+            },
             horizontalArrangement = Arrangement.SpaceAround,
             verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
@@ -536,23 +543,42 @@ fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
 }
 
 
-private fun calculateFeelsLike(dataCurrentHour: ForecastTimeStepData): Float? {
+private fun calculateFeelsLike(
+    dataCurrentHour: ForecastTimeStepData,
+    units: ForecastUnits
+): Float? {
     // Calculated using Australian apparent temperature (https://en.wikipedia.org/wiki/Wind_chill)
-    // TODO check if this should be changed
     val humidity = dataCurrentHour.instant?.details?.relativeHumidity
-    val currentTemperature = dataCurrentHour.instant?.details?.airTemperature
-    val currentWindSpeed = dataCurrentHour.instant?.details?.windSpeed
+
+    // Check if a F -> C conversion should be applied
+    val currentTemperature = if (units.airTemperature == "F") {
+        fahrenheitToCelsius(dataCurrentHour.instant?.details?.airTemperature!!)
+    } else {
+        dataCurrentHour.instant?.details?.airTemperature
+
+    }
+    // Check if a km/h -> m/s conversion should be made
+    val currentWindSpeed = if (units.windSpeed == "m/s") {
+        dataCurrentHour.instant?.details?.windSpeed
+    } else {
+        dataCurrentHour.instant?.details?.windSpeed!! / 3.6F
+    }
+
     return try {
         val e =
-            (humidity!! / 100) * 6.105F * exp((17.27F * currentTemperature!!) / (237.7 + currentTemperature))
+            (humidity!! / 100) * 6.105F * exp((17.27F * currentTemperature!!) / (237.7F + currentTemperature))
         val at = currentTemperature + (0.33F * e) - (0.70F * currentWindSpeed!!) - 4.00F
-        // Round to 1 decimal place
-        at.toBigDecimal().setScale(1, RoundingMode.HALF_UP).toFloat()
+
+        // Round to 1 decimal place and convert back to Fahrenheit if needed
+        roundFloat(
+            if (units.airTemperature == "F") {
+                celsiusToFahrenheit(at)
+            } else {
+                at
+            }
+        )
 
     } catch (error: Exception) {
         null
     }
 }
-
-
-

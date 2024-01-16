@@ -8,17 +8,25 @@ import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecast
 import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTimestamped
 import com.example.vejrapp.data.remote.locationforecast.models.NextHours
 import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
+import com.example.vejrapp.data.repository.WeatherUtils.celsiusToFahrenheit
+import com.example.vejrapp.data.repository.WeatherUtils.roundFloat
+import com.example.vejrapp.ui.settings.models.SettingsModel
 import java.time.ZoneId
 import java.util.TimeZone
 
 // More usable version of METJSONForecast
-data class WeatherData(val metjsonForecastTimestamped: METJSONForecastTimestamped, val city: City) {
+data class WeatherData(
+    val metjsonForecastTimestamped: METJSONForecastTimestamped,
+    val city: City,
+    val settings: SettingsModel
+) {
 
     /// Get weather data, expire date and data timestamp
     private val complete = applyUnitSettings(metjsonForecastTimestamped.metJsonForecast)
 
     //    private val complete = convertUnits(metjsonForecastTimestamped.metJsonForecast)
     val expires = metjsonForecastTimestamped.expires
+
     val units = complete.properties.meta.units
     val updatedAt = complete.properties.meta.updatedAt
 
@@ -44,13 +52,49 @@ data class WeatherData(val metjsonForecastTimestamped: METJSONForecastTimestampe
     private fun applyUnitSettings(metjsonForecast: METJSONForecast): METJSONForecast {
 
         val newTimeseries = mutableListOf<ForecastTimeStep>()
-        val newUnits = metjsonForecast.properties.meta.units.copy()
-
+        val existingUnits = metjsonForecast.properties.meta.units
+        val newUnits = existingUnits.copy(
+            // Pressure
+            airPressureAtSeaLevel = if (settings.pressureSetting.checked) {
+                settings.pressureSetting.choiceUnit
+            } else {
+                existingUnits.airPressureAtSeaLevel
+            },
+            // Temperature
+            airTemperature = if (settings.temperatureSetting.checked) {
+                settings.temperatureSetting.choiceUnit
+            } else {
+                existingUnits.airTemperature
+            },
+            airTemperatureMax = if (settings.temperatureSetting.checked) {
+                settings.temperatureSetting.choiceUnit
+            } else {
+                existingUnits.airTemperatureMax
+            },
+            airTemperatureMin = if (settings.temperatureSetting.checked) {
+                settings.temperatureSetting.choiceUnit
+            } else {
+                existingUnits.airTemperatureMin
+            },
+            // Wind speed
+            windSpeed = if (settings.windSpeedSetting.checked) {
+                settings.windSpeedSetting.choiceUnit
+            } else {
+                existingUnits.windSpeed
+            },
+            windSpeedOfGust = if (settings.windSpeedSetting.checked) {
+                settings.windSpeedSetting.choiceUnit
+            } else {
+                existingUnits.windSpeedOfGust
+            }
+        )
 
         fun convertNextHours(nextHours: NextHours?): NextHours? {
             return if (nextHours != null) {
                 NextHours(
                     details = nextHours.details.copy(
+                        // Pressure
+                        airPressureAtSeaLevel = convertPressure(nextHours.details.airPressureAtSeaLevel),
                         // Temperature
                         airTemperature = convertTemperature(nextHours.details.airTemperature),
                         airTemperatureMax = convertTemperature(nextHours.details.airTemperatureMax),
@@ -62,8 +106,6 @@ data class WeatherData(val metjsonForecastTimestamped: METJSONForecastTimestampe
                         windSpeedOfGust = convertWindSpeed(nextHours.details.windSpeedOfGust),
                         windSpeedPercentileNinety = convertWindSpeed(nextHours.details.windSpeedPercentileNinety),
                         windSpeedPercentileTen = convertWindSpeed(nextHours.details.windSpeedPercentileTen),
-                        // Pressure
-                        airPressureAtSeaLevel = convertPressure(nextHours.details.airPressureAtSeaLevel),
                     ),
                     summary = nextHours.summary
                 )
@@ -102,15 +144,29 @@ data class WeatherData(val metjsonForecastTimestamped: METJSONForecastTimestampe
     }
 
     private fun convertTemperature(temperature: Float?): Float? {
-
+        // Calculation from C -> F
+        // Source https://en.wikipedia.org/wiki/Fahrenheit
+        if (settings.temperatureSetting.checked && temperature != null) {
+            return roundFloat(celsiusToFahrenheit(temperature))
+        }
         return temperature
     }
 
     private fun convertWindSpeed(windSpeed: Float?): Float? {
+        // Calculation from m/s to km/h
+        // Source https://en.wikipedia.org/wiki/Kilometres_per_hour
+        if (settings.windSpeedSetting.checked && windSpeed != null) {
+            return roundFloat(windSpeed * 3.6F)
+        }
         return windSpeed
     }
 
     private fun convertPressure(pressure: Float?): Float? {
+        // Calculation from hPa -> atm
+        // Source https://en.wikipedia.org/wiki/Standard_atmosphere_(unit)
+        if (settings.pressureSetting.checked && pressure != null) {
+            return roundFloat((pressure / 10000) * 9.8692F, decimalPlaces = 4)
+        }
         return pressure
     }
 

@@ -167,7 +167,6 @@ fun WeekView(
     ) {
         items(weatherData.data.days) {
             val indexOfHour12ish = getHourClosestToMidday(it)
-
             // Need to calculate index of the hour I want to use
             // I can find min and max air temperature in nextSixHours
             // Rain/percipitation can also be found in nextSixHours
@@ -230,7 +229,7 @@ fun HourlyWeather(
     ) {
         items(dayData.hours) { hour ->
             WeatherHourCard(hour)
-//            Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
+            Spacer(modifier = Modifier.width(8.dp)) // Add spacing between cards
         }
     }
 }
