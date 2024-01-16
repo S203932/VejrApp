@@ -54,7 +54,7 @@ fun MainNavHost(
                 modifier = Modifier
                     .fillMaxSize(0.4f)
                     .align(Alignment.Center),
-                gifImage = R.drawable.splash,
+                gifImage = R.drawable.splashslow,
                 contentDescription = stringResource(id = R.string.app_name),
                 text = ""
             )

@@ -117,8 +117,8 @@ fun GifSplash(
 @Composable
 fun CountDownScreen(
     modifier: Modifier = Modifier,
-    totalTimeInMillis: Long = 850,
-    notifyMeEveryMillis: Long = 20,
+    totalTimeInMillis: Long = 1100,
+    notifyMeEveryMillis: Long = 100,
     onNotify: () -> Unit = {},
     beforeFinished: @Composable BoxScope.() -> Unit,
     whenFinished: @Composable () -> Unit
