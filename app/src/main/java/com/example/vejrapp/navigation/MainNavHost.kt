@@ -23,16 +23,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.vejrapp.R
 import com.example.vejrapp.ui.search.SearchBar
 import com.example.vejrapp.ui.search.SearchViewModel
 import com.example.vejrapp.ui.settings.Settings
 import com.example.vejrapp.ui.settings.SettingsViewModel
 import com.example.vejrapp.ui.theme.CountDownScreen
+import com.example.vejrapp.ui.theme.GifSplash
 import com.example.vejrapp.ui.theme.LinearGradient
 import com.example.vejrapp.ui.weatherScreens.Day
 import com.example.vejrapp.ui.weatherScreens.WeatherScreenViewModel
@@ -64,14 +67,14 @@ fun MainNavHost(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         beforeFinished = {
-//            GifSplash(
-//                modifier = Modifier
-//                    .fillMaxSize(0.4f)
-//                    .align(Alignment.Center),
-//                gifImage = R.drawable.splashslow,
-//                contentDescription = stringResource(id = R.string.app_name),
-//                text = ""
-//            )
+            GifSplash(
+                modifier = Modifier
+                    .fillMaxSize(0.4f)
+                    .align(Alignment.Center),
+                gifImage = R.drawable.splashslow,
+                contentDescription = stringResource(id = R.string.app_name),
+                text = ""
+            )
         }
     ) {
         NavHost(

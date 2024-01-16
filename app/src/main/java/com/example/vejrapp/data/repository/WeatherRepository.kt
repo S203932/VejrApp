@@ -68,46 +68,46 @@ class WeatherRepository(context: Context) {
     )
 
     init {
-        // Get the selected city and then get the weather data for that city
+        // Get the primary city and then get the weather data for that city
         // Get all available cities
         // Get settings
         scope.launch {
             getSettings()
-            getSelectedCity()
+            getPrimaryCity()
             getWeatherData()
             getCities()
         }
     }
 
 
-    private suspend fun getSelectedCity() {
+    private suspend fun getPrimaryCity() {
         // Get from cache if available, else use dataset
-        val cachedSelectedCity = dataStore.getPreferencePrimaryCity()
+        val cachedPrimaryCity = dataStore.getPreferencePrimaryCity()
 
         // Clear cache from non-favorite primary city
-        if (cachedSelectedCity != null && !cachedSelectedCity.favorite) {
+        if (cachedPrimaryCity != null && !cachedPrimaryCity.favorite) {
             dataStore.updatePreferencePrimaryCity(null)
             Log.d(
                 CITIES_DATA_TAG,
-                "Removing cached selected city ${primaryCity.value!!.getVerboseName()} as it is no longer favorite"
+                "Removing cached primary city ${primaryCity.value!!.getVerboseName()} as it is no longer favorite"
             )
         }
 
         // Use default city
-        else if (cachedSelectedCity == null) {
+        else if (cachedPrimaryCity == null) {
             primaryCity.value = locations.primaryCity
             Log.d(
                 CITIES_DATA_TAG,
-                "Using default selected city ${primaryCity.value!!.getVerboseName()} ${primaryCity.value?.uniqueId()}"
+                "Using default primary city ${primaryCity.value!!.getVerboseName()}"
             )
         }
 
         // Get city from cache
         else {
-            primaryCity.value = cachedSelectedCity
+            primaryCity.value = cachedPrimaryCity
             Log.d(
                 CITIES_DATA_TAG,
-                "Using cached selected city ${primaryCity.value?.name} - ${primaryCity.value?.country} with uniqueId ${primaryCity.value?.uniqueId()}"
+                "Using cached primary city ${primaryCity.value!!.getVerboseName()}"
             )
         }
     }
