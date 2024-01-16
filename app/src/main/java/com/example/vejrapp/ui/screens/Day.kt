@@ -41,11 +41,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.vejrapp.R
@@ -87,7 +85,7 @@ fun Day(
             SearchBar(onNextButtonClicked = { navController.navigate(Route.Settings.name) })
             LazyColumn {
                 item { TopWeather(dayIndex, screenViewModel) }
-                item { CautionBox(dayIndex, screenViewModel) }
+                item { CautionBox(dayIndex, false, screenViewModel) }
                 item { HourCards(dayIndex, screenViewModel) }
                 item { DetailsBox(dayIndex, false, screenViewModel) }
             }
@@ -215,6 +213,141 @@ fun TopWeather(day: Int, screenViewModel: screenViewModel) {
 // caution alerts to the user (showing dummy data
 //  the moment)
 @Composable
+fun CautionBox(day: Int, isInWeekList: Boolean, screenViewModel: screenViewModel) {
+    val weatherData by screenViewModel.weatherData.collectAsState()
+    val currentDay = weatherData.data.days[day]
+
+    var indexOfHour = getCurrentIndex(weatherData, day)
+    if (isInWeekList) {
+        indexOfHour = 0
+    }
+    val dataCurrentHour = currentDay.hours[indexOfHour]
+    val airtemp = dataCurrentHour.data.instant?.details?.airTemperature
+    //val dataCurrentHour = weatherData.data.days[day].hours[indexOfHour].data
+    val humidity = dataCurrentHour.data.instant?.details?.relativeHumidity
+    val humidityUnit = weatherData.units.relativeHumidity
+    val windSpeed = dataCurrentHour.data.instant?.details?.windSpeed
+    val windSpedUnit = weatherData.units.windSpeed
+    val uvIndex = dataCurrentHour.data.instant?.details?.ultravioletIndexClearSky
+    val percentageRain = dataCurrentHour.data.nextOneHours?.details?.probabilityOfPrecipitation
+    val percentageRainUnit = weatherData.units.probabilityOfPrecipitation
+    val pressure = dataCurrentHour.data.instant?.details?.airPressureAtSeaLevel
+    val pressureUnit = weatherData.units.airPressureAtSeaLevel
+    val probabilityThunder = dataCurrentHour.data.instant?.details?.probabilityOfThunder
+    val probabilityThunderUnit = weatherData.units.probabilityOfThunder
+    val rainAmount = dataCurrentHour.data.instant?.details?.precipitationAmount
+    val rainAmountUnit = weatherData.units.precipitationAmount
+    val fontColor = Color.White
+    
+    val shouldShowCaution = airtemp != null && (airtemp > 20 || airtemp < -5) ||
+            rainAmount != null && rainAmount > 20 ||
+            windSpeed != null && windSpeed > 20 ||
+            uvIndex != null && uvIndex > 10 ||
+            probabilityThunder != null && probabilityThunder > 10
+
+    if (shouldShowCaution) {
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+                .padding(bottom = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.day_caution),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = fontColor
+                )
+                if (airtemp != null && airtemp > 20)
+                    Text(
+                        text = stringResource(R.string.day_caution_hightemp_coming_days),
+                        color = fontColor
+                    )
+                if (airtemp != null && airtemp < -5)
+                    Text(
+                        text = stringResource(R.string.day_caution_lowtemp_coming_days),
+                        color = fontColor
+                    )
+                if (rainAmount != null && rainAmount > 20)
+                    Text(
+                        text = stringResource(R.string.day_caution_rainy_coming_days),
+                        color = fontColor
+                    )
+                if (windSpeed != null && windSpeed > 20)
+                    Text(
+                        text = stringResource(R.string.day_caution_wind_coming_days),
+                        color = fontColor
+                    )
+                if (uvIndex != null && uvIndex > 10)
+                    Text(
+                        text = stringResource(R.string.day_caution_sun_coming_days),
+                        color = fontColor
+                    )
+                if (probabilityThunder != null && probabilityThunder > 10)
+                    Text(
+                        text = stringResource(R.string.day_caution_thunder_coming_days),
+                        color = fontColor
+                    )
+            }
+        }
+    }
+}
+/*
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CautionBoxSwipeable(day: Int, screenViewModel: screenViewModel) {
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+        // provide pageCount
+        3
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(6.dp)
+    ) {
+        // HorizontalPager for CautionBox
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+        ) { page ->
+            CautionBox(day = day, screenViewModel = screenViewModel)
+        }
+
+        // Row of circle shapes
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 8.dp)
+        ) {
+            repeat(pagerState.pageCount) { iteration ->
+                val color =
+                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                Box(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .clip(CircleShape)
+                        .size(8.dp)
+                        .background(color)
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun CautionBox(day: Int, screenViewModel: screenViewModel) {
     val fontColor = Color.White
     Card(
@@ -242,6 +375,7 @@ fun CautionBox(day: Int, screenViewModel: screenViewModel) {
         }
     }
 }
+*/
 
 // In the LazyRow of the hour view
 // this is the composable generating
