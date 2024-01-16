@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
-
 }
 
 android {
@@ -20,7 +19,6 @@ android {
     }
 
      */
-
     namespace = "com.example.vejrapp"
     compileSdk = 34
 
@@ -36,7 +34,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
     }
 
 
@@ -59,7 +56,6 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-
     buildFeatures {
         compose = true
     }
@@ -71,7 +67,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-
 }
 
 dependencies {
@@ -122,6 +117,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation("com.github.MatteoBattilana:WeatherView:3.0.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
 }
 
 //Allow references to generated code

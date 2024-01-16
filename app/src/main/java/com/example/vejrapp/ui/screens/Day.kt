@@ -18,7 +18,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -43,7 +46,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
@@ -53,6 +58,8 @@ import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMaxTemperature
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
 import com.example.vejrapp.data.repository.models.WeatherData
+import com.example.vejrapp.navigation.Route
+import com.example.vejrapp.ui.search.SearchBar
 import com.example.vejrapp.ui.theme.WeatherAnimation
 import java.math.RoundingMode
 import java.time.LocalDateTime
@@ -95,9 +102,7 @@ fun Day(
 @Composable
 fun TopWeather(weatherData: WeatherData, day: Int) {
     val indexOfHour = getCurrentIndex(weatherData, day)
-    val dayDataCurrentHour = weatherData.data.days[day]
-    val dataCurrentHour = dayDataCurrentHour.hours[indexOfHour].data
-
+    val dataCurrentHour = weatherData.data.days[day].hours[indexOfHour].data
     val weatherImage = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
     val imageRes = weatherImage.mapToYRImageResource()
     val fontColor = Color.White
@@ -195,8 +200,8 @@ fun TopWeather(weatherData: WeatherData, day: Int) {
                     color = fontColor
                 )
             }
-            Image(
-                painter = painterResource(id = imageRes),
+            AsyncImage(
+                model = imageRes,
                 contentDescription = "Weather icon",
                 modifier = Modifier
                     .size(175.dp)
@@ -260,8 +265,8 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = imageRes), // Use your own image resource
+            AsyncImage(
+                model = imageRes, // Use your own image resource
                 contentDescription = null,
                 modifier = Modifier
                     .size(80.dp)
@@ -329,43 +334,6 @@ fun CardWithColumnAndRow(hour: ForecastTimeStep) {
     Spacer(modifier = Modifier.width(4.dp))
 }
 
-
-@OptIn(ExperimentalLayoutApi::class)
-@Preview
-@Composable
-fun MiniDetailCard() {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.day_details),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(4.dp)
-                .align(Alignment.CenterHorizontally),
-            color = Color.Black
-        )
-        FlowRow(
-            maxItemsInEachRow = 4,
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-        ) {
-            Detail(
-                painterId = R.drawable.baseline_water_drop_24,
-                text = stringResource(R.string.day_humidity),
-                value = 1F,
-                unit = String()
-            )
-
-        }
-    }
-}
 
 
 // The bottom section of the main screen displaying

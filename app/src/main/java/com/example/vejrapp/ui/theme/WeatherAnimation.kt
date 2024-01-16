@@ -23,7 +23,17 @@ fun WeatherAnimation(weatherData: WeatherData) {
             factory = { context ->
                 WeatherView(context, null).apply { this.setWeatherData(PrecipType.SNOW) }
             })
+    } else if (weatherState.contains("sleet")) {
+        AndroidView(
+            factory = { context ->
+                WeatherView(context, null).apply { this.setWeatherData(PrecipType.SNOW) }
+            })
+        AndroidView(
+            factory = { context ->
+                WeatherView(context, null).apply { this.setWeatherData(PrecipType.RAIN) }
+            })
     }
+
 
 }
 
