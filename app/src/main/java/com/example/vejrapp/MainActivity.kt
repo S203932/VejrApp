@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            VejrAppTheme {
+            VejrAppTheme(darkTheme = false) {
                 WeatherApp()
             }
         }

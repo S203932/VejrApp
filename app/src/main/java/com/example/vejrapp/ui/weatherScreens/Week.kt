@@ -50,6 +50,9 @@ import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.navigation.Route
+import com.example.vejrapp.ui.screens.Detail
+import com.example.vejrapp.ui.screens.getCurrentIndex
+import com.example.vejrapp.ui.screens.screenViewModel
 import com.example.vejrapp.ui.search.SearchBar
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
