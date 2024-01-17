@@ -9,6 +9,7 @@ import com.example.vejrapp.data.remote.locationforecast.models.METJSONForecastTi
 import com.example.vejrapp.data.remote.locationforecast.models.NextHours
 import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import com.example.vejrapp.data.repository.WeatherUtils.celsiusToFahrenheit
+import com.example.vejrapp.data.repository.WeatherUtils.msToKmH
 import com.example.vejrapp.data.repository.WeatherUtils.roundFloat
 import com.example.vejrapp.ui.settings.models.SettingsModel
 import java.time.ZoneId
@@ -144,19 +145,15 @@ data class WeatherData(
     }
 
     private fun convertTemperature(temperature: Float?): Float? {
-        // Calculation from C -> F
-        // Source https://en.wikipedia.org/wiki/Fahrenheit
         if (settings.temperatureSetting.checked && temperature != null) {
-            return roundFloat(celsiusToFahrenheit(temperature))
+            return roundFloat(celsiusToFahrenheit(temperature)!!)
         }
         return temperature
     }
 
     private fun convertWindSpeed(windSpeed: Float?): Float? {
-        // Calculation from m/s to km/h
-        // Source https://en.wikipedia.org/wiki/Kilometres_per_hour
         if (settings.windSpeedSetting.checked && windSpeed != null) {
-            return roundFloat(windSpeed * 3.6F)
+            return roundFloat(msToKmH(windSpeed)!!)
         }
         return windSpeed
     }

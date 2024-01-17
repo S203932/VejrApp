@@ -1,7 +1,7 @@
 package com.example.vejrapp.data.repository
 
+import android.util.Log
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.ui.weatherScreens.getCurrentIndex
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
@@ -94,6 +94,31 @@ object WeatherUtils {
         return minTemp
     }
 
+
+    // Method to get the index for the current hour in the current day
+    fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
+        val currentHour = if (dayInt > 0) {
+            //Set currentHour to 0 so that the day can show from 00:00 for tomorrow page
+            0
+        } else {
+            // Set currentHour to the relevant current time at the given time zone
+            applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
+        }
+        val hours = weatherData.data.days[dayInt].hours
+
+        val currentIndex = hours.indexOf(hours.find { it.time.hour == currentHour })
+
+        return if (currentIndex == -1) {
+            Log.d(
+                WeatherUtils.TAGS.WEATHER_DATA_TAG,
+                "Invalid index $currentHour. Using 0 instead for ${weatherData.city.getVerboseName()}"
+            )
+            0
+        } else {
+            currentIndex
+        }
+    }
+
     fun getDayHours(
         weatherData: WeatherData,
         dayInt: Int,
@@ -128,12 +153,36 @@ object WeatherUtils {
         return number.toBigDecimal().setScale(decimalPlaces, RoundingMode.HALF_UP).toFloat()
     }
 
-    fun celsiusToFahrenheit(celsius: Float): Float {
+    fun celsiusToFahrenheit(celsius: Float?): Float? {
+        // Calculation from C -> F
+        // Source https://en.wikipedia.org/wiki/Fahrenheit
+        if (celsius == null) {
+            return null
+        }
         return (celsius * 1.8F) + 32
     }
 
-    fun fahrenheitToCelsius(fahrenheit: Float): Float {
+    fun fahrenheitToCelsius(fahrenheit: Float?): Float? {
+        if (fahrenheit == null) {
+            return null
+        }
         return (fahrenheit - 32) / 1.8F
+    }
+
+    fun msToKmH(ms: Float?): Float? {
+        // Calculation from m/s to km/h
+        // Source https://en.wikipedia.org/wiki/Kilometres_per_hour
+        if (ms == null) {
+            return null
+        }
+        return ms * 3.6F
+    }
+
+    fun kmHToMs(kmH: Float?): Float? {
+        if (kmH == null) {
+            return null
+        }
+        return kmH / 3.6F
     }
 
 

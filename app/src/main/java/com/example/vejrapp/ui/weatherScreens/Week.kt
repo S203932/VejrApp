@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,48 +30,49 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
-import com.example.vejrapp.data.remote.locationforecast.models.WeatherSymbol
 import com.example.vejrapp.data.repository.WeatherUtils
 import com.example.vejrapp.data.repository.models.WeatherData
-import java.time.format.TextStyle
-import java.util.Locale
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun WeekPage(weatherScreenViewModel: WeatherScreenViewModel) {
+fun Week(weatherScreenViewModel: WeatherScreenViewModel) {
     val weatherData by weatherScreenViewModel.weatherData.collectAsState()
 
-    WeekView(weatherData!!)
+    LazyColumn(
+        modifier = Modifier
+            .padding(8.dp)
+    ) {
+        items(weatherData!!.data.days) {
+            WeekDay(weatherData!!, it)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DayCard(
-    avgTemp: String,
-    maxTemp: String,
-    minTemp: String,
-    dayOfTheWeek: String,
-    dayAndMonth: String,
-    precipitation: String,
-    rainIcon: Painter,
-    weatherIcon: WeatherSymbol,
-    dayInt: Int,
-    weatherData: WeatherData
-) {
-    val weatherImage = weatherIcon.toString()
+fun WeekDay(weatherData: WeatherData, day: WeatherData.Day) {
+    val indexOfHour12ish = getHourClosestToMidday(day)
+    val data = day.hours[indexOfHour12ish].data
+    val dateTime = day.hours[0].time
+
+    val weatherImage = data.nextSixHours?.summary?.symbolCode.toString()
     val imageRes = weatherImage.mapToYRImageResource()
+
     var expanded by remember { mutableStateOf(false) }
     val fontColor = Color.Black
+
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
+            .padding(4.dp)
             //.height(60.dp)
             .animateContentSize(
                 animationSpec = spring(
@@ -82,43 +82,51 @@ fun DayCard(
             ),
         onClick = { expanded = !expanded }
     ) {
-        Column(/*modifier = Modifier.background(Color.White.copy(alpha = 0.6f))*/) {
+        Column {
             Row(
                 modifier = Modifier
                     .fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.Bottom
             ) {
-                //Spacer(modifier = Modifier.width(50.dp))
+                // Day of week with date and month number
                 Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                    // Day of week
                     Text(
-                        text = dayOfTheWeek.take(3)
-                        /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
+                        text = dateTime.format(DateTimeFormatter.ofPattern("E")),
                         color = fontColor,
                         fontSize = 16.sp
                     )
+                    // Date and month. Use stringResource to ensure correct month / date placement
                     Text(
-                        text = dayAndMonth.substring(8, 10) + "/" + dayAndMonth.substring(5, 7)
-                        /* text = "${DateFormat.DATE_FIELD}"*/,
+                        text = dateTime.format(DateTimeFormatter.ofPattern(stringResource(R.string.week_date_format))),
                         color = fontColor,
                         fontSize = 14.sp
                     )
                 }
-                //Spacer(modifier = Modifier.width(10.dp))
-                Text( //Average Temperature
-                    text = avgTemp,
+                //Average Temperature
+                Text(
+                    text = "${data.instant?.details?.airTemperature}°",
                     modifier = Modifier
                         .padding(3.dp, 3.dp)
                         .align(Alignment.CenterVertically),
                     color = fontColor,
                     fontSize = 20.sp
                 )
-                //Spacer(modifier = Modifier.width(7.dp))
-                Column(modifier = Modifier.align(Alignment.CenterVertically)) {//MIN MAX Temperature
-                    Text(text = maxTemp, color = fontColor, fontSize = 16.sp)
-                    Text(text = minTemp, color = fontColor, fontSize = 16.sp)
+                // MIN MAX Temperature
+                Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                    Text(
+                        text = "${data.nextSixHours?.details?.airTemperatureMax}°",
+                        color = fontColor,
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "${data.nextSixHours?.details?.airTemperatureMin}°",
+                        color = fontColor,
+                        fontSize = 16.sp
+                    )
                 }
-                //Spacer(modifier = Modifier.width(7.dp))
+                // Weather Image
                 AsyncImage(
                     model = imageRes,
                     contentDescription = null,
@@ -127,17 +135,18 @@ fun DayCard(
                         .padding(7.dp)
                         .size(50.dp)
                 )
-                Spacer(modifier = Modifier.width(7.dp))
-                if (precipitation != "null%") {
+                if (data.nextSixHours?.details?.probabilityOfPrecipitation != null) {
+                    // Rain Icon
                     Image(
-                        painter = rainIcon, //Rain Icon
+                        painter = painterResource(id = R.drawable.umbrella),
                         contentDescription = null,
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
                             .size(20.dp),
                     )
+                    // Rain Forecast
                     Text(
-                        text = precipitation, //Rain Forecast
+                        text = "${data.nextSixHours.details.probabilityOfPrecipitation}%",
                         modifier = Modifier.align(Alignment.CenterVertically),
                         color = fontColor,
                         fontSize = 16.sp
@@ -147,47 +156,11 @@ fun DayCard(
         }
         if (expanded) {
             Column {
-                HourlyWeather(weatherData, dayInt)
+                HourlyWeather(weatherData, getDayIndex(weatherData, day))
                 Spacer(modifier = Modifier.width(10.dp))
-                Details(weatherData, dayInt, false)
+                Details(weatherData, getDayIndex(weatherData, day), false)
                 Spacer(modifier = Modifier.width(10.dp))
             }
-        }
-    }
-}
-
-@Composable
-fun WeekView(weatherData: WeatherData) {
-    LazyColumn(
-        modifier = Modifier
-            .padding(8.dp)
-    ) {
-        items(weatherData.data.days) {
-            val indexOfHour12ish = getHourClosestToMidday(it)
-            // Need to calculate index of the hour I want to use
-            // I can find min and max air temperature in nextSixHours
-            // Rain/percipitation can also be found in nextSixHours
-            // Condition can also be found in next six hours
-            // Instant is gonna be average of the data closest to 12 a clock midday
-
-            // All the data will be taken from the hour closest to midday
-            DayCard(
-                avgTemp = it.hours[indexOfHour12ish].data.instant?.details?.airTemperature.toString() + "°",
-                maxTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMax.toString() + "°",
-                minTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMin.toString() + "°",
-                dayOfTheWeek = it.hours[0].time.dayOfWeek.getDisplayName(
-                    TextStyle.FULL,
-                    Locale.getDefault()
-                ),
-                dayAndMonth = it.hours[0].time.toString(),
-                precipitation = it.hours[indexOfHour12ish].data.nextSixHours?.details?.probabilityOfPrecipitation.toString() + "%",
-                rainIcon = painterResource(id = R.drawable.umbrella),
-                weatherIcon = it.hours[indexOfHour12ish].data.nextSixHours?.summary?.symbolCode
-                    ?: WeatherSymbol.heavysnowshowers_polartwilight,
-                dayInt = getDayIndex(weatherData, it),
-                weatherData
-            )
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -204,7 +177,6 @@ fun getHourClosestToMidday(day: WeatherData.Day): Int {
     }
     return index
 }
-
 
 @Composable
 fun HourlyWeather(

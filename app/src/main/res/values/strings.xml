@@ -42,6 +42,11 @@
     <string name="day_pretty_time_24">kk:mm</string>
     <string name="day_pretty_time_12">hh:mm</string>
 
+    <!-- Week strings -->
+
+    <string name="week_date_format">d/MM</string>
+
+
     <!-- Settings strings -->
 
     <!-- Temperature -->

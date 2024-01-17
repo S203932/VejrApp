@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.example.vejrapp.R
 import com.example.vejrapp.data.mapToYRImageResource
+import com.example.vejrapp.data.repository.WeatherUtils.getCurrentIndex
 import com.example.vejrapp.ui.weatherScreens.WeatherScreenViewModel
-import com.example.vejrapp.ui.weatherScreens.getCurrentIndex
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
@@ -31,7 +31,12 @@ fun LinearGradient(weatherScreenViewModel: WeatherScreenViewModel) {
     }
 
     val weatherData by weatherScreenViewModel.weatherData.collectAsState()
+    // Ensure gradients are only found if data is available
+    if (weatherData == null) {
+        return
+    }
     val indexOfHour = getCurrentIndex(weatherData!!, dayIndex)
+
     val dataCurrentHour = weatherData!!.data.days[dayIndex].hours[indexOfHour].data
     val weatherImage = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
     val imageRes = weatherImage.mapToYRImageResource()

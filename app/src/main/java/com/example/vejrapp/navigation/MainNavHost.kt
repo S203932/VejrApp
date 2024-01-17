@@ -39,7 +39,7 @@ import com.example.vejrapp.ui.theme.GifSplash
 import com.example.vejrapp.ui.theme.LinearGradient
 import com.example.vejrapp.ui.weatherScreens.Day
 import com.example.vejrapp.ui.weatherScreens.WeatherScreenViewModel
-import com.example.vejrapp.ui.weatherScreens.WeekPage
+import com.example.vejrapp.ui.weatherScreens.Week
 import java.time.LocalDateTime
 
 
@@ -52,16 +52,6 @@ fun MainNavHost(
     val weatherScreenViewModel = hiltViewModel<WeatherScreenViewModel>()
     val searchViewModel = hiltViewModel<SearchViewModel>()
 
-//    NavHost(
-//        navController = navController,
-//        startDestination = Route.AllDaysAllWeek.name,
-//    ) {
-//        composable(Route.AllDaysAllWeek.name) {
-//            LinearGradient()
-//            val screens = listOf(
-//                Route.Today.name,
-//                Route.Tomorrow.name,
-//                Route.Week.name
     CountDownScreen(
         modifier = Modifier
             .fillMaxSize()
@@ -87,8 +77,8 @@ fun MainNavHost(
                     Route.Today.name,
                     Route.Tomorrow.name,
                     Route.Week.name
-
                 )
+
                 val pagerState = rememberPagerState(
                     initialPage = 0,
                     initialPageOffsetFraction = 0f
@@ -104,8 +94,6 @@ fun MainNavHost(
                             state = pagerState,
                             key = { screens[it] },
                             pageSize = PageSize.Fill,
-                            //Quickfix for lag
-                            // beyondBoundsPageCount = screens.size - 1,
                             verticalAlignment = Alignment.Top,
                         ) { index ->
                             when (screens[index]) {
@@ -127,7 +115,7 @@ fun MainNavHost(
 
                                 Route.Week.name -> {
                                     // Content specific to Week
-                                    WeekPage(weatherScreenViewModel = weatherScreenViewModel)
+                                    Week(weatherScreenViewModel = weatherScreenViewModel)
                                 }
                             }
                         }

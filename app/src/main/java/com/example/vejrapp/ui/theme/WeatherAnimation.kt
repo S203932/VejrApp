@@ -35,8 +35,8 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import coil.size.Size
+import com.example.vejrapp.data.repository.WeatherUtils.getCurrentIndex
 import com.example.vejrapp.data.repository.models.WeatherData
-import com.example.vejrapp.ui.weatherScreens.getCurrentIndex
 import com.github.matteobattilana.weather.PrecipType
 import com.github.matteobattilana.weather.WeatherView
 

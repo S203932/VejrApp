@@ -2,7 +2,6 @@ package com.example.vejrapp.ui.weatherScreens
 
 import android.graphics.Typeface
 import android.text.format.DateFormat
-import android.util.Log
 import android.widget.TextClock
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -49,12 +48,13 @@ import com.example.vejrapp.data.mapToYRImageResource
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStep
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastTimeStepData
 import com.example.vejrapp.data.remote.locationforecast.models.ForecastUnits
-import com.example.vejrapp.data.repository.WeatherUtils
 import com.example.vejrapp.data.repository.WeatherUtils.applyTimezone
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMaxTemperature
 import com.example.vejrapp.data.repository.WeatherUtils.calculateMinTemperature
 import com.example.vejrapp.data.repository.WeatherUtils.celsiusToFahrenheit
 import com.example.vejrapp.data.repository.WeatherUtils.fahrenheitToCelsius
+import com.example.vejrapp.data.repository.WeatherUtils.getCurrentIndex
+import com.example.vejrapp.data.repository.WeatherUtils.kmHToMs
 import com.example.vejrapp.data.repository.WeatherUtils.roundFloat
 import com.example.vejrapp.data.repository.models.WeatherData
 import com.example.vejrapp.ui.theme.WeatherAnimation
@@ -87,7 +87,7 @@ fun Day(
             Column(verticalArrangement = Arrangement.SpaceBetween) {
                 LazyColumn {
                     item { TopWeather(weatherData!!, dayIndex) }
-                    item { CautionBox(weatherData!!, dayIndex) }
+                    item { Cautions(weatherData!!, dayIndex) }
                     item { HourlyWeather(weatherData!!, dayIndex, true) }
                     item { Details(weatherData!!, dayIndex, true) }
                 }
@@ -139,8 +139,7 @@ fun TopWeather(weatherData: WeatherData, day: Int) {
                     }
                 )
             } else {
-                val is24HourFormat =
-                    android.text.format.DateFormat.is24HourFormat(LocalContext.current)
+                val is24HourFormat = DateFormat.is24HourFormat(LocalContext.current)
                 val stringResId =
                     if (is24HourFormat) R.string.day_text_clock_24 else R.string.day_text_clock_12
                 Text(
@@ -208,168 +207,97 @@ fun TopWeather(weatherData: WeatherData, day: Int) {
 }
 
 // The caution box in the weather screen to display
-// caution alerts to the user (showing dummy data
-//  the moment)
+// caution alerts to the user
 @Composable
-fun CautionBox(weatherData: WeatherData, day: Int) {
-    val currentDay = weatherData.data.days[day]
+fun Cautions(weatherData: WeatherData, day: Int) {
+    val dataCurrentHour = weatherData.data.days[day].hours[getCurrentIndex(weatherData, day)]
 
-    val indexOfHour = getCurrentIndex(weatherData, day)
+    val airTemperatureUnit = weatherData.units.airTemperature
+    // Ensure that any "cautions" are calculated using celsius
+    val airTemperature =
+        if (airTemperatureUnit == stringResource(R.string.settings_temperature_choice_fahrenheit_unit)) {
+            fahrenheitToCelsius(dataCurrentHour.data.instant?.details?.airTemperature)
+        } else {
+            dataCurrentHour.data.instant?.details?.airTemperature
+        }
 
-    val dataCurrentHour = currentDay.hours[indexOfHour]
-    val airtemp = dataCurrentHour.data.instant?.details?.airTemperature
-    //val dataCurrentHour = weatherData.data.days[day].hours[indexOfHour].data
-    val humidity = dataCurrentHour.data.instant?.details?.relativeHumidity
-    val humidityUnit = weatherData.units.relativeHumidity
-    val windSpeed = dataCurrentHour.data.instant?.details?.windSpeed
-    val windSpedUnit = weatherData.units.windSpeed
+    // Ensure that any "cautions" are calculated using m/s
+    val windSpeedUnit = weatherData.units.airTemperature
+    val windSpeed =
+        if (windSpeedUnit == stringResource(R.string.settings_wind_speed_choice_kmh_unit)) {
+            kmHToMs(dataCurrentHour.data.instant?.details?.windSpeed)
+        } else {
+            dataCurrentHour.data.instant?.details?.windSpeed
+        }
+
     val uvIndex = dataCurrentHour.data.instant?.details?.ultravioletIndexClearSky
-    val percentageRain = dataCurrentHour.data.nextOneHours?.details?.probabilityOfPrecipitation
-    val percentageRainUnit = weatherData.units.probabilityOfPrecipitation
-    val pressure = dataCurrentHour.data.instant?.details?.airPressureAtSeaLevel
-    val pressureUnit = weatherData.units.airPressureAtSeaLevel
     val probabilityThunder = dataCurrentHour.data.instant?.details?.probabilityOfThunder
-    val probabilityThunderUnit = weatherData.units.probabilityOfThunder
     val rainAmount = dataCurrentHour.data.instant?.details?.precipitationAmount
-    val rainAmountUnit = weatherData.units.precipitationAmount
+
     val fontColor = Color.White
 
-    val shouldShowCaution = airtemp != null && (airtemp > 20 || airtemp < -5) ||
-            rainAmount != null && rainAmount > 20 ||
-            windSpeed != null && windSpeed > 20 ||
-            uvIndex != null && uvIndex > 10 ||
-            probabilityThunder != null && probabilityThunder > 10
+    // Threshold values for cautions
+    val highTemp = 20
+    val lowTemp = -5
+    val rainy = 20
+    val windy = 20
+    val highUV = 10
+    val thunder = 10
 
-    if (shouldShowCaution) {
-        Card(
-            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+    // Map for sto
+    val cautionMap = mapOf(
+        // High temperature
+        Pair(
+            stringResource(R.string.day_caution_hightemp_coming_days),
+            airTemperature != null && airTemperature > highTemp
+        ),
+        // Low temperature
+        Pair(
+            stringResource(R.string.day_caution_lowtemp_coming_days),
+            airTemperature != null && airTemperature < lowTemp
+        ),
+        // Rainy
+        Pair(
+            stringResource(R.string.day_caution_rainy_coming_days),
+            rainAmount != null && rainAmount > rainy
+        ),
+        // Windy
+        Pair(
+            stringResource(R.string.day_caution_wind_coming_days),
+            windSpeed != null && windSpeed > windy
+        ),
+        // High UV
+        Pair(
+            stringResource(R.string.day_caution_sun_coming_days),
+            uvIndex != null && uvIndex > highUV
+        ),
+        // Thunder
+        Pair(
+            stringResource(R.string.day_caution_thunder_coming_days),
+            probabilityThunder != null && probabilityThunder > thunder
+        )
+    )
+
+    if (cautionMap.containsValue(true)) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-                .padding(bottom = 8.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.day_caution),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = fontColor
-                )
-                if (airtemp != null && airtemp > 20)
-                    Text(
-                        text = stringResource(R.string.day_caution_hightemp_coming_days),
-                        color = fontColor
-                    )
-                if (airtemp != null && airtemp < -5)
-                    Text(
-                        text = stringResource(R.string.day_caution_lowtemp_coming_days),
-                        color = fontColor
-                    )
-                if (rainAmount != null && rainAmount > 20)
-                    Text(
-                        text = stringResource(R.string.day_caution_rainy_coming_days),
-                        color = fontColor
-                    )
-                if (windSpeed != null && windSpeed > 20)
-                    Text(
-                        text = stringResource(R.string.day_caution_wind_coming_days),
-                        color = fontColor
-                    )
-                if (uvIndex != null && uvIndex > 10)
-                    Text(
-                        text = stringResource(R.string.day_caution_sun_coming_days),
-                        color = fontColor
-                    )
-                if (probabilityThunder != null && probabilityThunder > 10)
-                    Text(
-                        text = stringResource(R.string.day_caution_thunder_coming_days),
-                        color = fontColor
-                    )
+            Text(
+                text = stringResource(R.string.day_caution),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = fontColor
+            )
+            // Get all cautions that should be shown
+            cautionMap.filterValues { it }.forEach { caution ->
+                Text(text = caution.key, color = fontColor)
             }
         }
     }
 }
 
-//@OptIn(ExperimentalFoundationApi::class)
-//@Composable
-//fun CautionBoxSwipeable(weatherData: WeatherData, day: Int) {
-//    val pagerState = rememberPagerState(
-//        initialPage = 0,
-//        initialPageOffsetFraction = 0f
-//    ) {
-//        // provide pageCount
-//        3
-//    }
-//
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(6.dp)
-//    ) {
-//        // HorizontalPager for CautionBox
-//        HorizontalPager(
-//            state = pagerState,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(6.dp)
-//        ) { page ->
-//            CautionBox(day = day, screenViewModel = screenViewModel)
-//        }
-//
-//        // Row of circle shapes
-//        Row(
-//            modifier = Modifier
-//                .align(Alignment.BottomCenter)
-//                .padding(bottom = 8.dp)
-//        ) {
-//            repeat(pagerState.pageCount) { iteration ->
-//                val color =
-//                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-//                Box(
-//                    modifier = Modifier
-//                        .padding(2.dp)
-//                        .clip(CircleShape)
-//                        .size(8.dp)
-//                        .background(color)
-//                )
-//            }
-//        }
-//    }
-//}
-
-//@Composable
-//fun Cautions(weatherData: WeatherData, day: Int) {
-//    val fontColor = Color.White
-//    Card(
-//        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(6.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize(),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            Text(
-//                text = stringResource(R.string.day_caution),
-//                fontWeight = FontWeight.Bold,
-//                modifier = Modifier.align(Alignment.CenterHorizontally),
-//                color = fontColor
-//            )
-//            Text(
-//                text = stringResource(R.string.day_caution_rainy_coming_days),
-//                color = fontColor
-//            )
-//        }
-//    }
-//}
 
 // In the LazyRow of the hour view
 // this is the composable generating
@@ -651,31 +579,6 @@ fun prettyTime(zonedDateTime: ZonedDateTime, stringResource: String): String {
         .toString()
 }
 
-// Method to get the index for the current hour in the current day
-fun getCurrentIndex(weatherData: WeatherData, dayInt: Int): Int {
-    val currentHour = if (dayInt > 0) {
-        //Set currentHour to 0 so that the day can show from 00:00 for tomorrow page
-        0
-    } else {
-        // Set currentHour to the relevant current time at the given time zone
-        applyTimezone(ZonedDateTime.now(), TimeZone.getTimeZone(weatherData.city.timezone)).hour
-    }
-    val hours = weatherData.data.days[dayInt].hours
-
-    val currentIndex = hours.indexOf(hours.find { it.time.hour == currentHour })
-
-    return if (currentIndex == -1) {
-        Log.d(
-            WeatherUtils.TAGS.WEATHER_DATA_TAG,
-            "Invalid index $currentHour. Using 0 instead for ${weatherData.city.getVerboseName()}"
-        )
-        0
-    } else {
-        currentIndex
-    }
-}
-
-
 private fun calculateFeelsLike(
     dataCurrentHour: ForecastTimeStepData,
     units: ForecastUnits
@@ -702,10 +605,11 @@ private fun calculateFeelsLike(
             (humidity!! / 100) * 6.105F * exp((17.27F * currentTemperature!!) / (237.7F + currentTemperature))
         val at = currentTemperature + (0.33F * e) - (0.70F * currentWindSpeed!!) - 4.00F
 
+
         // Round to 1 decimal place and convert back to Fahrenheit if needed
         roundFloat(
             if (units.airTemperature == "F") {
-                celsiusToFahrenheit(at)
+                celsiusToFahrenheit(at)!!
             } else {
                 at
             }
