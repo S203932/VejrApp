@@ -57,6 +57,7 @@ import com.example.vejrapp.data.repository.WeatherUtils.celsiusToFahrenheit
 import com.example.vejrapp.data.repository.WeatherUtils.fahrenheitToCelsius
 import com.example.vejrapp.data.repository.WeatherUtils.roundFloat
 import com.example.vejrapp.data.repository.models.WeatherData
+import com.example.vejrapp.ui.theme.WeatherAnimation
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -81,14 +82,15 @@ fun Day(
     }
 
     if (weatherData != null) {
-        Column(verticalArrangement = Arrangement.SpaceBetween) {
-//            WeatherAnimation(weatherData!!)
-            LazyColumn {
-                item { TopWeather(weatherData!!, dayIndex) }
-                item { CautionBox(weatherData!!, dayIndex) }
-//                item { Cautions(weatherData!!, dayIndex) }
-                item { HourlyWeather(weatherData!!, dayIndex, true) }
-                item { Details(weatherData!!, dayIndex, true) }
+        Box {
+            WeatherAnimation(weatherData!!)
+            Column(verticalArrangement = Arrangement.SpaceBetween) {
+                LazyColumn {
+                    item { TopWeather(weatherData!!, dayIndex) }
+                    item { CautionBox(weatherData!!, dayIndex) }
+                    item { HourlyWeather(weatherData!!, dayIndex, true) }
+                    item { Details(weatherData!!, dayIndex, true) }
+                }
             }
         }
     }
@@ -212,7 +214,7 @@ fun TopWeather(weatherData: WeatherData, day: Int) {
 fun CautionBox(weatherData: WeatherData, day: Int) {
     val currentDay = weatherData.data.days[day]
 
-    var indexOfHour = getCurrentIndex(weatherData, day)
+    val indexOfHour = getCurrentIndex(weatherData, day)
 
     val dataCurrentHour = currentDay.hours[indexOfHour]
     val airtemp = dataCurrentHour.data.instant?.details?.airTemperature
