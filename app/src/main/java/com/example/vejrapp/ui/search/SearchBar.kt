@@ -9,9 +9,10 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -195,14 +196,13 @@ fun SearchBar(
                     .padding(horizontal = 8.dp),
             ) {
                 items(cities.value!!) { city ->
-                    Row(
-                        modifier = Modifier
+                    Box(
+                        Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 10.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    )
-                    {
-                        Column(modifier = Modifier
+                            .padding(vertical = 10.dp)
+                    ) {
+                        Row(Modifier
+                            .align(Alignment.CenterStart)
                             .selectable(
                                 city?.uniqueId() == currentCity?.uniqueId(),
                                 onClick = {
@@ -213,20 +213,27 @@ fun SearchBar(
                                     searchViewModel.updateCurrentCity(city!!)
                                 }
                             )) {
-                            Text(
-                                text = city?.name ?: "",
-                                fontSize = 18.sp,
-                                color = fontColor,
-                            )
-                            Text(
-                                text = city?.country ?: "",
-                                fontSize = 14.sp,
-                                color = fontColor,
-                            )
+                            Column(
+                            ) {
+                                Text(
+                                    text = city?.name ?: "",
+                                    fontSize = 18.sp,
+                                    color = fontColor,
+                                )
+                                Text(
+                                    text = city?.country ?: "",
+                                    fontSize = 14.sp,
+                                    color = fontColor,
+                                )
+                            }
+                            Spacer(modifier = Modifier.weight(1F))
                         }
 
                         IconButton(
-                            onClick = { searchViewModel.updateFavorite(city!!) }
+                            onClick = { searchViewModel.updateFavorite(city!!) },
+                            Modifier.align(
+                                Alignment.CenterEnd
+                            )
                         ) {
                             Icon(
                                 imageVector = city!!.favoriteIcon(),

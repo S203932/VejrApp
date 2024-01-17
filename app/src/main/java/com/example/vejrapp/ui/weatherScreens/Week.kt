@@ -95,13 +95,13 @@ fun DayCard(
                         text = dayOfTheWeek.take(3)
                         /*   text = "${DateFormat.DAY_OF_WEEK_FIELD}"*/,
                         color = fontColor,
-                        fontSize = 14.sp
+                        fontSize = 16.sp
                     )
                     Text(
                         text = dayAndMonth.substring(8, 10) + "/" + dayAndMonth.substring(5, 7)
                         /* text = "${DateFormat.DATE_FIELD}"*/,
                         color = fontColor,
-                        fontSize = 12.sp
+                        fontSize = 14.sp
                     )
                 }
                 //Spacer(modifier = Modifier.width(10.dp))
@@ -172,19 +172,15 @@ fun WeekView(weatherData: WeatherData) {
 
             // All the data will be taken from the hour closest to midday
             DayCard(
-                avgTemp = it.hours[indexOfHour12ish].data.instant?.details?.airTemperature
-                    .toString() + "°",
-                maxTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMax
-                    .toString() + "°",
-                minTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMin
-                    .toString() + "°",
+                avgTemp = it.hours[indexOfHour12ish].data.instant?.details?.airTemperature.toString() + "°",
+                maxTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMax.toString() + "°",
+                minTemp = it.hours[indexOfHour12ish].data.nextSixHours?.details?.airTemperatureMin.toString() + "°",
                 dayOfTheWeek = it.hours[0].time.dayOfWeek.getDisplayName(
                     TextStyle.FULL,
                     Locale.getDefault()
                 ),
                 dayAndMonth = it.hours[0].time.toString(),
-                precipitation = it.hours[indexOfHour12ish].data.nextSixHours?.details?.probabilityOfPrecipitation
-                    .toString() + "%",
+                precipitation = it.hours[indexOfHour12ish].data.nextSixHours?.details?.probabilityOfPrecipitation.toString() + "%",
                 rainIcon = painterResource(id = R.drawable.umbrella),
                 weatherIcon = it.hours[indexOfHour12ish].data.nextSixHours?.summary?.symbolCode
                     ?: WeatherSymbol.heavysnowshowers_polartwilight,

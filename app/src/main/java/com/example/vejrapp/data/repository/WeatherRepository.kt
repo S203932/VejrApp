@@ -58,7 +58,7 @@ class WeatherRepository(context: Context) {
                 name = getString(context, R.string.settings_pressure_name),
                 choiceUnit = getString(
                     context,
-                    R.string.settings_pressure_choice_atm
+                    R.string.settings_pressure_choice_atm_unit
                 ),
                 choices = mapOf(
                     Pair(false, getString(context, R.string.settings_pressure_choice_pa)),
