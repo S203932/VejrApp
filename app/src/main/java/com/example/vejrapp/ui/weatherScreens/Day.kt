@@ -83,7 +83,7 @@ fun Day(
 
     if (weatherData != null) {
         Box {
-            WeatherAnimation(weatherData!!)
+            WeatherAnimation(weatherData!!, dayIndex)
             Column(verticalArrangement = Arrangement.SpaceBetween) {
                 LazyColumn {
                     item { TopWeather(weatherData!!, dayIndex) }

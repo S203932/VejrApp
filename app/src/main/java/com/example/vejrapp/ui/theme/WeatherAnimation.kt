@@ -36,12 +36,14 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.vejrapp.data.repository.models.WeatherData
+import com.example.vejrapp.ui.weatherScreens.getCurrentIndex
 import com.github.matteobattilana.weather.PrecipType
 import com.github.matteobattilana.weather.WeatherView
 
 @Composable
-fun WeatherAnimation(weatherData: WeatherData) {
-    val dataCurrentHour = weatherData.data.days[0].hours[0].data
+fun WeatherAnimation(weatherData: WeatherData, dayInt: Int) {
+
+    val dataCurrentHour = weatherData.data.days[dayInt].hours[getCurrentIndex(weatherData, 0)].data
     val weatherState = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
     val weatherType: PrecipType
     //    var sleet: Boolean
