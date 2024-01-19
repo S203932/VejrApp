@@ -45,8 +45,6 @@ fun WeatherAnimation(weatherData: WeatherData, dayInt: Int) {
 
     val dataCurrentHour = weatherData.data.days[dayInt].hours[getCurrentIndex(weatherData, 0)].data
     val weatherState = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
-    val weatherType: PrecipType
-    //    var sleet: Boolean
 
     if (weatherState.contains("rain")) {
         AndroidView(
