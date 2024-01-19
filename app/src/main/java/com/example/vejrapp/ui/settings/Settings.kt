@@ -43,9 +43,7 @@ fun Settings(
             .safeDrawingPadding(),
         topBar = {
             IconButton(
-                onClick = {
-                    navController.popBackStack()
-                }
+                onClick = { navController.popBackStack() }
             ) {
                 Icon(
                     modifier = Modifier
@@ -57,7 +55,6 @@ fun Settings(
                 )
             }
         },
-        bottomBar = { About() }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -102,18 +99,5 @@ fun Setting(
             )
         }
         Switch(checked = setting.checked, onCheckedChange = { onToggle() })
-    }
-}
-
-@Composable
-fun About() {
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-
-    ) {
-        Text(text = "About", fontSize = 24.sp)
-        Text(text = "VejrApp is created by")
-        Text(text = "David, Kristian, Markus, Natali og Patrick")
     }
 }

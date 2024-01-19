@@ -73,7 +73,6 @@ fun WeekDay(weatherData: WeatherData, day: WeatherData.Day) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
-            //.height(60.dp)
             .animateContentSize(
                 animationSpec = spring(
                     dampingRatio = Spring.DampingRatioLowBouncy,
