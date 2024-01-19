@@ -3,8 +3,8 @@
     <string name="settings">Settings</string>
     <string name="search_label">Change location</string>
     <string name="tomorrow">Tomorrow</string>
-    <string name="week_view">Week_View</string>
-    <string name="allDaysAllWeek">AllDaysAllWeek</string>
+    <string name="week_view">Week View</string>
+    <string name="all_days_all_week">All Days All Week</string>
 
 
     <!-- SearchBar strings -->
@@ -12,24 +12,58 @@
     <string name="unfavorite_city">Unfavorite %s</string>
 
 
-    <!-- Day -->
-    <string name="day_realfeel">Realfeel</string>
-    <string name="day_caution">Caution</string>
+    <!-- Day strings-->
+
+    <!-- Day TopWeather-->
+    <string name="day_text_clock_12">EEEE d. MMMM - hh:mm a</string>
+    <string name="day_text_clock_24">EEEE d. MMMM - kk:mm</string>
+    <string name="day_temp_range">%s° to %s°</string>
+    <string name="day_feels_like">Feels like %s°</string>
+
+    <!-- Day CautionBox-->
+    <string name="day_caution">Caution:</string>
+    <string name="day_caution_rainy_coming_days">Rainy weather in coming days</string>
+    <string name="day_caution_hightemp_coming_days">High temperatures incoming</string>
+    <string name="day_caution_lowtemp_coming_days">Frosty temperatures incoming</string>
+    <string name="day_caution_sun_coming_days">Get your sunglasses, sunny weather incoming</string>
+    <string name="day_caution_wind_coming_days">Brace yourself, strong winds incoming</string>
+    <string name="day_caution_thunder_coming_days">Heavy thunder in the coming hours</string>
+
+    <!-- Day DetailsBox-->
+    <string name="day_details">Details</string>
+    <string name="day_humidity">Humidity</string>
+    <string name="day_wind_speed">Wind speed</string>
+    <string name="day_uv_index">UV index</string>
+    <string name="day_rain">Rain</string>
+    <string name="day_pressure">Pressure</string>
+    <string name="day_thunder">Thunder</string>
+    <string name="day_data_updated">Updated %s</string>
+    <string name="day_new_data">New data %s</string>
+    <string name="day_pretty_time_24">kk:mm</string>
+    <string name="day_pretty_time_12">hh:mm</string>
+
+    <!-- Week strings -->
+
+    <string name="week_date_format">d/MM</string>
+
 
     <!-- Settings strings -->
 
     <!-- Temperature -->
-    <string name="temperature_name">Temperature</string>
-    <string name="temperature_choice_celsius">Celsius</string>
-    <string name="temperature_choice_fahrenheit">Fahrenheit</string>
+    <string name="settings_temperature_name">Temperature</string>
+    <string name="settings_temperature_choice_celsius">Celsius</string>
+    <string name="settings_temperature_choice_fahrenheit">Fahrenheit</string>
+    <string name="settings_temperature_choice_fahrenheit_unit">F</string>
 
     <!-- Wind speed -->
-    <string name="wind_speed_name">Wind speed</string>
-    <string name="wind_speed_choice_ms">m/s</string>
-    <string name="wind_speed_choice_kmh">km/h</string>
+    <string name="settings_wind_speed_name">Wind speed</string>
+    <string name="settings_wind_speed_choice_ms">Meters per second</string>
+    <string name="settings_wind_speed_choice_kmh">Kilometers per hour</string>
+    <string name="settings_wind_speed_choice_kmh_unit">km/h</string>
 
     <!-- Pressure -->
-    <string name="pressure_name">Pressure</string>
-    <string name="pressure_choice_bar">Bar</string>
-    <string name="pressure_choice_pa">Pascal</string>
+    <string name="settings_pressure_name">Pressure</string>
+    <string name="settings_pressure_choice_pa">Pascal</string>
+    <string name="settings_pressure_choice_atm">Standard atmosphere</string>
+    <string name="settings_pressure_choice_atm_unit">atm</string>
 </resources>
