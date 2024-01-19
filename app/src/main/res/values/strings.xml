@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VejrApp</string>
+    <string name="app_name">24VejrApp</string>
     <string name="settings">Settings</string>
     <string name="search_label">Change location</string>
     <string name="tomorrow">Tomorrow</string>
@@ -25,7 +25,7 @@
     <string name="day_caution_rainy_coming_days">Rainy weather in coming days</string>
     <string name="day_caution_hightemp_coming_days">High temperatures incoming</string>
     <string name="day_caution_lowtemp_coming_days">Frosty temperatures incoming</string>
-    <string name="day_caution_sun_coming_days">Get your sunglasses, sunny weather incoming</string>
+    <string name="day_caution_sun_coming_days">Bring sunglasses, sunny weather incoming</string>
     <string name="day_caution_wind_coming_days">Brace yourself, strong winds incoming</string>
     <string name="day_caution_thunder_coming_days">Heavy thunder in the coming hours</string>
 
