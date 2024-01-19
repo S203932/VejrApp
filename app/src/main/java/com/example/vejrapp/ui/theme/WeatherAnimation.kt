@@ -40,10 +40,24 @@ import com.example.vejrapp.data.repository.models.WeatherData
 import com.github.matteobattilana.weather.PrecipType
 import com.github.matteobattilana.weather.WeatherView
 
+/*
+Weather animation uses Matteo Battilana's Android library
+com.github.matteobattilana.weather
+To help make the animations
+
+The Gifsplash, CountDownScreen, and SplashScreen
+are also taken and modified from ygorluizfrazao's
+github release (compose-splash-screens), but not
+used directly as a dependency (like the weather animations)
+as its source code breaks our own
+
+ */
+
 @Composable
 fun WeatherAnimation(weatherData: WeatherData, dayInt: Int) {
 
     val dataCurrentHour = weatherData.data.days[dayInt].hours[getCurrentIndex(weatherData, 0)].data
+    //Takes the symbolcode string from the weather api that is used to pick weather icons
     val weatherState = dataCurrentHour.nextOneHours?.summary?.symbolCode.toString()
     val weatherType: PrecipType
     //    var sleet: Boolean
@@ -82,7 +96,7 @@ fun GifSplash(
     text: String,
     textStyle: TextStyle = LocalTextStyle.current
 ) {
-
+    //Uses coils gif support to load a gif file
     val imageLoader = ImageLoader.Builder(context)
         .components {
             if (SDK_INT >= 28) {
@@ -113,6 +127,7 @@ fun GifSplash(
 }
 
 
+//This creates the countdown timer the splash screen is available
 @Composable
 fun CountDownScreen(
     modifier: Modifier = Modifier,
