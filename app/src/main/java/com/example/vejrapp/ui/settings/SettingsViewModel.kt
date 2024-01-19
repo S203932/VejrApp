@@ -1,18 +1,15 @@
 package com.example.vejrapp.ui.settings
 
 //import androidx.core.content.ContextCompat.getString
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vejrapp.data.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    @ApplicationContext context: Context,
     private val weatherRepository: WeatherRepository
 ) : ViewModel() {
     val settings = weatherRepository.settings
